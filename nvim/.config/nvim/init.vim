@@ -51,6 +51,7 @@ Plug 'michaeljsmith/vim-indent-object'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'pprovost/vim-ps1'
+Plug 'godlygeek/tabular'
 Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -149,3 +150,4 @@ augroup END
 "  Add polyglot and disable polyglot to load powershell
 "  Map over Q so I don't accidentally typed it
 "  Set fold method to manual
+"  Add tabular to easy align data
