@@ -98,9 +98,9 @@ nnoremap <c-p> :Files<CR>
 nnoremap <leader>b :Buffers<CR>
 if executable('rg')
     nnoremap <Leader>ps :Rg<SPACE>
-    nnoremap Q :Rg <c-r><c-w><CR>
+    nnoremap Q :Rg <c-r><c-w>
 else
-    nnoremap Q :<c-u>vim /<c-r><c-w>/ %<CR>
+    nnoremap Q :<c-u>vim /<c-r><c-w>/ %
 endif
 
 " If we can osc52 the clipboard
