@@ -83,6 +83,7 @@ endif
 " Keyboard remap
 nnoremap ]c ]czz
 nnoremap [c [czz
+inoremap <C-c> <ESC>
 nnoremap <leader>h :wincmd h<CR>
 nnoremap <leader>j :wincmd j<CR>
 nnoremap <leader>k :wincmd k<CR>
