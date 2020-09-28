@@ -55,15 +55,6 @@ Plug 'godlygeek/tabular'
 Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-" fzf works great with fd and configured as
-"  if command -v fd &>/dev/null; then
-"      export FZF_DEFAULT_COMMAND='fd --type file --color=always'
-"      export FZF_DEFAULT_OPTS="--ansi"
-"  elif command -v fdfind &>/dev/null; then
-"      export FZF_DEFAULT_COMMAND='fdfind --type file --color=always'
-"      export FZF_DEFAULT_OPTS="--ansi"
-"      alias fd=fdfind
-"  fi
 call plug#end()
 
 " Color setting
@@ -98,6 +89,10 @@ nnoremap <leader>w :w<CR>
 nnoremap <c-p> :Files<CR>
 nnoremap <leader>b :Buffers<CR>
 if executable('rg')
+    command! -bang -nargs=* Rg
+      \ call fzf#vim#grep(
+      \   'rg --hidden --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+      \   , <bang>0)
     nnoremap <Leader>ps :Rg<SPACE>
     nnoremap Q :Rg <c-r><c-w>
 else
@@ -137,18 +132,3 @@ augroup nowhitespaceattheend
     autocmd!
     autocmd BufWritePre * :call TrimWhitespace()
 augroup END
-
-" Since last version
-"  Added new plugin vim-osc52 and associated autocommand to send to osc52
-"  Replace with custom osc function as the one from the plugin doesn't work
-"    for nvim
-"  Add tty found capability as newer version cannot access /dev/tty directly
-"  Remove project specific to local folder
-"  Add additional check that only yank to osc52 with unnamed register
-"  When invoke from the command line reading stdin, the tty detection needs to
-"    be updated, now it will check everytime it runs the function
-"  Add key map to do ]c [c to ]czz [czz
-"  Add polyglot and disable polyglot to load powershell
-"  Map over Q so I don't accidentally typed it
-"  Set fold method to manual
-"  Add tabular to easy align data
