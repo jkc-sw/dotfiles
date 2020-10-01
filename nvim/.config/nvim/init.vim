@@ -59,7 +59,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
-" Plug 'nvim-lua/diagnostic-nvim'
+Plug 'nvim-lua/diagnostic-nvim'
 " Plug 'tjdevries/nlua.nvim'
 " Plug 'tjdevries/lsp_extensions.nvim'
 " Plug 'tpope/vim-fugitive'
@@ -81,14 +81,14 @@ colorscheme gruvbox
 let g:diagnostic_enable_virtual_text = 1
 autocmd BufEnter * lua require'completion'.on_attach()
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
-lua require'nvim_lsp'.clangd.setup{on_attach=require'completion'.on_attach}
-" lua << EOF
-" local on_attach_vim = function(client)
-"     require'completion'.on_attach(client)
-"     require'diagnostic'.on_attach(client)
-" end
-" require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
-" EOF
+" lua require'nvim_lsp'.clangd.setup{on_attach=require'completion'.on_attach}
+lua << EOF
+local on_attach_vim = function(client)
+    require'completion'.on_attach(client)
+    require'diagnostic'.on_attach(client)
+end
+require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
+EOF
 
 " Configuration specifics for/after plugins
 if executable('rg')
@@ -122,6 +122,9 @@ nnoremap <leader>gr    <cmd>lua vim.lsp.buf.references()<CR>
 nnoremap <leader>g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <leader>gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <leader>gd    <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <leader>go    <cmd>OpenDiagnostic<CR>
+nnoremap <leader>gn    <cmd>NextDiagnosticCycle<CR>
+nnoremap <leader>gp    <cmd>PrevDiagnosticCycle<CR>
 if executable('rg')
     command! -bang -nargs=* Rg
       \ call fzf#vim#grep(
