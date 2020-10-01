@@ -86,14 +86,14 @@ augroup nowhitespaceattheend
 augroup END
 " lua require'nvim_lsp'.clangd.setup{on_attach=require'completion'.on_attach}
 lua << EOF
-local on_attach_vim = function(client)
-    require'completion'.on_attach(client)
-    require'diagnostic'.on_attach(client)
-end
-local att = function(client)
+local att = function()
+    local on_attach_vim = function(client)
+        require'completion'.on_attach(client)
+        require'diagnostic'.on_attach(client)
+    end
     require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
 end
-_ = pcall(att, client)
+_ = pcall(att)
 EOF
 
 " Configuration specifics for/after plugins
