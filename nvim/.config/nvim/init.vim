@@ -60,12 +60,12 @@ Plug 'junegunn/fzf.vim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 " Plug 'nvim-lua/diagnostic-nvim'
-Plug 'tjdevries/nlua.nvim'
-Plug 'tjdevries/lsp_extensions.nvim'
+" Plug 'tjdevries/nlua.nvim'
+" Plug 'tjdevries/lsp_extensions.nvim'
 " Plug 'tpope/vim-fugitive'
-Plug 'nvim-lua/popup.nvim'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-lua/telescope.nvim'
+" Plug 'nvim-lua/popup.nvim'
+" Plug 'nvim-lua/plenary.nvim'
+" Plug 'nvim-lua/telescope.nvim'
 call plug#end()
 
 " Color setting
@@ -110,8 +110,8 @@ nnoremap <silent> <Leader>- :vertical resize -5<CR>
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 nnoremap <leader>w :w<CR>
-" nnoremap <c-p> :Files<CR>
-nnoremap <c-p> <cmd>lua require'telescope.builtin'.find_files{}<CR>
+nnoremap <c-p> :Files<CR>
+" nnoremap <c-p> <cmd>lua require'telescope.builtin'.find_files{}<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader><c-]> <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <leader>K     <cmd>lua vim.lsp.buf.hover()<CR>
@@ -157,10 +157,10 @@ if $SSH_CLIENT
     augroup END
 endif
 
-augroup inlayHint
-    autocmd!
-    autocmd BufEnter,BufWinEnter,TabEnter *.rs :lua require'lsp_extensions'.inlay_hints{}
-augroup END
+" augroup inlayHint
+"     autocmd!
+"     autocmd BufEnter,BufWinEnter,TabEnter *.rs :lua require'lsp_extensions'.inlay_hints{}
+" augroup END
 
 " Trim the whitespaces
 fun! TrimWhitespace()
