@@ -79,15 +79,21 @@ colorscheme gruvbox
 
 " lsp setup
 let g:diagnostic_enable_virtual_text = 1
-autocmd BufEnter * lua require'completion'.on_attach()
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
+augroup nowhitespaceattheend
+    autocmd!
+    autocmd BufEnter * lua require'completion'.on_attach()
+augroup END
 " lua require'nvim_lsp'.clangd.setup{on_attach=require'completion'.on_attach}
 lua << EOF
 local on_attach_vim = function(client)
     require'completion'.on_attach(client)
     require'diagnostic'.on_attach(client)
 end
-require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
+local att = function(client)
+    require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
+end
+_ = pcall(att, client)
 EOF
 
 " Configuration specifics for/after plugins
