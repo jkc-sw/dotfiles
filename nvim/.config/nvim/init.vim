@@ -28,6 +28,8 @@ set shortmess+=c
 set colorcolumn=80
 set background=dark
 set splitbelow splitright
+set termguicolors
+set completeopt=menuone,noinsert,noselect
 highlight ColorColumn ctermbg=0 guibg=lightgrey
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
@@ -55,16 +57,38 @@ Plug 'godlygeek/tabular'
 Plug 'sheerun/vim-polyglot'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
+" Plug 'nvim-lua/diagnostic-nvim'
+Plug 'tjdevries/nlua.nvim'
+Plug 'tjdevries/lsp_extensions.nvim'
+" Plug 'tpope/vim-fugitive'
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/telescope.nvim'
 call plug#end()
 
 " Color setting
-colorscheme gruvbox
 let g:gruvbox_contrast_dark = 'hard'
 if exists('+termguicolors')
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 let g:gruvbox_invert_selections = '0'
+colorscheme gruvbox
+
+" lsp setup
+let g:diagnostic_enable_virtual_text = 1
+autocmd BufEnter * lua require'completion'.on_attach()
+let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
+lua require'nvim_lsp'.clangd.setup{on_attach=require'completion'.on_attach}
+" lua << EOF
+" local on_attach_vim = function(client)
+"     require'completion'.on_attach(client)
+"     require'diagnostic'.on_attach(client)
+" end
+" require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
+" EOF
 
 " Configuration specifics for/after plugins
 if executable('rg')
@@ -86,8 +110,18 @@ nnoremap <silent> <Leader>- :vertical resize -5<CR>
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 nnoremap <leader>w :w<CR>
-nnoremap <c-p> :Files<CR>
+" nnoremap <c-p> :Files<CR>
+nnoremap <c-p> <cmd>lua require'telescope.builtin'.find_files{}<CR>
 nnoremap <leader>b :Buffers<CR>
+nnoremap <leader><c-]> <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <leader>K     <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <leader>gD    <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <leader><c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <leader>1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <leader>gr    <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <leader>g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <leader>gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+nnoremap <leader>gd    <cmd>lua vim.lsp.buf.declaration()<CR>
 if executable('rg')
     command! -bang -nargs=* Rg
       \ call fzf#vim#grep(
@@ -95,6 +129,7 @@ if executable('rg')
       \   fzf#vim#with_preview(), <bang>0)
     nnoremap <Leader>ps :Rg<SPACE>
     nnoremap Q :Rg <c-r><c-w>
+    " nnoremap Q <cmd>lua require('telescope.builtin').live_grep()<CR>
 else
     nnoremap Q :<c-u>vim /<c-r><c-w>/ %
 endif
@@ -121,6 +156,11 @@ if $SSH_CLIENT
             \| endif
     augroup END
 endif
+
+augroup inlayHint
+    autocmd!
+    autocmd BufEnter,BufWinEnter,TabEnter *.rs :lua require'lsp_extensions'.inlay_hints{}
+augroup END
 
 " Trim the whitespaces
 fun! TrimWhitespace()
