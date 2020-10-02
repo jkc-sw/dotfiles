@@ -92,7 +92,8 @@ local att = function()
         require'diagnostic'.on_attach(client)
     end
     require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
-    require'nvim_lsp'.rls.setup{on_attach=on_attach_vim}
+    -- require'nvim_lsp'.rls.setup{on_attach=on_attach_vim}
+    require'nvim_lsp'.rust_analyzer.setup{on_attach=on_attach_vim}
 end
 _ = pcall(att)
 EOF
