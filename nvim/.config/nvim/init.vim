@@ -117,6 +117,7 @@ nnoremap <leader>u :UndotreeShow<CR>
 nnoremap <leader>pv :vertical topleft wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
 nnoremap <silent> <Leader>+ :vertical resize +5<CR>
 nnoremap <silent> <Leader>- :vertical resize -5<CR>
+nnoremap <leader>V :vsp ~/.config/nvim/init.vim<CR>
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 nnoremap <leader>w :w<CR>
