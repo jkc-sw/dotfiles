@@ -60,8 +60,8 @@ Plug 'junegunn/fzf.vim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 Plug 'nvim-lua/diagnostic-nvim'
-" Plug 'tjdevries/nlua.nvim'
-" Plug 'tjdevries/lsp_extensions.nvim'
+Plug 'tjdevries/nlua.nvim'
+Plug 'tjdevries/lsp_extensions.nvim'
 " Plug 'tpope/vim-fugitive'
 " Plug 'nvim-lua/popup.nvim'
 " Plug 'nvim-lua/plenary.nvim'
@@ -92,6 +92,7 @@ local att = function()
         require'diagnostic'.on_attach(client)
     end
     require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
+    require'nvim_lsp'.rls.setup{on_attach=on_attach_vim}
 end
 _ = pcall(att)
 EOF
@@ -166,10 +167,10 @@ if $SSH_CLIENT
     augroup END
 endif
 
-" augroup inlayHint
-"     autocmd!
-"     autocmd BufEnter,BufWinEnter,TabEnter *.rs :lua require'lsp_extensions'.inlay_hints{}
-" augroup END
+augroup inlayHint
+    autocmd!
+    autocmd BufEnter,BufWinEnter,TabEnter *.rs :lua require'lsp_extensions'.inlay_hints{}
+augroup END
 
 " Trim the whitespaces
 fun! TrimWhitespace()
