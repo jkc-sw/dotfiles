@@ -92,10 +92,18 @@ local att = function()
         require'completion'.on_attach(client)
         require'diagnostic'.on_attach(client)
     end
-    require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
-    -- require'nvim_lsp'.rls.setup{on_attach=on_attach_vim}
-    require'nvim_lsp'.rust_analyzer.setup{on_attach=on_attach_vim}
-    require'nvim_lsp'.pyls.setup{on_attach=on_attach_vim}
+    if vim.fn.executable('clangd-10') == 1 then
+        require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
+    end
+    -- if vim.fn.executable('rls') == 1 then
+    --     require'nvim_lsp'.rls.setup{on_attach=on_attach_vim}
+    -- end
+    if vim.fn.executable('rust-analyzer') == 1 then
+        require'nvim_lsp'.rust_analyzer.setup{on_attach=on_attach_vim}
+    end
+    if vim.fn.executable('pyls') == 1 then
+        require'nvim_lsp'.pyls.setup{on_attach=on_attach_vim}
+    end
 end
 _ = pcall(att)
 EOF
