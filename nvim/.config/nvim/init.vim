@@ -85,44 +85,8 @@ augroup nowhitespaceattheend
     autocmd!
     autocmd BufEnter * lua require'completion'.on_attach()
 augroup END
-" lua require'nvim_lsp'.clangd.setup{on_attach=require'completion'.on_attach}
-lua << EOF
-local att = function()
-    local on_attach_vim = function(client)
-        require'completion'.on_attach(client)
-        require'diagnostic'.on_attach(client)
-    end
-    if vim.fn.executable('clangd-10') == 1 then
-        require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
-    end
-    -- if vim.fn.executable('rls') == 1 then
-    --     require'nvim_lsp'.rls.setup{on_attach=on_attach_vim}
-    -- end
-    if vim.fn.executable('rust-analyzer') == 1 then
-        require'nvim_lsp'.rust_analyzer.setup{on_attach=on_attach_vim}
-    end
-    local luals = require'nvim_lsp'.sumneko_lua
-    luals.setup{}
-    if not luals.install_info().is_installed then
-        luals.install()
-    end
-    if vim.fn.executable('pyls') == 1 then
-        require'nvim_lsp'.pyls.setup{
-            on_attach=on_attach_vim,
-            settings={
-                pyls={
-                    plugins={
-                        pycodestyle={
-                            maxLineLength=100
-                        }
-                    }
-                }
-            }
-        }
-    end
-end
-_ = pcall(att)
-EOF
+" configure my lsp setup
+lua require'my_lsp_setup'.setup_lsp()
 
 " Configuration specifics for/after plugins
 if executable('rg')
