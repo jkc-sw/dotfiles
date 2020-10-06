@@ -101,7 +101,11 @@ local att = function()
     if vim.fn.executable('rust-analyzer') == 1 then
         require'nvim_lsp'.rust_analyzer.setup{on_attach=on_attach_vim}
     end
-    require'nvim_lsp'.sumneko_lua.setup{}
+    local luals = require'nvim_lsp'.sumneko_lua
+    luals.setup{}
+    if not luals.install_info().is_installed then
+        luals.install()
+    end
     if vim.fn.executable('pyls') == 1 then
         require'nvim_lsp'.pyls.setup{
             on_attach=on_attach_vim,
