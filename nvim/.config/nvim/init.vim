@@ -102,7 +102,18 @@ local att = function()
         require'nvim_lsp'.rust_analyzer.setup{on_attach=on_attach_vim}
     end
     if vim.fn.executable('pyls') == 1 then
-        require'nvim_lsp'.pyls.setup{on_attach=on_attach_vim}
+        require'nvim_lsp'.pyls.setup{
+            on_attach=on_attach_vim,
+            settings={
+                pyls={
+                    plugins={
+                        pycodestyle={
+                            maxLineLength=100
+                        }
+                    }
+                }
+            }
+        }
     end
 end
 _ = pcall(att)
