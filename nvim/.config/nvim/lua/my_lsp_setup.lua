@@ -18,7 +18,7 @@ local setup_lsp = function()
     require'nvim_lsp'.rust_analyzer.setup{on_attach=on_attach_vim}
   end
   local luals = require'nvim_lsp'.sumneko_lua
-  luals.setup{}
+  luals.setup{on_attach=on_attach_vim}
   if not luals.install_info().is_installed then
     luals.install()
   end
