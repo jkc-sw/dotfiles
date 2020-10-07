@@ -69,6 +69,11 @@ Plug 'tjdevries/lsp_extensions.nvim'
 " Plug 'nvim-lua/telescope.nvim'
 call plug#end()
 
+" if define headless update
+if $ANSIBLE_UPDATE
+    :finish
+endif
+
 " Color setting
 let g:gruvbox_contrast_dark = 'hard'
 if exists('+termguicolors')
