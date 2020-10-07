@@ -76,7 +76,7 @@ if exists('+termguicolors')
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 let g:gruvbox_invert_selections = '0'
-colorscheme gruvbox
+silent! colorscheme gruvbox
 
 " lsp setup
 let g:diagnostic_enable_virtual_text = 1
