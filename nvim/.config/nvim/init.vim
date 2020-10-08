@@ -39,9 +39,6 @@ let g:netrw_altv = 1
 let g:netrw_winsize = 25
 set nofoldenable
 
-" Some plugin setups run before plugin loaded
-let g:polyglot_disabled = ['powershell']
-
 " Plugin manager section
 "   Install this plugin manager from https://github.com/junegunn/vim-plug
 call plug#begin('~/.vim/plugged')
