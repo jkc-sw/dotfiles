@@ -17,5 +17,5 @@ use_12hr = true
 disabled = false
 
 [env_var]
-variable = 'SHELL'
+variable = 'STARSHIP_SHELL'
 
