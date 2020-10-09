@@ -15,3 +15,7 @@ ssh_only = false
 [time]
 use_12hr = true
 disabled = false
+
+[env_var]
+variable = 'SHELL'
+
