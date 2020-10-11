@@ -46,4 +46,9 @@ https://github.com/PowerShell/PowerShellEditorServices
     };
   };
 };
+
+return {
+  pses_bundle_path = pses_bundle_path,
+  config = configs.powershell_editor_service
+}
 -- vim:et ts=2 sw=2

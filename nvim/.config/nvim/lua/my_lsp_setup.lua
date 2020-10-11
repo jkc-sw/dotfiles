@@ -1,20 +1,19 @@
 
 require'powershell_editor_service'
 
-local setup_lsp = function()
-
-  -- Helper functino to attach completion and diagnosis
-  local on_attach_vim = function(client)
+local on_attach_vim = function(client)
     require'completion'.on_attach(client)
     require'diagnostic'.on_attach(client)
-  end
+end
+
+local setup_lsp = function()
 
   -- clangd
   -- require'nvim_lsp'.clangd.setup{on_attach=require'completion'.on_attach}
   if vim.fn.executable('clangd-10') == 1 then
     require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
   end
-  require'nvim_lsp'.powershell_editor_service.setup{on_attach=on_attach_vim}
+  -- require'nvim_lsp'.powershell_editor_service.setup{on_attach=on_attach_vim}
 
   -- rust
   -- if vim.fn.executable('rls') == 1 then
@@ -78,7 +77,8 @@ local setup_lsp = function()
 end
 
 return {
-  setup_lsp = setup_lsp
+  setup_lsp = setup_lsp,
+  on_attach_vim = on_attach_vim
 }
 
 -- vim:et ts=2 sw=2
