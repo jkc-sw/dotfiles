@@ -13,6 +13,8 @@ local setup_lsp = function()
   if vim.fn.executable('clangd-10') == 1 then
     require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
   end
+
+  -- pwsh
   -- require'nvim_lsp'.powershell_editor_service.setup{on_attach=on_attach_vim}
 
   -- rust
