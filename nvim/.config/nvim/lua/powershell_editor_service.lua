@@ -1,7 +1,7 @@
 local configs = require 'nvim_lsp/configs'
 
 -- Define the path to the lsp location
-local pses_bundle_path = vim.env.HOME..'/repos/PowerShellEditorServices'
+local pses_bundle_path = vim.env.HOME..'/repos/PowerShellEditorServices/module'
 -- Setup the lsp with custom command setup
 configs.powershell_editor_service = {
   default_config = {
@@ -10,7 +10,7 @@ configs.powershell_editor_service = {
       "-NoLogo",
       "-NonInteractive",
       "-NoProfile",
-      pses_bundle_path.."/module/PowerShellEditorServices/Start-EditorServices.ps1",
+      pses_bundle_path.."/PowerShellEditorServices/Start-EditorServices.ps1",
       "-BundledModulesPath",
       pses_bundle_path,
       "-LogPath",
