@@ -1,5 +1,6 @@
 
 require'my_custom_lsp'
+local defaults = require'defaults'
 
 local on_attach_vim = function(client)
     require'completion'.on_attach(client)
@@ -14,16 +15,11 @@ local setup_lsp = function()
     require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
   end
 
-  -- pwsh
-  -- require'nvim_lsp'.powershell_editor_service.setup{on_attach=on_attach_vim}
-
   -- rust
   -- if vim.fn.executable('rls') == 1 then
   --     require'nvim_lsp'.rls.setup{on_attach=on_attach_vim}
   -- end
-  if vim.fn.executable('rust-analyzer') == 1 then
-    require'nvim_lsp'.rust_analyzer.setup{on_attach=on_attach_vim}
-  end
+  require'nvim_lsp'.rust_analyzer.setup{on_attach=on_attach_vim}
 
   -- lua
   local luals = require'nvim_lsp'.sumneko_lua
@@ -68,20 +64,27 @@ local setup_lsp = function()
   end
 
   -- cmake
-  require'nvim_lsp'.cmake.setup{on_attach=on_attach_vim}
+  require'nvim_lsp'.cmake.setup{
+    cmd = {defaults.lsp_condaenv_bin..'cmake-language-server'},
+    on_attach = on_attach_vim
+  }
+
+  -- python
+  require'nvim_lsp'.pyls.setup{
+    on_attach=on_attach_vim,
+    settings={
+      pyls={plugins={pycodestyle={maxLineLength=100}}}
+    }
+  }
+
+  -- my custom section
 
   -- hdl
   require'nvim_lsp'.hdl_checker.setup{on_attach=on_attach_vim}
 
-  -- python
-  if vim.fn.executable('pyls') == 1 then
-    require'nvim_lsp'.pyls.setup{
-      on_attach=on_attach_vim,
-      settings={
-        pyls={plugins={pycodestyle={maxLineLength=100}}}
-      }
-    }
-  end
+  -- pwsh
+  -- require'nvim_lsp'.powershell_editor_service.setup{on_attach=on_attach_vim}
+
 end
 
 return {

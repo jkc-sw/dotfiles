@@ -51,7 +51,7 @@ https://github.com/PowerShell/PowerShellEditorServices
 configs.hdl_checker = {
   default_config = {
     cmd = {
-      "hdl_checker", "--lsp"
+      defaults.lsp_condaenv_bin.."hdl_checker", "--lsp"
     },
     filetypes = {"vhdl", "verilog", "systemverilog"},
     root_dir = function()
