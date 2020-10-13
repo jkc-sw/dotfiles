@@ -1,7 +1,7 @@
-local configs = require 'nvim_lsp/configs'
+local configs = require'nvim_lsp/configs'
+local defaults = require'defaults'
 
--- Define the path to the lsp location
-local pses_bundle_path = vim.env.HOME..'/repos/PowerShellEditorServices/module'
+-- pwsh
 -- Setup the lsp with custom command setup
 configs.powershell_editor_service = {
   default_config = {
@@ -10,9 +10,9 @@ configs.powershell_editor_service = {
       "-NoLogo",
       "-NonInteractive",
       "-NoProfile",
-      pses_bundle_path.."/PowerShellEditorServices/Start-EditorServices.ps1",
+      defaults.pses_bundle_path.."/PowerShellEditorServices/Start-EditorServices.ps1",
       "-BundledModulesPath",
-      pses_bundle_path,
+      defaults.pses_bundle_path,
       "-LogPath",
       vim.fn.getcwd().."/logs.log",
       "-SessionDetailsPath",
@@ -45,10 +45,24 @@ https://github.com/PowerShell/PowerShellEditorServices
       root_dir = "vim's starting directory";
     };
   };
-};
-
-return {
-  pses_bundle_path = pses_bundle_path,
-  config = configs.powershell_editor_service
 }
+
+-- hdl
+configs.hdl_checker = {
+  default_config = {
+    cmd = {
+      "hdl_checker", "--lsp"
+    },
+    filetypes = {"vhdl", "verilog", "systemverilog"},
+    root_dir = function()
+      return vim.fn.getcwd()
+    end,
+    docs = {
+      description = [[
+https://github.com/suoto/hdl_checker
+      ]]
+    }
+  }
+}
+
 -- vim:et ts=2 sw=2

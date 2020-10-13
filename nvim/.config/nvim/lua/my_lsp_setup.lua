@@ -1,5 +1,5 @@
 
-require'powershell_editor_service'
+require'my_custom_lsp'
 
 local on_attach_vim = function(client)
     require'completion'.on_attach(client)
@@ -66,6 +66,12 @@ local setup_lsp = function()
   if not tsserver.install_info().is_installed then
     tsserver.install()
   end
+
+  -- cmake
+  require'nvim_lsp'.cmake.setup{on_attach=on_attach_vim}
+
+  -- hdl
+  require'nvim_lsp'.hdl_checker.setup{on_attach=on_attach_vim}
 
   -- python
   if vim.fn.executable('pyls') == 1 then
