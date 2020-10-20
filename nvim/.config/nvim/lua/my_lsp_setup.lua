@@ -12,7 +12,10 @@ local setup_lsp = function()
   -- clangd
   -- require'nvim_lsp'.clangd.setup{on_attach=require'completion'.on_attach}
   if vim.fn.executable('clangd-10') == 1 then
-    require'nvim_lsp'.clangd.setup{on_attach=on_attach_vim}
+    require'nvim_lsp'.clangd.setup{
+      filetypes = { "c", "cpp", "cc", "objc", "objcpp" },
+      on_attach=on_attach_vim
+    }
   end
 
   -- rust
