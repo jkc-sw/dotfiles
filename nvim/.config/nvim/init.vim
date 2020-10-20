@@ -12,6 +12,7 @@ set shiftwidth=4
 set expandtab
 set smartindent
 set autoindent
+set mouse=nvic
 set number relativenumber
 set nowrap
 set smartcase
