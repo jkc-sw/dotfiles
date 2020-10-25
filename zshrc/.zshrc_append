@@ -85,7 +85,6 @@ if [[ -d "$HOME/.vim/plugged/fzf" ]]; then
     . "$HOME/.vim/plugged/fzf/shell/completion.zsh"
     . "$HOME/.vim/plugged/fzf/shell/key-bindings.zsh"
 fi
-set -o vi
 if [[ -x "$HOME/.vim/plugged/fzf/bin/fzf" ]]; then
     addThisPath "$HOME/.vim/plugged/fzf/bin"
     if [[ -d "$HOME/.vim/plugged/fzf/shell" ]]; then
