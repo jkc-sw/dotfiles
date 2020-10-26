@@ -140,7 +140,7 @@ else
 endif
 
 " If we can osc52 the clipboard
-if $SSH_CLIENT
+if ! empty($SSH_CLIENT)
     " See: https://www.reddit.com/r/vim/comments/ac9eyh/talk_i_gave_on_going_mouseless_with_vim_tmux/
     " See: https://gist.github.com/agriffis/70360287f9016fd8849b8150a4966469
     function! Osc52Yank()
@@ -158,6 +158,22 @@ if $SSH_CLIENT
         autocmd!
         autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
             \| call Osc52Yank()
+            \| endif
+    augroup END
+endif
+
+" If we are wsl
+if ! empty($WSLENV)
+    function! ClipExeYank()
+        let buffer=getreg('"')
+        if executable('clip.exe')
+            call system('clip.exe', buffer)
+        endif
+    endfunction
+    augroup sendToClipExe
+        autocmd!
+        autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
+            \| call ClipExeYank()
             \| endif
     augroup END
 endif
