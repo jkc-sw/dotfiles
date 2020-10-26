@@ -19,3 +19,10 @@ disabled = false
 [env_var]
 variable = 'STARSHIP_SHELL'
 
+[character]
+error_symbol = "[](bold red) "
+
+[status]
+format = '[$status]($style) '
+disabled = false
+
