@@ -12,6 +12,7 @@ function addThisPath() {
 }
 addThisPath "$HOME/.cargo/bin"
 export TERM=xterm-256color
+export EDITOR=nvim
 export BAT_THEME=gruvbox
 if command -v fd &>/dev/null; then
     export FZF_DEFAULT_COMMAND='fd --hidden --type file --color=always'
