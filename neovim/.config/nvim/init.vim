@@ -163,7 +163,7 @@ if ! empty($SSH_CLIENT)
 endif
 
 " If we are wsl
-if ! empty($WSLENV)
+if ! empty($WSL_INTEROP)
     function! ClipExeYank()
         let buffer=getreg('"')
         if executable('clip.exe')
