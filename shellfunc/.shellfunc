@@ -27,6 +27,8 @@ nv () {
         nvim $@
     fi
 }
+# try to use bat in man
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 # Alias to trim newline and send to clipboard
 function toclip() {
     content=''
