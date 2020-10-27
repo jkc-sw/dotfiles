@@ -124,6 +124,10 @@ if [[ -x "$HOME/.vim/plugged/fzf/bin/fzf" ]]; then
 fi
 eval "$(starship init zsh)"
 
+# for autocompletions add custom key map
+bindkey '^j' menu-select
+bindkey '^k' history-search
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
