@@ -88,14 +88,14 @@ local setup_lsp = function()
 
 end
 
-local start_pwshlsp = function()
+local start_mylsp = function()
   require'nvim_lsp'.powershell_editor_service.setup{on_attach=on_attach_vim}
 end
 
 return {
   setup_lsp = setup_lsp,
   on_attach_vim = on_attach_vim,
-  start_pwshlsp = start_pwshlsp
+  start_mylsp = start_mylsp
 }
 
 -- vim:et ts=2 sw=2
