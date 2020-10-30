@@ -84,7 +84,7 @@ endif
 let g:gruvbox_invert_selections = '0'
 silent! colorscheme gruvbox
 let g:lightline = {
-      \ 'colorscheme': 'wombat',
+      \ 'colorscheme': 'seoul256',
       \ }
 
 " lsp setup
