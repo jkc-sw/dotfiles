@@ -32,6 +32,7 @@ set background=dark
 set splitbelow splitright
 set termguicolors
 set completeopt=menuone,noinsert,noselect
+set signcolumn=yes
 highlight ColorColumn ctermbg=0 guibg=lightgrey
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
@@ -49,8 +50,9 @@ Plug 'mbbill/undotree'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
 Plug 'michaeljsmith/vim-indent-object'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
+Plug 'itchyny/lightline.vim'
 Plug 'pprovost/vim-ps1'
 Plug 'kergoth/vim-bitbake'
 Plug 'godlygeek/tabular'
@@ -62,10 +64,10 @@ Plug 'nvim-lua/completion-nvim'
 Plug 'nvim-lua/diagnostic-nvim'
 Plug 'tjdevries/nlua.nvim'
 Plug 'tjdevries/lsp_extensions.nvim'
-" Plug 'tpope/vim-fugitive'
-" Plug 'nvim-lua/popup.nvim'
-" Plug 'nvim-lua/plenary.nvim'
-" Plug 'nvim-lua/telescope.nvim'
+Plug 'tpope/vim-fugitive'
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/telescope.nvim'
 call plug#end()
 
 " if define headless update
@@ -81,6 +83,9 @@ if exists('+termguicolors')
 endif
 let g:gruvbox_invert_selections = '0'
 silent! colorscheme gruvbox
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ }
 
 " lsp setup
 let g:diagnostic_enable_virtual_text = 1
@@ -96,6 +101,9 @@ lua require'my_lsp_setup'.setup_lsp()
 if executable('rg')
     let g:rg_derive_root='true'
 endif
+
+" Whether if I want to use fzf or telescope
+let s:use_fzf = 0
 
 " Keyboard remap
 nnoremap ]c ]czz
@@ -113,9 +121,16 @@ nnoremap <leader>V :vsp ~/.config/nvim/init.vim<CR>
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 nnoremap <leader>w :w<CR>
-nnoremap <c-p> :Files<CR>
-" nnoremap <c-p> <cmd>lua require'telescope.builtin'.find_files{}<CR>
-nnoremap <leader>b :Buffers<CR>
+if s:use_fzf
+    nnoremap <c-p> :Files<CR>
+else
+    nnoremap <c-p> <cmd>lua require'telescope.builtin'.find_files{find_command = vim.split(vim.env.FZF_DEFAULT_COMMAND, ' ')}<CR>
+endif
+if s:use_fzf
+    nnoremap <leader>b :Buffers<CR>
+else
+    nnoremap <leader>b <cmd>lua require'telescope.builtin'.buffers{}<CR>
+endif
 nnoremap <leader><c-]> <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <leader>K     <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <leader>gD    <cmd>lua vim.lsp.buf.implementation()<CR>
@@ -131,13 +146,17 @@ nnoremap <leader>gp    <cmd>PrevDiagnosticCycle<CR>
 if executable('rg')
     command! -bang -nargs=* Rg
       \ call fzf#vim#grep(
-      \   'rg --hidden --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+      \   'rg -- '.shellescape(<q-args>), 1,
       \   fzf#vim#with_preview(), <bang>0)
-    nnoremap <Leader>ps :Rg<SPACE>
-    nnoremap Q :Rg <c-r><c-w>
-    " nnoremap Q <cmd>lua require('telescope.builtin').live_grep()<CR>
+    if s:use_fzf
+        nnoremap <Leader>ps :Rg<SPACE>
+        nnoremap Q :Rg <c-r><c-w>
+    else
+        nnoremap <Leader>ps <cmd>lua require('telescope.builtin').live_grep()<CR>
+        nnoremap Q <cmd>lua require('telescope.builtin').grep_string()<CR>
+    endif
 else
-    nnoremap Q :<c-u>vim /<c-r><c-w>/ %
+    nnoremap Q :<c-u>vim /<c-r><c-w>/ **
 endif
 
 " If we can osc52 the clipboard

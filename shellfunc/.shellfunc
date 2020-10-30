@@ -10,27 +10,37 @@ function addThisPath() {
     *) PATH="$1:$PATH";; # or PATH="$PATH:$1"
     esac
 }
+
+# add cargo path
 addThisPath "$HOME/.cargo/bin"
+
+# some configuration to shell
 export TERM=xterm-256color
 export EDITOR=nvim
-export BAT_THEME=gruvbox
+
+# configuration to rg and fd
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 if command -v fd &>/dev/null; then
-    export FZF_DEFAULT_COMMAND='fd --hidden --type file --color=always'
-    export FZF_DEFAULT_OPTS="--ansi"
+    export FZF_DEFAULT_COMMAND='fd --hidden --type file'
 elif command -v fdfind &>/dev/null; then
-    export FZF_DEFAULT_COMMAND='fdfind --hidden --type file --color=always'
-    export FZF_DEFAULT_OPTS="--ansi"
+    export FZF_DEFAULT_COMMAND='fdfind --hidden --type file'
     alias fd=fdfind
 fi
+export FZF_DEFAULT_OPTS="--color=dark"
+
+# shortcut to start nvim
 nv () {
     if command -v nvim &>/dev/null; then
         nvim $@
     fi
 }
+
 # try to use bat in man
+export BAT_THEME=gruvbox
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-# Alias to trim newline and send to clipboard
-function toclip() {
+
+# function to send stuff to clipboard intelligently
+toclip() {
     content=''
     # handle the different input
     # https://stackoverflow.com/questions/18761209/how-to-make-a-bash-function-which-can-read-from-standard-input?lq=1
@@ -62,6 +72,8 @@ function toclip() {
         echo -ne "\e]52;c;$content\x07"
     fi
 }
+
+# nvm stuff
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
