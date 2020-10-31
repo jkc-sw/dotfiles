@@ -4,6 +4,7 @@ filetype plugin on
 
 let mapleader = " "
 set hidden
+set nohlsearch
 set path+=**
 set clipboard+=unnamedplus
 set noerrorbells
