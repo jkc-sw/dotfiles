@@ -12,9 +12,9 @@ local construct_statusline = function()
   if not vim.tbl_isempty(vim.lsp.buf_get_clients(0)) then
     local ecnt = vim.lsp.util.buf_diagnostics_count([[Error]]) or 0
     local wcnt = vim.lsp.util.buf_diagnostics_count([[Warning]]) or 0
-    local err = (ecnt > 0) and string.format('E: %d', ecnt) or ''
+    local err = (ecnt > 0) and string.format(' %d', ecnt) or ''
     local spacer = (ecnt > 0) and ' ' or ''
-    local wan = (wcnt > 0) and string.format('W: %d', wcnt) or ''
+    local wan = (wcnt > 0) and string.format(' %d', wcnt) or ''
     local line = string.format('%s%s%s', err, spacer, wan)
     return line
   end
