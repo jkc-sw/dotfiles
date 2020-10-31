@@ -84,9 +84,6 @@ if exists('+termguicolors')
 endif
 let g:gruvbox_invert_selections = '0'
 silent! colorscheme gruvbox
-let g:lightline = {
-      \ 'colorscheme': 'seoul256',
-      \ }
 
 " lsp setup
 let g:diagnostic_enable_virtual_text = 1
@@ -97,6 +94,35 @@ augroup nowhitespaceattheend
 augroup END
 " configure my lsp setup
 lua require'my_lsp_setup'.setup_lsp()
+
+" Straight from the lsp help page
+function! LspStatus()
+    return luaeval("require'my_lsp_setup'.construct_statusline{}")
+endfunction
+
+" The lightline configuration
+let g:lightline = {
+    \ 'colorscheme': 'seoul256',
+    \ 'active': {
+    \   'left': [['mode', 'paste'], ['readonly', 'filename', 'modified']],
+    \   'right': [['lineinfo'], ['percent'], ['fileformat', 'fileencoding', 'filetype', 'lsp']]
+    \ },
+    \ 'inactive': {
+    \   'left': [['filename']],
+    \   'right': [['lineinfo'], ['percent']]
+    \ },
+    \ 'component': {
+    \   'mode': '%{lightline#mode()}',
+    \   'absolutepath': '%F', 'relativepath': '%f', 'filename': '%t', 'modified': '%M', 'bufnum': '%n',
+    \   'paste': '%{&paste?"PASTE":""}', 'readonly': '%R', 'charvalue': '%b', 'charvaluehex': '%B',
+    \   'spell': '%{&spell?&spelllang:""}', 'fileencoding': '%{&fenc!=#""?&fenc:&enc}', 'fileformat': '%{&ff}',
+    \   'filetype': '%{&ft!=#""?&ft:"no ft"}', 'percent': '%3p%%', 'percentwin': '%P',
+    \   'lineinfo': '%3l:%-2c', 'line': '%l', 'column': '%c', 'close': '%999X X ', 'winnr': '%{winnr()}'
+    \ },
+    \ 'component_function': {
+    \   'lsp': 'LspStatus'
+    \ },
+    \ }
 
 " Configuration specifics for/after plugins
 if executable('rg')
