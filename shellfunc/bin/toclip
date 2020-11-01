@@ -1,0 +1,36 @@
+#!/bin/bash
+
+content=''
+# handle the different input
+# https://stackoverflow.com/questions/18761209/how-to-make-a-bash-function-which-can-read-from-standard-input?lq=1
+if [[ -t 0 ]]; then
+    if [[ $# -gt 0 ]]; then
+        content="$(echo "$*")"
+    fi
+else
+    content="$(cat -)"
+fi
+if [[ -z $content ]]; then
+    echowarning 'no value to copy to clipboard' >&2
+    exit 1
+fi
+if [[ -z $SSH_CLIENT ]]; then
+    if command -v clip.exe &>/dev/null; then
+        echo -n "$content" | clip.exe
+        exit 0
+    fi
+    if command -v xclip &>/dev/null; then
+        echo -n "$content" | xclip -selection clipboard
+        exit 0
+    fi
+    echo "clip.exe is not found" >&1
+    echo "xclip is not installed either" >&1
+    exit 1
+else
+    content="$(echo -n $content | base64 -)"
+    content="\e]52;c;$content\x07"
+    if [[ -n $TMUX ]]; then
+        content="\ePtmux;\e$content\e\\"
+    fi
+    echo -ne "$content"
+fi
