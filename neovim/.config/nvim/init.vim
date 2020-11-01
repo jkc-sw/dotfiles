@@ -104,7 +104,7 @@ endfunction
 let g:lightline = {
     \ 'colorscheme': 'seoul256',
     \ 'active': {
-    \   'left': [['mode', 'paste'], ['readonly', 'filename', 'modified']],
+    \   'left': [['mode', 'paste'], ['gitbranch', 'readonly', 'filename', 'modified']],
     \   'right': [['lineinfo', 'lsp'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
     \ },
     \ 'inactive': {
@@ -120,7 +120,8 @@ let g:lightline = {
     \   'lineinfo': '%3l:%-2c', 'line': '%l', 'column': '%c', 'close': '%999X X ', 'winnr': '%{winnr()}'
     \ },
     \ 'component_function': {
-    \   'lsp': 'LspStatus'
+    \   'lsp': 'LspStatus',
+    \   'gitbranch': 'FugitiveStatusline'
     \ },
     \ }
 
