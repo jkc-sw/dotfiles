@@ -105,7 +105,7 @@ let g:lightline = {
     \ 'colorscheme': 'seoul256',
     \ 'active': {
     \   'left': [['mode', 'paste'], ['readonly', 'filename', 'modified']],
-    \   'right': [['lineinfo'], ['percent'], ['fileformat', 'fileencoding', 'filetype', 'lsp']]
+    \   'right': [['lineinfo', 'lsp'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
     \ },
     \ 'inactive': {
     \   'left': [['filename']],
