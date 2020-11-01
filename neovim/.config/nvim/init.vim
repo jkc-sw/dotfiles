@@ -189,18 +189,22 @@ endif
 
 " If we can osc52 the clipboard
 if ! empty($SSH_CLIENT)
+
     " See: https://www.reddit.com/r/vim/comments/ac9eyh/talk_i_gave_on_going_mouseless_with_vim_tmux/
     " See: https://gist.github.com/agriffis/70360287f9016fd8849b8150a4966469
     function! Osc52Yank()
-        let buffer=system('base64 -w0', getreg('"'))
-        let buffer=substitute(buffer, "\n$", "", "")
-        let buffer="\e]52;c;".buffer."\x07"
+        let content=system('base64 -w0', getreg('"'))
+        let content=substitute(content, "\n$", "", "")
+        let fmtted="\e]52;c;".content."\x07"
+        if ! empty($TMUX)
+            let fmtted="\ePtmux;\e".fmtted."\e\\"
+        endif
         if ! exists('s:tty_found')
             let s:tty_found=system(
                 \'tty &>/dev/null && tty || tty </proc/$PPID/fd/0 | grep /dev/'
                 \)
         endif
-        silent exe "!echo -ne ".shellescape(buffer)." > ".s:tty_found
+        silent exe "!echo -ne ".shellescape(fmtted)." > ".s:tty_found
     endfunction
     augroup sendToOsc52autocmd
         autocmd!
@@ -208,6 +212,7 @@ if ! empty($SSH_CLIENT)
             \| call Osc52Yank()
             \| endif
     augroup END
+
 endif
 
 " If we are wsl
