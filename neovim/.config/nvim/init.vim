@@ -50,6 +50,8 @@ Plug 'vim-utils/vim-man'
 Plug 'mbbill/undotree'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
+Plug 'sainnhe/gruvbox-material'
+Plug 'flazz/vim-colorschemes'
 Plug 'michaeljsmith/vim-indent-object'
 " Plug 'vim-airline/vim-airline'
 " Plug 'vim-airline/vim-airline-themes'
@@ -73,7 +75,7 @@ call plug#end()
 
 " if define headless update
 if $ANSIBLE_UPDATE
-    :finish
+    finish
 endif
 
 " Color setting
