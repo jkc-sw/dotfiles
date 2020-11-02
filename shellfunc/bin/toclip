@@ -23,8 +23,8 @@ if [[ -z $SSH_CLIENT ]]; then
         echo -n "$content" | xclip -selection clipboard
         exit 0
     fi
-    echo "clip.exe is not found" >&1
-    echo "xclip is not installed either" >&1
+    echo "clip.exe is not found" >&2
+    echo "xclip is not installed either" >&2
     exit 1
 else
     content="$(echo -n $content | base64 -)"
