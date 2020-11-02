@@ -203,48 +203,6 @@ if executable('toclip')
     augroup END
 endif
 
-" " If we can osc52 the clipboard
-" if ! empty($SSH_CLIENT)
-"     " See: https://www.reddit.com/r/vim/comments/ac9eyh/talk_i_gave_on_going_mouseless_with_vim_tmux/
-"     " See: https://gist.github.com/agriffis/70360287f9016fd8849b8150a4966469
-"     function! Osc52Yank()
-"         let content=system('base64 -w0', getreg('"'))
-"         let content=substitute(content, "\n$", "", "")
-"         let fmtted="\e]52;c;".content."\x07"
-"         if ! empty($TMUX)
-"             let fmtted="\ePtmux;\e".fmtted."\e\\"
-"         endif
-"         if ! exists('s:tty_found')
-"             let s:tty_found=system(
-"                 \'tty &>/dev/null && tty || tty </proc/$PPID/fd/0 | grep /dev/'
-"                 \)
-"         endif
-"         silent exe "!echo -ne ".shellescape(fmtted)." > ".s:tty_found
-"     endfunction
-"     augroup sendToOsc52autocmd
-"         autocmd!
-"         autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
-"             \| call Osc52Yank()
-"             \| endif
-"     augroup END
-" endif
-
-" " If we are wsl
-" if ! empty($WSL_INTEROP)
-"     function! ClipExeYank()
-"         let buffer=getreg('"')
-"         if executable('clip.exe')
-"             call system('clip.exe', buffer)
-"         endif
-"     endfunction
-"     augroup sendToClipExe
-"         autocmd!
-"         autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
-"             \| call ClipExeYank()
-"             \| endif
-"     augroup END
-" endif
-
 augroup inlayHint
     autocmd!
     autocmd BufEnter,BufWinEnter,TabEnter *.rs :lua require'lsp_extensions'.inlay_hints{}
