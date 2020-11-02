@@ -32,6 +32,7 @@ set noshowmode
 set background=dark
 set splitbelow splitright
 set termguicolors
+set guicursor=i-ci-ve:block-blinkwait175-blinkoff150-blinkon175
 set completeopt=menuone,noinsert,noselect
 set signcolumn=yes
 highlight ColorColumn ctermbg=0 guibg=lightgrey
