@@ -11,7 +11,7 @@ else
     content="$(cat -)"
 fi
 if [[ -z $content ]]; then
-    echowarning 'no value to copy to clipboard' >&2
+    echo 'no value to copy to clipboard' >&2
     exit 1
 fi
 if [[ -z $SSH_CLIENT ]]; then
