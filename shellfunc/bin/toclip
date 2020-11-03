@@ -27,7 +27,7 @@ if [[ -z $SSH_CLIENT ]]; then
     echo "xclip is not installed either" >&2
     exit 1
 else
-    content="$(echo -n $content | base64 -)"
+    content="$(echo -n $content | head -c 100000 | base64 -)"
     content="\e]52;c;$content\x07"
     if [[ -n $TMUX ]]; then
         content="\ePtmux;\e$content\e\\"
