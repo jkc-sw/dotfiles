@@ -183,7 +183,7 @@ if executable('rg')
         nnoremap <Leader>ps :Rg<SPACE>
         nnoremap Q :Rg <c-r><c-w>
     else
-        nnoremap <Leader>ps <cmd>lua require('telescope.builtin').live_grep()<CR>
+        nnoremap <Leader>ps <cmd>lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For >") })<CR>
         nnoremap Q <cmd>lua require('telescope.builtin').grep_string()<CR>
     endif
 else
