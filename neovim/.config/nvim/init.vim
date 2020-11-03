@@ -192,14 +192,10 @@ endif
 
 " Use toclip to send content to clipboard
 if executable('toclip')
-    function! ToClip()
-        let buffer=getreg('"')
-        call system('toclip', buffer)
-    endfunction
     augroup toClipBoard
         autocmd!
         autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
-            \| call ToClip()
+            \| call system('toclip', getreg('"'))
             \| endif
     augroup END
 endif
