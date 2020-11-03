@@ -146,11 +146,7 @@ nnoremap <leader>k :wincmd k<CR>
 nnoremap <leader>l :wincmd l<CR>
 nnoremap <leader>u :UndotreeShow<CR>
 nnoremap <leader>pv :vertical topleft wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
-nnoremap <silent> <Leader>+ :vertical resize +5<CR>
-nnoremap <silent> <Leader>- :vertical resize -5<CR>
 nnoremap <leader>V :vsp ~/.config/nvim/init.vim<CR>
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
 nnoremap <leader>w :w<CR>
 if s:use_fzf
     nnoremap <c-p> :Files<CR>
@@ -189,6 +185,12 @@ if executable('rg')
 else
     nnoremap Q :<c-u>vim /<c-r><c-w>/ **
 endif
+
+" " Unused items, but sad to delete them
+" vnoremap J :m '>+1<CR>gv=gv
+" vnoremap K :m '<-2<CR>gv=gv
+" nnoremap <silent> <Leader>+ :vertical resize +5<CR>
+" nnoremap <silent> <Leader>- :vertical resize -5<CR>
 
 " Use toclip to send content to clipboard
 if executable('toclip')
