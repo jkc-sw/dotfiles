@@ -27,7 +27,8 @@ if [[ -z $SSH_CLIENT ]]; then
     echo "xclip is not installed either" >&2
     exit 1
 else
-    content="$(echo -n $content | head -c 100000 | base64 -)"
+    # find out why that number in: https://sunaku.github.io/tmux-yank-osc52.html
+    content="$(echo -n $content | head -c 74994 | base64 -)"
     content="\e]52;c;$content\x07"
     if [[ -n $TMUX ]]; then
         content="\ePtmux;\e$content\e\\"
