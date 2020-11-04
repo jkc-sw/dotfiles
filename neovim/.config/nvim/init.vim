@@ -198,8 +198,8 @@ if executable('toclip')
         autocmd!
         autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
             \| let ret = system('toclip', getreg('"'))
-            \| echom ret
             \| endif
+            " \| echom ret
     augroup END
 endif
 
