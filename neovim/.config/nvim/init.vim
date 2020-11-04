@@ -197,7 +197,8 @@ if executable('toclip')
     augroup toClipBoard
         autocmd!
         autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
-            \| call system('toclip', getreg('"'))
+            \| let ret = system('toclip', getreg('"'))
+            \| echom ret
             \| endif
     augroup END
 endif

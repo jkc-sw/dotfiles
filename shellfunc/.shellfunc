@@ -38,6 +38,11 @@ nv () {
     fi
 }
 
+# shortcut to start nvim with host being a tmux
+nvt () {
+    TOCLIP_HOST_TMUX=2 nv $@
+}
+
 # add local bin to path for many scripts
 addThisPath "$HOME/bin"
 
