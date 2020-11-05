@@ -2,6 +2,7 @@
 require'my_custom_lsp'
 local defaults = require'defaults'
 local nvim_lsp = require'nvim_lsp'
+local vim = vim
 
 local on_attach_vim = function(client)
     require'completion'.on_attach(client)
@@ -85,12 +86,14 @@ local setup_lsp = function()
   }
 
   -- python
-  nvim_lsp.pyls.setup{
-    on_attach=on_attach_vim,
-    settings={
-      pyls={plugins={pycodestyle={maxLineLength=100}}}
+  if vim.fn.executable('pyls') then
+    nvim_lsp.pyls.setup{
+      on_attach=on_attach_vim,
+      settings={
+        pyls={plugins={pycodestyle={maxLineLength=100}}}
+      }
     }
-  }
+  end
 
   -- my custom section
 
