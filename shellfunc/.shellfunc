@@ -32,15 +32,22 @@ export FZF_DEFAULT_OPTS="--color=dark"
 TMUX_PLUGIN_MANAGER_PATH="$HOME/.tmux/plugins/"
 
 # shortcut to start nvim
-nv () {
+nv() {
     if command -v nvim &>/dev/null; then
         nvim $@
     fi
 }
 
 # shortcut to start nvim with host being a tmux
-nvt () {
+nvt() {
     TOCLIP_HOST_TMUX=2 nv $@
+}
+
+# add a command to start docker instance
+dr() {
+    args=(use u18)
+    args+=("$@")
+    ~/repos/dev-env-ansible/rr.sh "${args[@]}"
 }
 
 # add local bin to path for many scripts
