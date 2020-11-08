@@ -86,12 +86,16 @@ COMPLETION_WAITING_DOTS="true"
 # source $ZSH/oh-my-zsh.sh
 
 
+# add asdf
+. "$HOME/repos/asdf/asdf.sh"
+
 #===============================================================================
 # plugin manager section
 #===============================================================================
 source "$HOME/.local/share/antigen/antigen.zsh"
 antigen use oh-my-zsh
 antigen bundle git
+antigen bundle asdf
 antigen bundle colored-man-pages
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
@@ -124,10 +128,6 @@ if [[ -x "$HOME/.vim/plugged/fzf/bin/fzf" ]]; then
     alias his='eval "$(history | tac | sed -n "s/[ 0-9]\+\(.*\)/\1/p" | fzf)"'
 fi
 eval "$(starship init zsh)"
-
-# for autocompletions add custom key map
-bindkey '^j' menu-select
-bindkey '^k' history-search
 
 # export MANPATH="/usr/local/man:$MANPATH"
 

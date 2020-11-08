@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# add asdf
+. "$HOME/repos/asdf/asdf.sh"
+
 . "$HOME/.shellfunc"
 if [[ -d "$HOME/.vim/plugged/fzf" ]]; then
     addThisPath "$HOME/.vim/plugged/fzf/bin"
