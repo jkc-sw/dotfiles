@@ -18,6 +18,7 @@ disabled = false
 
 [env_var]
 variable = 'STARSHIP_SHELL'
+style = 'cyan'
 
 [character]
 error_symbol = "[](bold red) "
