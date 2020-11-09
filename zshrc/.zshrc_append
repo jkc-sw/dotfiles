@@ -85,26 +85,21 @@ COMPLETION_WAITING_DOTS="true"
 
 # source $ZSH/oh-my-zsh.sh
 
-
-# add asdf
-. "$HOME/repos/asdf/asdf.sh"
-
 #===============================================================================
 # plugin manager section
 #===============================================================================
 source "$HOME/.local/share/antigen/antigen.zsh"
 antigen use oh-my-zsh
-antigen bundle git
-antigen bundle asdf
-antigen bundle colored-man-pages
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions
 # antigen bundle marlonrichert/zsh-autocomplete
 antigen bundle agkozak/zsh-z
 # antigen theme robbyrussell
-antigen apply
+antigen bundle git
+antigen bundle colored-man-pages
 
+antigen apply
 
 #===============================================================================
 # User configuration
@@ -128,6 +123,10 @@ if [[ -x "$HOME/.vim/plugged/fzf/bin/fzf" ]]; then
     alias his='eval "$(history | tac | sed -n "s/[ 0-9]\+\(.*\)/\1/p" | fzf)"'
 fi
 eval "$(starship init zsh)"
+
+# source asdf
+. "$ASDF_DIR/asdf.sh"
+. "$ASDF_DIR/completions/asdf.bash"
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
