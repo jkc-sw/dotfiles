@@ -128,80 +128,96 @@ let g:lightline = {
     \ },
     \ }
 
-" Configuration specifics for/after plugins
-if executable('rg')
-    let g:rg_derive_root='true'
-endif
-
 " Whether if I want to use fzf or telescope
-let s:use_fzf = 0
+let g:rg_derive_root='true'
+let g:use_fzf = 0
+
+" function to search through files
+func! FileFuzzySearch()
+    if g:use_fzf
+        :Files
+    else
+        lua require'telescope.builtin'.find_files{find_command = vim.split(vim.env.FZF_DEFAULT_COMMAND, ' ')}
+    endif
+endfun
+
+" function to search through buffer
+func! BufferFuzzySearch()
+    if g:use_fzf
+        :Buffers
+    else
+        lua require'telescope.builtin'.buffers{}
+    endif
+endfun
+
+" rg function to use later
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
+" function to search string globally
+func! WordFuzzySearch()
+    if g:use_fzf
+        :Rg <c-r><c-w>
+    else
+        lua require('telescope.builtin').grep_string()
+    endif
+endfun
+
+" function to search string globally for a string
+func! GlobalFuzzySearch()
+    if g:use_fzf
+        :Rg<SPACE>
+    else
+        lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For >") })
+    endif
+endfun
 
 " Keyboard remap
+nnoremap <leader>h     <cmd> wincmd h<CR>
+nnoremap <leader>j     <cmd> wincmd j<CR>
+nnoremap <leader>k     <cmd> wincmd k<CR>
+nnoremap <leader>l     <cmd> wincmd l<CR>
+nnoremap <leader>u     <cmd> UndotreeShow<CR>
+nnoremap <leader>pv    <cmd> vertical topleft wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
+nnoremap <leader>V     <cmd> vsp ~/.config/nvim/init.vim<CR>
+nnoremap <leader>w     <cmd> w<CR>
+nnoremap <c-p>         <cmd> call FileFuzzySearch()<CR>
+nnoremap <leader>b     <cmd> call BufferFuzzySearch()<CR>
+nnoremap Q             <cmd> call WordFuzzySearch()<CR>
+nnoremap <leader>ps    <cmd> call GlobalFuzzySearch()<CR>
+nnoremap <leader><c-]> <cmd> lua vim.lsp.buf.definition()<CR>
+nnoremap <leader>K     <cmd> lua vim.lsp.buf.hover()<CR>
+nnoremap <leader>gD    <cmd> lua vim.lsp.buf.implementation()<CR>
+nnoremap <leader><c-k> <cmd> lua vim.lsp.buf.signature_help()<CR>
+nnoremap <leader>1gD   <cmd> lua vim.lsp.buf.type_definition()<CR>
+nnoremap <leader>gr    <cmd> lua vim.lsp.buf.references()<CR>
+nnoremap <leader>g0    <cmd> lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <leader>gW    <cmd> lua vim.lsp.buf.workspace_symbol()<CR>
+nnoremap <leader>gd    <cmd> lua vim.lsp.buf.declaration()<CR>
+nnoremap <leader>go    <cmd> OpenDiagnostic<CR>
+nnoremap <leader>gn    <cmd> NextDiagnosticCycle<CR>
+nnoremap <leader>gp    <cmd> PrevDiagnosticCycle<CR>
+
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
 nnoremap ]c ]czz
 nnoremap [c [czz
 inoremap <C-c> <ESC>
-nnoremap <leader>h :wincmd h<CR>
-nnoremap <leader>j :wincmd j<CR>
-nnoremap <leader>k :wincmd k<CR>
-nnoremap <leader>l :wincmd l<CR>
-nnoremap <leader>u :UndotreeShow<CR>
-nnoremap <leader>pv :vertical topleft wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
-nnoremap <leader>V :vsp ~/.config/nvim/init.vim<CR>
-nnoremap <leader>w :w<CR>
-if s:use_fzf
-    nnoremap <c-p> :Files<CR>
-else
-    nnoremap <c-p> <cmd>lua require'telescope.builtin'.find_files{find_command = vim.split(vim.env.FZF_DEFAULT_COMMAND, ' ')}<CR>
-endif
-if s:use_fzf
-    nnoremap <leader>b :Buffers<CR>
-else
-    nnoremap <leader>b <cmd>lua require'telescope.builtin'.buffers{}<CR>
-endif
-nnoremap <leader><c-]> <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <leader>K     <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <leader>gD    <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <leader><c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <leader>1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <leader>gr    <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <leader>g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <leader>gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-nnoremap <leader>gd    <cmd>lua vim.lsp.buf.declaration()<CR>
-nnoremap <leader>go    <cmd>OpenDiagnostic<CR>
-nnoremap <leader>gn    <cmd>NextDiagnosticCycle<CR>
-nnoremap <leader>gp    <cmd>PrevDiagnosticCycle<CR>
-if executable('rg')
-    command! -bang -nargs=* Rg
-      \ call fzf#vim#grep(
-      \   'rg -- '.shellescape(<q-args>), 1,
-      \   fzf#vim#with_preview(), <bang>0)
-    if s:use_fzf
-        nnoremap <Leader>ps :Rg<SPACE>
-        nnoremap Q :Rg <c-r><c-w>
-    else
-        nnoremap <Leader>ps <cmd>lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For >") })<CR>
-        nnoremap Q <cmd>lua require('telescope.builtin').grep_string()<CR>
-    endif
-else
-    nnoremap Q :<c-u>vim /<c-r><c-w>/ **
-endif
 
 " " Unused items, but sad to delete them
-" vnoremap J :m '>+1<CR>gv=gv
-" vnoremap K :m '<-2<CR>gv=gv
 " nnoremap <silent> <Leader>+ :vertical resize +5<CR>
 " nnoremap <silent> <Leader>- :vertical resize -5<CR>
 
 " Use toclip to send content to clipboard
-if executable('toclip')
-    augroup toClipBoard
-        autocmd!
-        autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
-            \| let ret = system('toclip', getreg('"'))
-            \| endif
-            " \| echom ret
-    augroup END
-endif
+augroup toClipBoard
+    autocmd!
+    autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
+        \| let ret = system('toclip', getreg('"'))
+        \| endif
+        " \| echom ret
+augroup END
 
 augroup inlayHint
     autocmd!
