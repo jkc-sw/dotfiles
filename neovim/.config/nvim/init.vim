@@ -160,7 +160,7 @@ command! -bang -nargs=* Rg
 " function to search string globally
 func! WordFuzzySearch()
     if g:use_fzf
-        :Rg <c-r><c-w>
+        exec ':Rg '.expand('<cword>')
     else
         lua require('telescope.builtin').grep_string()
     endif
@@ -169,7 +169,8 @@ endfun
 " function to search string globally for a string
 func! GlobalFuzzySearch()
     if g:use_fzf
-        :Rg<SPACE>
+        let word = input('Grep For >')
+        exec ':Rg '.word
     else
         lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For >") })
     endif
