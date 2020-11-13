@@ -60,10 +60,15 @@ else
     content="$(wrap_osc52 "$content")"
 
     # for remote, there are couple conditions to think about
-    # When local: plain ; remote: plain (ignore) ; osc52 to sshtty
-    # When local: plain ; remote: tmux (ignore)  ; osc52 to sshtty
-    # When local: tmux  ; remote: tmux (ignore)  ; osc52+tmuxwrap to sshtty
-    # When local: tmux  ; remote: plain (ignore) ; osc52+tmuxwrap to sshtty
+    # TODO make sure all following cases were covered
+    # When local: plain ; remote: plain (ignore) ; in nvim     ; osc52 to sshtty
+    # When local: plain ; remote: tmux (ignore)  ; in nvim     ; osc52 to sshtty
+    # When local: tmux  ; remote: tmux (ignore)  ; in nvim     ; osc52+tmuxwrap to sshtty
+    # When local: tmux  ; remote: plain (ignore) ; in nvim     ; osc52+tmuxwrap to sshtty
+    # When local: plain ; remote: plain (ignore) ; in terminal ; osc52 to sshtty
+    # When local: plain ; remote: tmux (ignore)  ; in terminal ; osc52 to sshtty
+    # When local: tmux  ; remote: tmux (ignore)  ; in terminal ; osc52+tmuxwrap to sshtty
+    # When local: tmux  ; remote: plain (ignore) ; in terminal ; osc52+tmuxwrap to sshtty
 
     # if we have detected to have remote tmux session
     if [[ -n $TOCLIP_HOST_TMUX ]]; then
