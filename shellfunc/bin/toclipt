@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# delegate the call to the to toclip with environmnt variables set
+TOCLIP_HOST_TMUX=2 toclip "$@"
