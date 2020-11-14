@@ -26,9 +26,10 @@ if [[ -t 0 ]]; then
         content="$(echo "$*")"
     fi
 else
-    content="$(cat /dev/stdin)" # will throw device not found error
-    # content="$(tee)"
+    # content="$(</dev/stdin)" # will throw device not found error
+    # content="$(cat /dev/stdin)" # will throw device not found error
     # content="$(echo -ne "\n$content\n")"
+    content="$(tee)"
 fi
 
 # handle the no input error
@@ -39,6 +40,7 @@ fi
 
 # handle either local or remote
 if [[ -z $SSH_TTY ]]; then
+
     # local connection
     if command -v clip.exe &>/dev/null; then
         echo -n "$content" | clip.exe
@@ -61,14 +63,15 @@ else
 
     # for remote, there are couple conditions to think about
     # TODO make sure all following cases were covered
-    # When local: plain ; remote: plain (ignore) ; in nvim     ; osc52 to sshtty
-    # When local: plain ; remote: tmux (ignore)  ; in nvim     ; osc52 to sshtty
-    # When local: tmux  ; remote: tmux (ignore)  ; in nvim     ; osc52+tmuxwrap to sshtty
-    # When local: tmux  ; remote: plain (ignore) ; in nvim     ; osc52+tmuxwrap to sshtty
-    # When local: plain ; remote: plain (ignore) ; in terminal ; osc52 to sshtty
-    # When local: plain ; remote: tmux (ignore)  ; in terminal ; osc52 to sshtty
-    # When local: tmux  ; remote: tmux (ignore)  ; in terminal ; osc52+tmuxwrap to sshtty
-    # When local: tmux  ; remote: plain (ignore) ; in terminal ; osc52+tmuxwrap to sshtty
+
+    # When local: plain ; remote: plain ; in nvim     ; Osc52 to sshtty
+    # When local: plain ; remote: tmux  ; in nvim     ; Osc52 to sshtty
+    # When local: tmux  ; remote: tmux  ; in nvim     ; Osc52+tmuxwrpa to sshtty
+    # When local: tmux  ; remote: plain ; in nvim     ; Osc52+tmuxwrap to sshtty
+    # When local: plain ; remote: plain ; in terminal ; Osc52 to sshtty
+    # When local: plain ; remote: tmux  ; in terminal ; Osc52 to sshtty
+    # When local: tmux  ; remote: tmux  ; in terminal ; Osc52+tmuxwrap to sshtty
+    # When local: tmux  ; remote: plain ; in terminal ; Osc52+tmuxwrap to sshtty
 
     # if we have detected to have remote tmux session
     if [[ -n $TOCLIP_HOST_TMUX ]]; then
@@ -77,4 +80,5 @@ else
 
     # when we have ssh tty available, just use it
     echo -ne "$content" > $SSH_TTY
+
 fi

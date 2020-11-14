@@ -65,7 +65,6 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
-Plug 'nvim-lua/diagnostic-nvim'
 Plug 'tjdevries/nlua.nvim'
 Plug 'tjdevries/lsp_extensions.nvim'
 Plug 'tpope/vim-fugitive'
@@ -90,7 +89,7 @@ colorscheme gruvbox
 " colorscheme ayu
 
 " lsp setup
-let g:diagnostic_enable_virtual_text = 1
+" let g:diagnostic_enable_virtual_text = 1
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 augroup nowhitespaceattheend
     autocmd!
@@ -198,10 +197,9 @@ nnoremap <leader>gr    <cmd> lua vim.lsp.buf.references()<CR>
 nnoremap <leader>g0    <cmd> lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <leader>gW    <cmd> lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <leader>gd    <cmd> lua vim.lsp.buf.declaration()<CR>
-nnoremap <leader>go    <cmd> OpenDiagnostic<CR>
-nnoremap <leader>gn    <cmd> NextDiagnosticCycle<CR>
-nnoremap <leader>gp    <cmd> PrevDiagnosticCycle<CR>
-
+nnoremap <leader>go    <cmd> lua vim.lsp.diagnostic.set_loclist() <CR>
+nnoremap <leader>gn    <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false }<CR>
+nnoremap <leader>gp    <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false }<CR>
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 nnoremap ]c ]czz
