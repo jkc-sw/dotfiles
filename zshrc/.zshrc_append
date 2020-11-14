@@ -132,7 +132,7 @@ eval "$(starship init zsh)"
 # https://babushk.in/posts/renew-environment-tmux.html
 if [ -n "$TMUX" ]; then
     function refresh {
-        export $(tmux show-environment | grep "^SSH_TTY")
+        export "$(tmux show-environment | grep '^SSH_TTY')"
     }
 else
     function refresh { }
