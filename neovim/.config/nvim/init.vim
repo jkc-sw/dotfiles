@@ -214,8 +214,10 @@ inoremap <C-c> <ESC>
 augroup toClipBoard
     autocmd!
     autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
-        \| let ret = system('toclip', getreg('"'))
+        \|     let ret = system('toclip', getreg('"'))
         \| endif
+        " \| if empty($TMUX)
+        " \| endif
         " \| echom ret
 augroup END
 
