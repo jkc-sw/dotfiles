@@ -1,7 +1,7 @@
 
 require'my_custom_lsp'
 local defaults = require'defaults'
-local nvim_lsp = require'nvim_lsp'
+local lspconfig = require'lspconfig'
 local vim = vim
 
 local on_attach_vim = function(client)
@@ -25,7 +25,7 @@ local setup_lsp = function()
 
   -- clangd
   -- nvim_lsp.clangd.setup{on_attach=require'completion'.on_attach}
-  nvim_lsp.clangd.setup{
+  lspconfig.clangd.setup{
     filetypes = { "c", "cpp", "cc", "objc", "objcpp" },
     on_attach=on_attach_vim,
   }
@@ -34,59 +34,59 @@ local setup_lsp = function()
   -- if vim.fn.executable('rls') == 1 then
   --     nvim_lsp.rls.setup{on_attach=on_attach_vim}
   -- end
-  nvim_lsp.rust_analyzer.setup{on_attach=on_attach_vim}
+  lspconfig.rust_analyzer.setup{on_attach=on_attach_vim}
 
   -- lua
-  local luals = nvim_lsp.sumneko_lua
+  local luals = lspconfig.sumneko_lua
   luals.setup{on_attach=on_attach_vim}
   if not luals.install_info().is_installed then
     luals.install()
   end
 
   -- json
-  local jsonls = nvim_lsp.jsonls
+  local jsonls = lspconfig.jsonls
   jsonls.setup{on_attach=on_attach_vim}
   if not jsonls.install_info().is_installed then
     jsonls.install()
   end
 
   -- bash
-  local bashls = nvim_lsp.bashls
+  local bashls = lspconfig.bashls
   bashls.setup{on_attach=on_attach_vim}
   if not bashls.install_info().is_installed then
     bashls.install()
   end
 
   -- docker
-  local dockerls = nvim_lsp.dockerls
+  local dockerls = lspconfig.dockerls
   dockerls.setup{on_attach=on_attach_vim}
   if not dockerls.install_info().is_installed then
     dockerls.install()
   end
 
   -- yaml
-  local yamlls = nvim_lsp.yamlls
+  local yamlls = lspconfig.yamlls
   yamlls.setup{on_attach=on_attach_vim}
   if not yamlls.install_info().is_installed then
     yamlls.install()
   end
 
   -- tsserver
-  local tsserver = nvim_lsp.tsserver
+  local tsserver = lspconfig.tsserver
   tsserver.setup{on_attach=on_attach_vim}
   if not tsserver.install_info().is_installed then
     tsserver.install()
   end
 
   -- cmake
-  nvim_lsp.cmake.setup{
+  lspconfig.cmake.setup{
     cmd = {defaults.lsp_condaenv_bin..'cmake-language-server'},
     on_attach = on_attach_vim
   }
 
   -- python
   if vim.fn.executable('pyls') then
-    nvim_lsp.pyls.setup{
+    lspconfig.pyls.setup{
       on_attach=on_attach_vim,
       settings={
         pyls={plugins={pycodestyle={maxLineLength=100}}}
@@ -97,7 +97,7 @@ local setup_lsp = function()
   -- my custom section
 
   -- hdl
-  nvim_lsp.hdl_checker.setup{on_attach=on_attach_vim}
+  lspconfig.hdl_checker.setup{on_attach=on_attach_vim}
 
   -- pwsh
   -- nvim_lsp.powershell_editor_service.setup{on_attach=on_attach_vim}
@@ -105,7 +105,7 @@ local setup_lsp = function()
 end
 
 local start_mylsp = function()
-  nvim_lsp.powershell_editor_service.setup{on_attach=on_attach_vim}
+  lspconfig.powershell_editor_service.setup{on_attach=on_attach_vim}
 end
 
 return {

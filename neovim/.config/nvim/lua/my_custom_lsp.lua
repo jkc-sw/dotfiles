@@ -1,9 +1,10 @@
-local configs = require'nvim_lsp/configs'
+local lspconfig = require'lspconfig/configs'
 local defaults = require'defaults'
+local vim = vim
 
 -- pwsh
 -- Setup the lsp with custom command setup
-configs.powershell_editor_service = {
+lspconfig.powershell_editor_service = {
   default_config = {
     cmd = {
       "pwsh",
@@ -48,7 +49,7 @@ https://github.com/PowerShell/PowerShellEditorServices
 }
 
 -- hdl
-configs.hdl_checker = {
+lspconfig.hdl_checker = {
   default_config = {
     cmd = {
       defaults.lsp_condaenv_bin.."hdl_checker", "--lsp"
@@ -64,5 +65,6 @@ https://github.com/suoto/hdl_checker
     }
   }
 }
+
 
 -- vim:et ts=2 sw=2
