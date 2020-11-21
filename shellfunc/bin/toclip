@@ -26,8 +26,9 @@ if [[ -t 0 ]]; then
         content="$(echo "$*")"
     fi
 else
-    content="$(</dev/stdin)" # will throw device not found error
+    # content="$(</dev/stdin)" # will throw device not found error
     # content="$(cat /dev/stdin)" # will throw device not found error
+    content="$(cat)"
     # content="$(echo -ne "\n$content\n")"
     # content="$(tee)" # missing newline at head and tail
 fi

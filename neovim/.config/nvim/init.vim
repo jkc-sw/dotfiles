@@ -216,9 +216,9 @@ augroup toClipBoard
     autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
         \|     let ret = system('toclip', getreg('"'))
         \| endif
+        " \| echom ret
         " \| if empty($TMUX)
         " \| endif
-        " \| echom ret
 augroup END
 
 augroup inlayHint
