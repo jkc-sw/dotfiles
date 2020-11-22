@@ -31,6 +31,11 @@ export FZF_DEFAULT_OPTS="--color=dark"
 # configuration for tpm
 TMUX_PLUGIN_MANAGER_PATH="$HOME/.tmux/plugins/"
 
+# # cpu managements
+# alias cinfo='sudo modprobe msr && sudo cpupower frequency-info'
+# alias cmonitor='sudo modprobe msr && sudo turbostat --show Core,CPU,Avg_MHz,Busy%,Bzy_MHz,TSC_MHz,CoreTmp,PkgTmp,PkgWatt,RAMWatt'
+# alias cperf='sudo modprobe msr && sudo cpupower frequency-set -g performance'
+
 # shortcut to start nvim
 nv() {
     if command -v nvim &>/dev/null; then
