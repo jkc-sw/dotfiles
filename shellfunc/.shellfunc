@@ -29,7 +29,7 @@ fi
 export FZF_DEFAULT_OPTS="--color=dark"
 
 # configuration for tpm
-TMUX_PLUGIN_MANAGER_PATH="$HOME/.tmux/plugins/"
+export TMUX_PLUGIN_MANAGER_PATH="$HOME/.tmux/plugins/"
 
 # # cpu managements
 # alias cinfo='sudo modprobe msr && sudo cpupower frequency-info'
