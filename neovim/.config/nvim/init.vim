@@ -42,7 +42,8 @@ let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 25
 set nofoldenable
-set scrolloff=100 " this is attempt to center the cursor in the middle
+set scrolloff=20 " Make sure that cursor won't be too high
+set cursorline
 
 " Plugin manager section
 "   Install this plugin manager from https://github.com/junegunn/vim-plug
