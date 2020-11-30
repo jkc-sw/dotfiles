@@ -118,7 +118,7 @@ let g:lightline = {
     \ },
     \ 'component': {
     \   'mode': '%{lightline#mode()}',
-    \   'absolutepath': '%F', 'relativepath': '%f', 'filename': '%t', 'modified': '%M', 'bufnum': '%n',
+    \   'absolutepath': '%F', 'relativepath': '%f', 'filename': '%f', 'modified': '%M', 'bufnum': '%n',
     \   'paste': '%{&paste?"PASTE":""}', 'readonly': '%R', 'charvalue': '%b', 'charvaluehex': '%B',
     \   'spell': '%{&spell?&spelllang:""}', 'fileencoding': '%{&fenc!=#""?&fenc:&enc}', 'fileformat': '%{&ff}',
     \   'filetype': '%{&ft!=#""?&ft:"no ft"}', 'percent': '%3p%%', 'percentwin': '%P',
