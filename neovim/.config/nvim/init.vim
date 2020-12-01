@@ -130,6 +130,9 @@ let g:lightline = {
     \ },
     \ }
 
+" Configure the sorter
+lua require('telescope').setup({defaults = {file_sorter = require('telescope.sorters').get_fzy_sorter}})
+
 " Whether if I want to use fzf or telescope
 let g:rg_derive_root='true'
 let g:use_fzf = 0
