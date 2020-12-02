@@ -42,7 +42,7 @@ let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 25
 set nofoldenable
-set scrolloff=10 " Make sure that cursor won't be too high
+set scrolloff=15 " Make sure that cursor won't be too high
 set cursorline
 
 " Plugin manager section
