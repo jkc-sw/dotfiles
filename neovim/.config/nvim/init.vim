@@ -56,8 +56,6 @@ Plug 'tpope/vim-surround'
 Plug 'sainnhe/gruvbox-material'
 Plug 'flazz/vim-colorschemes'
 Plug 'michaeljsmith/vim-indent-object'
-" Plug 'vim-airline/vim-airline'
-" Plug 'vim-airline/vim-airline-themes'
 Plug 'itchyny/lightline.vim'
 Plug 'pprovost/vim-ps1'
 Plug 'kergoth/vim-bitbake'
@@ -73,6 +71,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/telescope.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/playground'
 call plug#end()
 
 " if define headless update
@@ -91,7 +91,6 @@ colorscheme gruvbox
 " colorscheme ayu
 
 " lsp setup
-" let g:diagnostic_enable_virtual_text = 1
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 augroup nowhitespaceattheend
     autocmd!
@@ -99,6 +98,15 @@ augroup nowhitespaceattheend
 augroup END
 " configure my lsp setup
 lua require'my_lsp_setup'.setup_lsp()
+lua require'my_lsp_setup'.install_lsp{}
+
+" Treesitter setup
+lua << EOF
+require'nvim-treesitter.configs'.setup{
+    highlight = { enable = true },
+    indent = { enable = true }
+}
+EOF
 
 " Straight from the lsp help page
 function! LspStatus()

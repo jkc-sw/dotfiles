@@ -1,5 +1,6 @@
 
 require'my_custom_lsp'
+
 local defaults = require'defaults'
 local lspconfig = require'lspconfig'
 local vim = vim
@@ -21,6 +22,25 @@ local construct_statusline = function()
   return ''
 end
 
+local list_of_lsps_has_installer = {
+  lspconfig.sumneko_lua,
+  lspconfig.jsonls,
+  lspconfig.bashls,
+  lspconfig.dockerls,
+  lspconfig.yamlls,
+  lspconfig.tsserver,
+}
+
+local install_lsp = function()
+  for i = 1, #list_of_lsps_has_installer do
+    local lsp = list_of_lsps_has_installer[i]
+    if not lsp.install_info().is_installed then
+      print(string.format('working on %d', i))
+      lsp.install()
+    end
+  end
+end
+
 local setup_lsp = function()
 
   -- clangd
@@ -39,44 +59,26 @@ local setup_lsp = function()
   -- lua
   local luals = lspconfig.sumneko_lua
   luals.setup{on_attach=on_attach_vim}
-  if not luals.install_info().is_installed then
-    luals.install()
-  end
 
   -- json
   local jsonls = lspconfig.jsonls
   jsonls.setup{on_attach=on_attach_vim}
-  if not jsonls.install_info().is_installed then
-    jsonls.install()
-  end
 
   -- bash
   local bashls = lspconfig.bashls
   bashls.setup{on_attach=on_attach_vim}
-  if not bashls.install_info().is_installed then
-    bashls.install()
-  end
 
   -- docker
   local dockerls = lspconfig.dockerls
   dockerls.setup{on_attach=on_attach_vim}
-  if not dockerls.install_info().is_installed then
-    dockerls.install()
-  end
 
   -- yaml
   local yamlls = lspconfig.yamlls
   yamlls.setup{on_attach=on_attach_vim}
-  if not yamlls.install_info().is_installed then
-    yamlls.install()
-  end
 
   -- tsserver
   local tsserver = lspconfig.tsserver
   tsserver.setup{on_attach=on_attach_vim}
-  if not tsserver.install_info().is_installed then
-    tsserver.install()
-  end
 
   -- cmake
   lspconfig.cmake.setup{
@@ -104,14 +106,15 @@ local setup_lsp = function()
 
 end
 
-local start_mylsp = function()
+local start_other_lsp = function()
   lspconfig.powershell_editor_service.setup{on_attach=on_attach_vim}
 end
 
 return {
+  install_lsp = install_lsp,
   setup_lsp = setup_lsp,
   on_attach_vim = on_attach_vim,
-  start_mylsp = start_mylsp,
+  start_other_lsp = start_other_lsp,
   construct_statusline = construct_statusline
 }
 
