@@ -77,6 +77,10 @@ call plug#end()
 
 " if define headless update
 if $ANSIBLE_UPDATE
+    :PlugInstall
+    :PlugUpdate
+    :PlugClean!
+    :TSInstall maintained
     finish
 endif
 
