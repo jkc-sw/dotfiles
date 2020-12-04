@@ -80,7 +80,7 @@ if $ANSIBLE_UPDATE
     :PlugInstall
     :PlugUpdate
     :PlugClean!
-    :TSInstall maintained
+    :TSInstall all
     finish
 endif
 
