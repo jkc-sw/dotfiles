@@ -80,7 +80,6 @@ if $ANSIBLE_UPDATE
     :PlugInstall
     :PlugUpdate
     :PlugClean!
-    :TSInstall all
     finish
 endif
 
@@ -93,6 +92,12 @@ let g:gruvbox_contrast_dark = 'hard'
 let g:gruvbox_invert_selections = '0'
 colorscheme gruvbox
 " colorscheme ayu
+
+" Treesitter install
+augroup treesitterInstall
+    autocmd!
+    autocmd VimEnter * TSInstall maintained
+augroup END
 
 " lsp setup
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
