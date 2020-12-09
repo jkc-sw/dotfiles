@@ -221,8 +221,10 @@ nnoremap <leader>g0    <cmd> lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <leader>gW    <cmd> lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <leader>gd    <cmd> lua vim.lsp.buf.declaration()<CR>
 nnoremap <leader>go    <cmd> lua vim.lsp.diagnostic.set_loclist() <CR>
-nnoremap <leader>gn    <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false }<CR>
-nnoremap <leader>gp    <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false }<CR>
+nnoremap <leader>gn    <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, severity = 'Error' }<CR>
+nnoremap <leader>gp    <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity = 'Error' }<CR>
+nnoremap <leader>gN    <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, severity_limit = 'Warning' }<CR>
+nnoremap <leader>gP    <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity_limit = 'Warning' }<CR>
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 nnoremap ]c ]czz
