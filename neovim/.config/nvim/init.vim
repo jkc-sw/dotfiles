@@ -188,6 +188,15 @@ func! WordFuzzySearch()
     endif
 endfun
 
+" function to find references
+func! ListSymbols()
+    if g:use_fzf
+        echom "List symbols from fzf is not supported"
+    else
+        lua require('telescope.builtin').lsp_document_symbols()
+    endif
+endfun
+
 " function to search string globally for a string
 func! GlobalFuzzySearch()
     if g:use_fzf
@@ -209,6 +218,7 @@ nnoremap <leader>V     <cmd> vsp ~/.config/nvim/init.vim<CR>
 nnoremap <leader>w     <cmd> w<CR>
 nnoremap <c-p>         <cmd> call FileFuzzySearch()<CR>
 nnoremap <leader>b     <cmd> call BufferFuzzySearch()<CR>
+nnoremap <leader>o     <cmd> call ListSymbols()<CR>
 nnoremap Q             <cmd> call WordFuzzySearch()<CR>
 nnoremap <leader>ps    <cmd> call GlobalFuzzySearch()<CR>
 nnoremap <leader><c-]> <cmd> lua vim.lsp.buf.definition()<CR>
