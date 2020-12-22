@@ -113,7 +113,6 @@ lua require'my_lsp_setup'.install_lsp{}
 " Treesitter setup
 lua << EOF
 require'nvim-treesitter.configs'.setup{
-    ensure_installed = "maintained",
     highlight = { enable = true },
     indent = { enable = true }
 }
