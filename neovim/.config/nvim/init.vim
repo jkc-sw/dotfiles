@@ -23,6 +23,7 @@ set nobackup
 set undodir=~/.vim/undodir
 set undofile
 set incsearch
+set inccommand=split
 set wildmenu
 set cmdheight=1
 set updatetime=50
@@ -276,4 +277,9 @@ endfun
 augroup nowhitespaceattheend
     autocmd!
     autocmd BufWritePre * :call TrimWhitespace()
+augroup END
+
+augroup LuaHighlight
+    autocmd!
+    autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup END
