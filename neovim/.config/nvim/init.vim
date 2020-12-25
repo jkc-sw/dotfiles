@@ -79,9 +79,11 @@ call plug#end()
 
 " if define headless update
 if $ANSIBLE_UPDATE
-    :PlugInstall
-    :PlugUpdate
-    :PlugClean!
+    execute 'PlugInstall'
+    execute 'PlugUpdate'
+    execute 'PlugClean!'
+    lua require'my_lsp_setup'.install_lsp{}
+    execute 'TSInstall maintained'
     finish
 endif
 
@@ -95,11 +97,11 @@ let g:gruvbox_invert_selections = '0'
 colorscheme gruvbox
 " colorscheme ayu
 
-" Treesitter install
-augroup treesitterInstall
-    autocmd!
-    autocmd VimEnter * TSInstall maintained
-augroup END
+" " Treesitter install
+" augroup treesitterInstall
+"     autocmd!
+"     autocmd VimEnter * TSInstall maintained
+" augroup END
 
 " lsp setup
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
@@ -109,7 +111,7 @@ augroup nowhitespaceattheend
 augroup END
 " configure my lsp setup
 lua require'my_lsp_setup'.setup_lsp()
-lua require'my_lsp_setup'.install_lsp{}
+" lua require'my_lsp_setup'.install_lsp{}
 
 " Treesitter setup
 lua << EOF
