@@ -36,7 +36,7 @@ export FZF_DEFAULT_OPTS="--color=dark"
 # shortcut to start nvim
 nv() {
     if command -v nvim &>/dev/null; then
-        nvim $@
+        nvim -c "lua require'my_lsp_setup'.start_other_lsp{}" "$@"
     fi
 }
 
