@@ -95,12 +95,6 @@ let g:gruvbox_invert_selections = '0'
 colorscheme gruvbox
 " colorscheme ayu
 
-" Treesitter install
-augroup treesitterInstall
-    autocmd!
-    autocmd VimEnter * TSInstall maintained
-augroup END
-
 " lsp setup
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 augroup nowhitespaceattheend
@@ -114,6 +108,7 @@ lua require'my_lsp_setup'.install_lsp{}
 " Treesitter setup
 lua << EOF
 require'nvim-treesitter.configs'.setup{
+    ensure_installed = "maintained",
     highlight = { enable = true },
     indent = { enable = true }
 }
