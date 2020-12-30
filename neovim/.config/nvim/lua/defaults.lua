@@ -1,7 +1,7 @@
 
 -- some constant
 return {
-  lsp_condaenv_bin = vim.loop.os_homedir()..'/repos/dev-env-ansible/env/bin/',
+  lsp_condaenv_bin = vim.loop.os_homedir()..'/miniconda3/envs/dev_env_ansible/bin/',
   pses_bundle_path = vim.env.HOME..'/repos/PowerShellEditorServices/module'
 }
 

@@ -35,6 +35,10 @@ export FZF_DEFAULT_OPTS="--color=dark"
 
 # shortcut to start nvim
 nv() {
+    if [[ -d "$HOME/miniconda3/envs/dev_env_ansible" ]]; then
+        conda activate "$HOME/miniconda3/envs/dev_env_ansible"
+    fi
+
     if command -v nvim &>/dev/null; then
         nvim -c "lua require'my_lsp_setup'.start_other_lsp{}" "$@"
     fi
