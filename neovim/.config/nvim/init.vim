@@ -6,7 +6,7 @@ let mapleader = " "
 set hidden
 set nohlsearch
 set path+=**
-set clipboard+=unnamedplus
+set clipboard+=unnamed
 set noerrorbells
 set tabstop=4 softtabstop=4
 set shiftwidth=4
@@ -240,6 +240,7 @@ nnoremap <leader>gN    <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, se
 nnoremap <leader>gP    <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity_limit = 'Warning' }<CR>
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
+vnoremap <leader>p "_dP
 nnoremap ]c ]czz
 nnoremap [c [czz
 inoremap <C-c> <ESC>
