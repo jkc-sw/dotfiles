@@ -246,6 +246,8 @@ nnoremap [c [czz
 inoremap <C-c> <ESC>
 nnoremap ; :
 nnoremap : ;
+vnoremap ; :
+vnoremap : ;
 
 " " Unused items, but sad to delete them
 " nnoremap <silent> <Leader>+ :vertical resize +5<CR>
