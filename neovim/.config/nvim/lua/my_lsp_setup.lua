@@ -22,25 +22,6 @@ local construct_statusline = function()
   return ''
 end
 
-local list_of_lsps_has_installer = {
-  lspconfig.sumneko_lua,
-  lspconfig.jsonls,
-  lspconfig.bashls,
-  lspconfig.dockerls,
-  lspconfig.yamlls,
-  lspconfig.tsserver,
-}
-
-local install_lsp = function()
-  for i = 1, #list_of_lsps_has_installer do
-    local lsp = list_of_lsps_has_installer[i]
-    if not lsp.install_info().is_installed then
-      print(string.format('working on %d', i))
-      lsp.install()
-    end
-  end
-end
-
 local setup_lsp = function()
 
   -- clangd
@@ -58,7 +39,28 @@ local setup_lsp = function()
 
   -- lua
   local luals = lspconfig.sumneko_lua
-  luals.setup{on_attach=on_attach_vim}
+  luals.setup{
+		cmd = {defaults.luals_repos .. 'bin/Linux/lua-language-server', "-E", defaults.luals_repos .. "main.lua"};
+		settings = {
+			Lua = {
+				runtime = {
+					version = 'LuaJIT', -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+					path = vim.split(package.path, ';'), -- Setup your lua path
+				},
+				diagnostics = {
+					globals = {'vim'}, -- Get the language server to recognize the `vim` global
+				},
+				workspace = {
+					-- Make the server aware of Neovim runtime files
+					library = {
+						[vim.fn.expand('$VIMRUNTIME/lua')] = true,
+						[vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+					},
+				},
+			},
+		},
+		on_attach=on_attach_vim
+	}
 
   -- json
   local jsonls = lspconfig.jsonls
@@ -87,7 +89,7 @@ local setup_lsp = function()
   }
 
   -- python
-  if vim.fn.executable('pyls') then
+  if vim.fn.executable('pyls') == 1 then
     lspconfig.pyls.setup{
       on_attach=on_attach_vim,
       settings={
@@ -111,7 +113,6 @@ local start_other_lsp = function()
 end
 
 return {
-  install_lsp = install_lsp,
   setup_lsp = setup_lsp,
   on_attach_vim = on_attach_vim,
   start_other_lsp = start_other_lsp,

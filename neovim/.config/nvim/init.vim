@@ -38,9 +38,7 @@ set completeopt=menuone,noinsert,noselect
 set signcolumn=yes
 highlight ColorColumn ctermbg=0 guibg=lightgrey
 let g:netrw_banner = 0
-let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
-let g:netrw_altv = 1
 let g:netrw_winsize = 25
 set nofoldenable
 set scrolloff=15 " Make sure that cursor won't be too high
@@ -104,7 +102,6 @@ augroup nowhitespaceattheend
 augroup END
 " configure my lsp setup
 lua require'my_lsp_setup'.setup_lsp()
-lua require'my_lsp_setup'.install_lsp{}
 
 " Treesitter setup
 lua << EOF
