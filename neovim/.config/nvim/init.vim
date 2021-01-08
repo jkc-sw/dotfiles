@@ -44,6 +44,7 @@ let g:netrw_localrmdir='rm -r'
 set nofoldenable
 set scrolloff=15 " Make sure that cursor won't be too high
 set cursorline
+let g:vimsyn_embed = 'l'
 
 " Plugin manager section
 "   Install this plugin manager from https://github.com/junegunn/vim-plug
@@ -183,7 +184,7 @@ command! -bang -nargs=* Rg
 " function to search string globally
 func! WordFuzzySearch()
     if g:use_fzf
-        exec ':Rg '.expand('<cword>')
+        exec 'Rg '.expand('<cword>')
     else
         lua require('telescope.builtin').grep_string()
     endif
@@ -202,9 +203,18 @@ endfun
 func! GlobalFuzzySearch()
     if g:use_fzf
         let word = input('Grep For >')
-        exec ':Rg '.word
+        exec 'Rg '.word
     else
         lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For >") })
+    endif
+endfun
+
+" function to toggle the paste mode for c-v paste to work
+func! TogglePasteMode()
+    if &paste == 1
+		let &paste = 0
+    else
+		let &paste = 1
     endif
 endfun
 
@@ -215,6 +225,7 @@ nnoremap <leader>k     <cmd> wincmd k<CR>
 nnoremap <leader>l     <cmd> wincmd l<CR>
 nnoremap <leader>u     <cmd> UndotreeShow<CR>
 nnoremap <leader>pv    <cmd> vertical topleft wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
+nnoremap <leader>pp    <cmd> call TogglePasteMode()<CR>
 nnoremap <leader>V     <cmd> vsp ~/.config/nvim/init.vim<CR>
 nnoremap <leader>w     <cmd> w<CR>
 nnoremap <c-p>         <cmd> call FileFuzzySearch()<CR>
