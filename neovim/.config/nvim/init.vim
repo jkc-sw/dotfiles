@@ -1,7 +1,48 @@
+" Plugin manager section
+"   Install this plugin manager from https://github.com/junegunn/vim-plug
+call plug#begin('~/.vim/plugged')
+Plug 'gruvbox-community/gruvbox'
+Plug 'vim-utils/vim-man'
+Plug 'mbbill/undotree'
+Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'sainnhe/gruvbox-material'
+Plug 'flazz/vim-colorschemes'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'itchyny/lightline.vim'
+Plug 'pprovost/vim-ps1'
+Plug 'kergoth/vim-bitbake'
+Plug 'godlygeek/tabular'
+Plug 'sheerun/vim-polyglot'
+Plug 'andymass/vim-matlab'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'skywind3000/asyncrun.vim'
+Plug 'junegunn/fzf.vim'
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
+Plug 'tjdevries/nlua.nvim'
+Plug 'nvim-lua/lsp_extensions.nvim'
+Plug 'tpope/vim-fugitive'
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/telescope.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/playground'
+Plug 'romgrk/nvim-treesitter-context'
+call plug#end()
+
+" if define headless update
+if $ANSIBLE_UPDATE
+    :PlugInstall
+    :PlugUpdate
+    :PlugClean!
+    finish
+endif
+
 " Native settings
 syntax on
 filetype plugin on
-
 let mapleader = " "
 set hidden
 set nohlsearch
@@ -40,52 +81,10 @@ highlight ColorColumn ctermbg=0 guibg=lightgrey
 let g:netrw_banner = 0
 let g:netrw_browse_split = 4
 let g:netrw_winsize = 25
-let g:netrw_localrmdir='rm -r'
 set nofoldenable
 set scrolloff=15 " Make sure that cursor won't be too high
 set cursorline
 let g:vimsyn_embed = 'l'
-
-" Plugin manager section
-"   Install this plugin manager from https://github.com/junegunn/vim-plug
-call plug#begin('~/.vim/plugged')
-Plug 'gruvbox-community/gruvbox'
-Plug 'vim-utils/vim-man'
-Plug 'mbbill/undotree'
-Plug 'tomtom/tcomment_vim'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'sainnhe/gruvbox-material'
-Plug 'flazz/vim-colorschemes'
-Plug 'michaeljsmith/vim-indent-object'
-Plug 'itchyny/lightline.vim'
-Plug 'pprovost/vim-ps1'
-Plug 'kergoth/vim-bitbake'
-Plug 'godlygeek/tabular'
-Plug 'sheerun/vim-polyglot'
-Plug 'andymass/vim-matlab'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
-Plug 'tjdevries/nlua.nvim'
-Plug 'nvim-lua/lsp_extensions.nvim'
-Plug 'tpope/vim-fugitive'
-Plug 'nvim-lua/popup.nvim'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-lua/telescope.nvim'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'nvim-treesitter/playground'
-Plug 'romgrk/nvim-treesitter-context'
-call plug#end()
-
-" if define headless update
-if $ANSIBLE_UPDATE
-    :PlugInstall
-    :PlugUpdate
-    :PlugClean!
-    finish
-endif
 
 " Color setting
 if exists('+termguicolors')
@@ -96,6 +95,9 @@ let g:gruvbox_contrast_dark = 'hard'
 let g:gruvbox_invert_selections = '0'
 colorscheme gruvbox
 " colorscheme ayu
+
+" Setup for the asyncrun
+let g:asyncrun_mode = 'term'
 
 " lsp setup
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
@@ -248,8 +250,6 @@ nnoremap <leader>gn    <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, se
 nnoremap <leader>gp    <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity = 'Error' }<CR>
 nnoremap <leader>gN    <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, severity_limit = 'Warning' }<CR>
 nnoremap <leader>gP    <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity_limit = 'Warning' }<CR>
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
 vnoremap <leader>p "_dP
 nnoremap ]c ]czz
 nnoremap [c [czz
@@ -260,6 +260,8 @@ vnoremap ; :
 vnoremap : ;
 
 " " Unused items, but sad to delete them
+" vnoremap J :m '>+1<CR>gv=gv
+" vnoremap K :m '<-2<CR>gv=gv
 " nnoremap <silent> <Leader>+ :vertical resize +5<CR>
 " nnoremap <silent> <Leader>- :vertical resize -5<CR>
 
