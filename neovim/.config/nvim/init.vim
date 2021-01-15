@@ -97,7 +97,18 @@ colorscheme gruvbox
 " colorscheme ayu
 
 " Setup for the asyncrun
-let g:asyncrun_mode = 'term'
+let g:ar_opts = {
+    \ 'mode': 'term',
+    \ 'raw': 1,
+    \ 'pos': 'right',
+    \ 'cols': 80,
+    \ 'reuse': 1,
+    \ 'focus': 0,
+    \ }
+command! -bang -nargs=+ -range=0 -complete=file Ar
+    \ call asyncrun#run(
+    \    '<bang>', g:ar_opts, <q-args>, <count>, <line1>, <line2>
+    \)
 
 " lsp setup
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
