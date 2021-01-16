@@ -14,7 +14,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'pprovost/vim-ps1'
 Plug 'kergoth/vim-bitbake'
 Plug 'godlygeek/tabular'
-Plug 'sheerun/vim-polyglot'
+" Plug 'sheerun/vim-polyglot'
 Plug 'andymass/vim-matlab'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -290,7 +290,7 @@ augroup END
 
 augroup matlabFileDetection
     autocmd!
-    autocmd BufNewFile,BufRead *.m set filetype=matlab
+    autocmd BufRead,BufNewFile *.m set filetype=matlab
 augroup END
 
 augroup LuaHighlight
