@@ -225,7 +225,7 @@ nnoremap <leader>l     <cmd> wincmd l<CR>
 nnoremap <leader>u     <cmd> UndotreeShow<CR>
 nnoremap <leader>pv    <cmd> vertical topleft wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
 nnoremap <leader>pp    <cmd> call TogglePasteMode()<CR>
-nnoremap <leader>V     <cmd> vsp ~/.config/nvim/init.vim<CR>
+nnoremap <leader>V     <cmd> vsp ~/.config/nvim/init.vim <bar> lcd ~/.config/nvim<CR>
 nnoremap <leader>w     <cmd> w<CR>
 nnoremap <c-p>         <cmd> call FileFuzzySearch()<CR>
 nnoremap <leader>b     <cmd> call BufferFuzzySearch()<CR>
