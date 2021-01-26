@@ -214,9 +214,10 @@ endfun
 " function to toggle the paste mode for c-v paste to work
 func! TogglePasteMode()
     if &paste == 1
-		let &paste = 0
+        set nopaste
+        set expandtab
     else
-		let &paste = 1
+        set paste
     endif
 endfun
 
