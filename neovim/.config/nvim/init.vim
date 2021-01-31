@@ -19,6 +19,7 @@ Plug 'andymass/vim-matlab'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'neovim/nvim-lspconfig'
+Plug 'glepnir/lspsaga.nvim'
 Plug 'nvim-lua/completion-nvim'
 Plug 'tjdevries/nlua.nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
@@ -155,6 +156,9 @@ require('telescope').setup({
 })
 EOF
 
+" Configure the lspsaga
+lua require('lspsaga').init_lsp_saga()
+
 " Whether if I want to use fzf or telescope
 let g:rg_derive_root='true'
 let g:use_fzf = 0
@@ -231,25 +235,45 @@ nnoremap <leader>pv    <cmd> vertical topleft wincmd v<bar> :Ex <bar> :vertical 
 nnoremap <leader>pp    <cmd> call TogglePasteMode()<CR>
 nnoremap <leader>V     <cmd> vsp ~/.config/nvim/init.vim <bar> lcd ~/.config/nvim<CR>
 nnoremap <leader>w     <cmd> w<CR>
+
+" Telescope navigation
 nnoremap <c-p>         <cmd> call FileFuzzySearch()<CR>
 nnoremap <leader>b     <cmd> call BufferFuzzySearch()<CR>
 nnoremap <leader>o     <cmd> call ListSymbols()<CR>
 nnoremap Q             <cmd> call WordFuzzySearch()<CR>
 nnoremap <leader>ps    <cmd> call GlobalFuzzySearch()<CR>
-nnoremap <leader><c-]> <cmd> lua vim.lsp.buf.definition()<CR>
-nnoremap <leader>K     <cmd> lua vim.lsp.buf.hover()<CR>
-nnoremap <leader>gD    <cmd> lua vim.lsp.buf.implementation()<CR>
-nnoremap <leader><c-k> <cmd> lua vim.lsp.buf.signature_help()<CR>
-nnoremap <leader>1gD   <cmd> lua vim.lsp.buf.type_definition()<CR>
-nnoremap <leader>gr    <cmd> lua vim.lsp.buf.references()<CR>
+
+nnoremap <leader><c-]> <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
+nnoremap <leader>1gD   <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
+nnoremap <leader>gD    <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
+nnoremap <leader>gd    <cmd> lua require'lspsaga.provider'.preview_definition()<CR>
+nnoremap <leader>gr    <cmd> lua require('lspsaga.rename').rename()<CR>
+
+" nnoremap <leader><c-]> <cmd> lua vim.lsp.buf.definition()<CR>
+" nnoremap <leader>1gD   <cmd> lua vim.lsp.buf.type_definition()<CR>
+" nnoremap <leader>gd    <cmd> lua vim.lsp.buf.declaration()<CR>
+" nnoremap <leader>gr    <cmd> lua vim.lsp.buf.references()<CR>
+" nnoremap <leader>gD    <cmd> lua vim.lsp.buf.implementation()<CR>
+
+nnoremap <leader>ga <cmd>lua require('lspsaga.codeaction').code_action()<CR>
+vnoremap <leader>ga <cmd>'<,'>lua require('lspsaga.codeaction').range_code_action()<CR>
+
+nnoremap <leader>K     <cmd> lua require('lspsaga.hover').render_hover_doc()<CR>
+nnoremap <leader><c-k> <cmd> lua require('lspsaga.signaturehelp').signature_help()<CR>
+
+" nnoremap <leader>K     <cmd> lua vim.lsp.buf.hover()<CR>
+" nnoremap <leader><c-k> <cmd> lua vim.lsp.buf.signature_help()<CR>
+
+" TODO replace with telescope
 nnoremap <leader>g0    <cmd> lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <leader>gW    <cmd> lua vim.lsp.buf.workspace_symbol()<CR>
-nnoremap <leader>gd    <cmd> lua vim.lsp.buf.declaration()<CR>
+
 nnoremap <leader>go    <cmd> lua vim.lsp.diagnostic.set_loclist() <CR>
 nnoremap <leader>gn    <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, severity = 'Error' }<CR>
 nnoremap <leader>gp    <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity = 'Error' }<CR>
 nnoremap <leader>gN    <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, severity_limit = 'Warning' }<CR>
 nnoremap <leader>gP    <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity_limit = 'Warning' }<CR>
+
 vnoremap <leader>p "_dP
 nnoremap ]c ]czz
 nnoremap [c [czz
