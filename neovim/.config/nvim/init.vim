@@ -243,18 +243,18 @@ nnoremap <leader>o     <cmd> call ListSymbols()<CR>
 nnoremap Q             <cmd> call WordFuzzySearch()<CR>
 nnoremap <leader>ps    <cmd> call GlobalFuzzySearch()<CR>
 
-nnoremap <leader><c-]> <cmd> lua vim.lsp.buf.definition()<CR>
-nnoremap <leader>1gD   <cmd> lua vim.lsp.buf.type_definition()<CR>
-nnoremap <leader>gr    <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
-nnoremap <leader>gd    <cmd> lua require'lspsaga.provider'.preview_definition()<CR>
-nnoremap <leader>gR    <cmd> lua require('lspsaga.rename').rename()<CR>
+nnoremap <leader><c-]>  <cmd> lua vim.lsp.buf.definition()<CR>
+nnoremap <leader>g<c-]> <cmd> lua require'lspsaga.provider'.preview_definition()<CR>
+nnoremap <leader>gd     <cmd> lua vim.lsp.buf.declaration()<CR>
+nnoremap <leader>gD     <cmd> lua vim.lsp.buf.implementation()<CR>
+nnoremap <leader>gr     <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
+nnoremap <leader>gR     <cmd> lua require('lspsaga.rename').rename()<CR>
+nnoremap <leader>1gD    <cmd> lua vim.lsp.buf.type_definition()<CR>
 
 " TODO remove after some testing
 " nnoremap <leader><c-]> <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
 " nnoremap <leader>1gD   <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
-" nnoremap <leader>gd    <cmd> lua vim.lsp.buf.declaration()<CR>
 " nnoremap <leader>gr    <cmd> lua vim.lsp.buf.references()<CR>
-" nnoremap <leader>gD    <cmd> lua vim.lsp.buf.implementation()<CR>
 
 nnoremap <leader>ga <cmd>lua require('lspsaga.codeaction').code_action()<CR>
 vnoremap <leader>ga <cmd>'<,'>lua require('lspsaga.codeaction').range_code_action()<CR>
