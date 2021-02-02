@@ -30,6 +30,7 @@ Plug 'nvim-lua/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/playground'
 Plug 'romgrk/nvim-treesitter-context'
+Plug 'ngemily/vim-vp4'
 call plug#end()
 
 " if define headless update
