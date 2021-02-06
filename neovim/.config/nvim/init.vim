@@ -150,10 +150,18 @@ let g:lightline = {
 
 " Configure the sorter
 lua <<EOF
+local actions = require('telescope.actions')
 require('telescope').setup({
     defaults = {
-        file_sorter = require('telescope.sorters').get_fzy_sorter
-    }
+        file_sorter = require('telescope.sorters').get_fzy_sorter,
+        mappings = {
+          i = {
+            ["<C-x>"] = false,
+            ["<C-s>"] = actions.goto_file_selection_split,
+            ["<C-q>"] = actions.send_to_qflist,
+          },
+        }
+    },
 })
 EOF
 
