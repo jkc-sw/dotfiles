@@ -4,7 +4,7 @@ disabled = false
 show_always = true
 
 [memory_usage]
-disabled = false
+disabled = true
 threshold = 0
 format = "via $symbol [${ram} | ${ram_pct}]($style) "
 
