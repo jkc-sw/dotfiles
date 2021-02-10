@@ -156,8 +156,6 @@ require('telescope').setup({
         file_sorter = require('telescope.sorters').get_fzy_sorter,
         mappings = {
           i = {
-            ["<C-x>"] = false,
-            ["<C-s>"] = actions.goto_file_selection_split,
             ["<C-q>"] = actions.send_to_qflist,
           },
         }
