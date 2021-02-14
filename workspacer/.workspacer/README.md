@@ -16,6 +16,11 @@ Clone the repo with
 mkdir $ENV:USERPROFILE/repos
 cd repos
 git clone https://github.com/jkc-sw/dotfiles
+```
+
+Then open a powershell window with admin right
+
+```powersherr
 cd $ENV:USERPROFILE/repos/dotfiles
-dploy workspacer "$ENV:USERPROFILE"
+dploy stow workspacer "$ENV:USERPROFILE"
 ```
