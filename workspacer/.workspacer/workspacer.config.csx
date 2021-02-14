@@ -20,7 +20,7 @@ Action<IConfigContext> doConfig = context =>
     var mod = KeyModifiers.RAlt;
     context.Keybinds.UnsubscribeAll();
     context.Keybinds.Subscribe(MouseEvent.LButtonDown,                   () => context.Workspaces.SwitchFocusedMonitorToMouseLocation());
-    context.Keybinds.Subscribe(mod,                      Keys.Escape,    () => context.Enabled = !context.Enabled,                                    "toggle enable/disable");
+    context.Keybinds.Subscribe(mod,                      Keys.A,         () => context.Enabled = !context.Enabled,                                    "toggle enable/disable");
     context.Keybinds.Subscribe(mod | KeyModifiers.Shift, Keys.C,         () => context.Workspaces.FocusedWorkspace.CloseFocusedWindow(),              "close focused window");
     context.Keybinds.Subscribe(mod,                      Keys.Space,     () => context.Workspaces.FocusedWorkspace.NextLayoutEngine(),                "next layout");
     context.Keybinds.Subscribe(mod | KeyModifiers.Shift, Keys.Space,     () => context.Workspaces.FocusedWorkspace.PreviousLayoutEngine(),            "previous layout");
@@ -68,7 +68,7 @@ Action<IConfigContext> doConfig = context =>
     context.Keybinds.Subscribe(mod,                      Keys.O,         () => context.Windows.DumpWindowDebugOutput(),                               "dump debug info to console for all windows");
     context.Keybinds.Subscribe(mod | KeyModifiers.Shift, Keys.O,         () => context.Windows.DumpWindowUnderCursorDebugOutput(),                    "dump debug info to console for window under cursor");
     context.Keybinds.Subscribe(mod | KeyModifiers.Shift, Keys.I,         () => context.ToggleConsoleWindow(),                                         "toggle debug console");
-    context.Keybinds.Subscribe(mod | KeyModifiers.Shift, Keys.Oem2,      () => context.Keybinds.ShowKeybindDialog(),                                                   "open keybind window");
+    context.Keybinds.Subscribe(mod | KeyModifiers.Shift, Keys.Oem2,      () => context.Keybinds.ShowKeybindDialog(),                                  "open keybind window");
 
     context.AddBar();
     context.AddFocusIndicator();
