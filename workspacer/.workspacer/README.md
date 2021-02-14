@@ -2,6 +2,7 @@
 
 ## Pre-requisites
 
+- powershell
 - scoop
 - git (`scoop install git`)
 - workspacer (`scoop bucket add extras && scoop install workspacer`)
@@ -14,7 +15,7 @@ Clone the repo with
 
 ```powershell
 mkdir $ENV:USERPROFILE/repos
-cd repos
+cd $ENV:USERPROFILE/repos
 git clone https://github.com/jkc-sw/dotfiles
 ```
 
