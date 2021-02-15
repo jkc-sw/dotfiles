@@ -31,6 +31,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/playground'
 Plug 'romgrk/nvim-treesitter-context'
 Plug 'ngemily/vim-vp4'
+Plug 'modille/groovy.vim'
 call plug#end()
 
 " if define headless update
