@@ -1,7 +1,7 @@
 
-require'my_custom_lsp'
+require'jerry.lsp.setup'
 
-local defaults = require'defaults'
+local vars = require'jerry.lsp.vars'
 local lspconfig = require'lspconfig'
 local vim = vim
 
@@ -22,7 +22,7 @@ local construct_statusline = function()
   return ''
 end
 
-local setup_lsp = function()
+local general_lsp = function()
 
   -- clangd
   -- nvim_lsp.clangd.setup{on_attach=require'completion'.on_attach}
@@ -40,7 +40,7 @@ local setup_lsp = function()
   -- lua
   local luals = lspconfig.sumneko_lua
   luals.setup{
-		cmd = {defaults.luals_repos .. 'bin/Linux/lua-language-server', "-E", defaults.luals_repos .. "main.lua"};
+		cmd = {vars.luals_repos .. 'bin/Linux/lua-language-server', "-E", vars.luals_repos .. "main.lua"};
 		settings = {
 			Lua = {
 				runtime = {
@@ -84,7 +84,7 @@ local setup_lsp = function()
 
   -- cmake
   lspconfig.cmake.setup{
-    cmd = {defaults.lsp_condaenv_bin..'cmake-language-server'},
+    cmd = {vars.lsp_condaenv_bin..'cmake-language-server'},
     on_attach = on_attach_vim
   }
 
@@ -108,14 +108,14 @@ local setup_lsp = function()
 
 end
 
-local start_other_lsp = function()
+local alternative_lsp = function()
   lspconfig.powershell_editor_service.setup{on_attach=on_attach_vim}
 end
 
 return {
-  setup_lsp = setup_lsp,
+  general_lsp = general_lsp,
   on_attach_vim = on_attach_vim,
-  start_other_lsp = start_other_lsp,
+  alternative_lsp = alternative_lsp,
   construct_statusline = construct_statusline
 }
 

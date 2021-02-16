@@ -1,5 +1,5 @@
 local lspconfig = require'lspconfig/configs'
-local defaults = require'defaults'
+local vars = require'jerry.lsp.vars'
 local vim = vim
 
 -- pwsh
@@ -11,9 +11,9 @@ lspconfig.powershell_editor_service = {
       "-NoLogo",
       "-NonInteractive",
       "-NoProfile",
-      defaults.pses_bundle_path.."/PowerShellEditorServices/Start-EditorServices.ps1",
+      vars.pses_bundle_path.."/PowerShellEditorServices/Start-EditorServices.ps1",
       "-BundledModulesPath",
-      defaults.pses_bundle_path,
+      vars.pses_bundle_path,
       "-LogPath",
       vim.fn.getcwd().."/logs.log",
       "-SessionDetailsPath",
@@ -52,7 +52,7 @@ https://github.com/PowerShell/PowerShellEditorServices
 lspconfig.hdl_checker = {
   default_config = {
     cmd = {
-      defaults.lsp_condaenv_bin.."hdl_checker", "--lsp"
+      vars.lsp_condaenv_bin.."hdl_checker", "--lsp"
     },
     filetypes = {"vhdl", "verilog", "systemverilog"},
     root_dir = function()

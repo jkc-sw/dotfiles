@@ -41,7 +41,7 @@ nv() {
     fi
 
     if command -v nvim &>/dev/null; then
-        nvim -c "lua require'my_lsp_setup'.start_other_lsp{}" "$@"
+        nvim -c "lua require'jerry.lsp.config'.alternative_lsp{}" "$@"
     fi
 }
 
