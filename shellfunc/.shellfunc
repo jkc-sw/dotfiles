@@ -58,7 +58,7 @@ dr() {
 }
 
 # add local bin to path for many scripts
-addThisPath "$HOME/bin"
+addThisPath "$HOME/bin/toclip"
 
 # try to use bat in man
 export BAT_THEME=gruvbox
