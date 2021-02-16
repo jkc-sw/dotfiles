@@ -105,7 +105,7 @@ augroup nowhitespaceattheend
     autocmd BufEnter * lua require'completion'.on_attach()
 augroup END
 " configure my lsp setup
-lua require'my_lsp_setup'.setup_lsp()
+lua require'jerry.lsp.config'.general_lsp()
 
 " Treesitter setup
 lua << EOF
@@ -121,7 +121,7 @@ EOF
 
 " Straight from the lsp help page
 function! LspStatus()
-    return luaeval("require'my_lsp_setup'.construct_statusline{}")
+    return luaeval("require'jerry.lsp.config'.construct_statusline{}")
 endfunction
 
 " The lightline configuration
