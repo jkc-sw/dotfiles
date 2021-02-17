@@ -86,5 +86,7 @@ Action<IConfigContext> doConfig = context =>
     context.WindowRouter.AddFilter((window) => !window.Title.Contains("Virtual Machine"));
     context.WindowRouter.AddFilter((window) => !window.Title.Contains("Hyper-V"));
     context.WindowRouter.AddFilter((window) => !window.Title.Contains("Windows Sandbox"));
+    context.WindowRouter.AddFilter((window) => !window.Title.Contains("Snip"));
+    context.WindowRouter.AddFilter((window) => !window.Title.Contains("Sketch"));
 };
 return doConfig;
