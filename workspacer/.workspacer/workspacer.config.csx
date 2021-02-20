@@ -17,7 +17,7 @@ Action<IConfigContext> doConfig = context =>
     // From https://github.com/rickbutton/workspacer/blob/master/src/workspacer/Keybinds/KeybindManager.cs
     // From https://workspacer.org/config/
     // From https://github.com/rickbutton/workspacer/blob/master/src/workspacer.Shared/Keybind/KeyModifiers.cs
-    var mod = KeyModifiers.RAlt;
+    var mod = KeyModifiers.LAlt;
     context.Keybinds.UnsubscribeAll();
     context.Keybinds.Subscribe(MouseEvent.LButtonDown,                   () => context.Workspaces.SwitchFocusedMonitorToMouseLocation());
     context.Keybinds.Subscribe(mod,                      Keys.A,         () => context.Enabled = !context.Enabled,                                    "toggle enable/disable");
@@ -75,8 +75,8 @@ Action<IConfigContext> doConfig = context =>
     var actionMenu = context.AddActionMenu();
 
     context.DefaultLayouts = () => new ILayoutEngine[] {
-        new VertLayoutEngine(),
         new TallLayoutEngine(),
+        new VertLayoutEngine(),
         new FullLayoutEngine()
     };
 
