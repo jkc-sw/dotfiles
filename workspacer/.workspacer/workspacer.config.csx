@@ -25,12 +25,12 @@ Action<IConfigContext> doConfig = context =>
     context.Keybinds.Subscribe(mod,                      Keys.Space,     () => context.Workspaces.FocusedWorkspace.NextLayoutEngine(),                "next layout");
     context.Keybinds.Subscribe(mod | KeyModifiers.Shift, Keys.Space,     () => context.Workspaces.FocusedWorkspace.PreviousLayoutEngine(),            "previous layout");
     context.Keybinds.Subscribe(mod,                      Keys.N,         () => context.Workspaces.FocusedWorkspace.ResetLayout(),                     "reset layout");
-    context.Keybinds.Subscribe(mod,                      Keys.J,         () => context.Workspaces.FocusedWorkspace.FocusNextWindow(),                 "focus next window");
-    context.Keybinds.Subscribe(mod,                      Keys.K,         () => context.Workspaces.FocusedWorkspace.FocusPreviousWindow(),             "focus previous window");
+    context.Keybinds.Subscribe(mod,                      Keys.Up,        () => context.Workspaces.FocusedWorkspace.FocusNextWindow(),                 "focus next window");
+    context.Keybinds.Subscribe(mod,                      Keys.Down,      () => context.Workspaces.FocusedWorkspace.FocusPreviousWindow(),             "focus previous window");
     context.Keybinds.Subscribe(mod,                      Keys.M,         () => context.Workspaces.FocusedWorkspace.FocusPrimaryWindow(),              "focus primary window");
     context.Keybinds.Subscribe(mod,                      Keys.Enter,     () => context.Workspaces.FocusedWorkspace.SwapFocusAndPrimaryWindow(),       "swap focus and primary window");
-    context.Keybinds.Subscribe(mod | KeyModifiers.Shift, Keys.J,         () => context.Workspaces.FocusedWorkspace.SwapFocusAndNextWindow(),          "swap focus and next window");
-    context.Keybinds.Subscribe(mod | KeyModifiers.Shift, Keys.K,         () => context.Workspaces.FocusedWorkspace.SwapFocusAndPreviousWindow(),      "swap focus and previous window");
+    context.Keybinds.Subscribe(mod | KeyModifiers.Shift, Keys.Up,        () => context.Workspaces.FocusedWorkspace.SwapFocusAndNextWindow(),          "swap focus and next window");
+    context.Keybinds.Subscribe(mod | KeyModifiers.Shift, Keys.Down,      () => context.Workspaces.FocusedWorkspace.SwapFocusAndPreviousWindow(),      "swap focus and previous window");
     context.Keybinds.Subscribe(mod,                      Keys.H,         () => context.Workspaces.FocusedWorkspace.ShrinkPrimaryArea(),               "shrink primary area");
     context.Keybinds.Subscribe(mod,                      Keys.L,         () => context.Workspaces.FocusedWorkspace.ExpandPrimaryArea(),               "expand primary area");
     context.Keybinds.Subscribe(mod,                      Keys.Oemcomma,  () => context.Workspaces.FocusedWorkspace.IncrementNumberOfPrimaryWindows(), "increment # primary windows");
