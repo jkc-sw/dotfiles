@@ -80,7 +80,7 @@ Action<IConfigContext> doConfig = context =>
         new FullLayoutEngine()
     };
 
-    context.WorkspaceContainer.CreateWorkspaces("one", "two", "three", "four", "five");
+    context.WorkspaceContainer.CreateWorkspaces("1", "2", "3", "4", "5", "6", "7", "8");
 
     context.WindowRouter.AddFilter((window) => !window.Title.Contains("Remote Desktop"));
     context.WindowRouter.AddFilter((window) => !window.Title.Contains("Virtual Machine"));
