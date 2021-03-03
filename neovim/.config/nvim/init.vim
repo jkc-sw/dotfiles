@@ -27,6 +27,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/playground'
 Plug 'romgrk/nvim-treesitter-context'
@@ -155,13 +156,24 @@ local actions = require('telescope.actions')
 require('telescope').setup({
     defaults = {
         file_sorter = require('telescope.sorters').get_fzy_sorter,
+        color_devicons = true,
+        file_previewer   = require('telescope.previewers').vim_buffer_cat.new,
+        grep_previewer   = require('telescope.previewers').vim_buffer_vimgrep.new,
+        qflist_previewer = require('telescope.previewers').vim_buffer_qflist.new,
         mappings = {
           i = {
             ["<C-q>"] = actions.send_to_qflist,
           },
         }
     },
+    extensions = {
+        fzy_native = {
+            override_generic_sorter = false,
+            override_file_sorter = true,
+        }
+    }
 })
+require('telescope').load_extension('fzy_native')
 EOF
 
 " Configure the lspsaga
@@ -241,7 +253,7 @@ nnoremap <leader>l     <cmd> wincmd l<CR>
 nnoremap <leader>u     <cmd> UndotreeShow<CR>
 nnoremap <leader>pv    <cmd> vertical topleft wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
 nnoremap <leader>pp    <cmd> call TogglePasteMode()<CR>
-nnoremap <leader>V     <cmd> vsp ~/.config/nvim/init.vim <bar> lcd ~/.config/nvim<CR>
+nnoremap <leader>V     <cmd> exec("lua require('jerry.telescope.pickers').vimrc_files{}") <bar> lcd ~/repos/dotfiles/neovim/.config/nvim <CR>
 nnoremap <leader>w     <cmd> w<CR>
 
 " Telescope navigation
