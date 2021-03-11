@@ -125,11 +125,16 @@ function! LspStatus()
     return luaeval("require'jerry.lsp.config'.construct_statusline{}")
 endfunction
 
+" Shorten the path
+function! CorrentFileShortener()
+    return pathshorten(expand('%'))
+endfunction
+
 " The lightline configuration
 let g:lightline = {
     \ 'colorscheme': 'seoul256',
     \ 'active': {
-    \   'left': [['mode', 'paste'], ['gitbranch', 'readonly', 'filename', 'modified']],
+    \   'left': [['mode', 'paste'], ['gitbranch', 'readonly', 'shortpath', 'modified']],
     \   'right': [['lineinfo', 'lsp'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
     \ },
     \ 'inactive': {
@@ -146,7 +151,8 @@ let g:lightline = {
     \ },
     \ 'component_function': {
     \   'lsp': 'LspStatus',
-    \   'gitbranch': 'FugitiveStatusline'
+    \   'gitbranch': 'FugitiveStatusline',
+    \   'shortpath': 'CorrentFileShortener'
     \ },
     \ }
 
