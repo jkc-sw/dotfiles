@@ -1,0 +1,33 @@
+# ColorSchemeForMATLAB - MATLAB color scheme
+# Generated with schemer_export v1.4.0, on MATLAB 9.9.0.1467703 (R2020b)
+# Thu Mar 11 12:33:18 PST 2021
+# To enable this color scheme in MATLAB use schemer_import, available at:
+#     https://github.com/scottclowe/matlab-schemer
+#     https://www.mathworks.com/matlabcentral/fileexchange/53862-matlab-schemer
+ColorsUseSystem=Bfalse
+ColorsUseMLintAutoFixBackground=Btrue
+Editor.VariableHighlighting.Automatic=Btrue
+Editor.NonlocalVariableHighlighting=Btrue
+EditorCodepadHighVisible=Btrue
+EditorCodeBlockDividers=Btrue
+Editorhighlight-caret-row-boolean=Bfalse
+EditorRightTextLineVisible=Btrue
+EditorRightTextLimitLineWidth=I1
+ColorsText=C-794949
+ColorsBackground=C-11513776
+Colors_M_Keywords=C-26168
+Colors_M_Comments=C-8934352
+Colors_M_Strings=C-8934352
+Colors_M_UnterminatedStrings=C-65281
+Colors_M_SystemCommands=C-4533004
+Colors_M_Errors=C-65536
+Colors_HTML_HTMLLinks=C-5379073
+Colors_M_Warnings=C-65281
+ColorsMLintAutoFixBackground=C-65281
+Editor.VariableHighlighting.Color=C-8487298
+Editor.NonlocalVariableHighlighting.TextColor=C-26368
+Editorhighlight-lines=C-10395295
+Editorhighlight-caret-row-boolean-color=C-2167080
+EditorRightTextLimitLineColor=C-3355444
+Color_CmdWinWarnings=C-39936
+Color_CmdWinErrors=C-65536
