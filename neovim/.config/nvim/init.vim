@@ -138,7 +138,7 @@ let g:lightline = {
     \   'right': [['lineinfo', 'lsp'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
     \ },
     \ 'inactive': {
-    \   'left': [['filename']],
+    \   'left': [['shortpath']],
     \   'right': [['lineinfo'], ['percent']]
     \ },
     \ 'component': {
