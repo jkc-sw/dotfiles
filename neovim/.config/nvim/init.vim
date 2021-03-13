@@ -33,6 +33,8 @@ Plug 'nvim-treesitter/playground'
 Plug 'romgrk/nvim-treesitter-context'
 Plug 'ngemily/vim-vp4'
 Plug 'modille/groovy.vim'
+Plug 'tjdevries/colorbuddy.vim'
+Plug 'tjdevries/gruvbuddy.nvim'
 call plug#end()
 
 " if define headless update
@@ -90,14 +92,17 @@ set cursorline
 let g:vimsyn_embed = 'l'
 
 " Color setting
-if exists('+termguicolors')
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-endif
-let g:gruvbox_contrast_dark = 'hard'
-let g:gruvbox_invert_selections = '0'
-colorscheme gruvbox
-" colorscheme ayu
+lua require('colorbuddy').colorscheme('gruvbuddy')
+
+" " Color setting
+" if exists('+termguicolors')
+"     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+"     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+" endif
+" let g:gruvbox_contrast_dark = 'hard'
+" let g:gruvbox_invert_selections = '0'
+" colorscheme gruvbox
+" " colorscheme ayu
 
 " lsp setup
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
