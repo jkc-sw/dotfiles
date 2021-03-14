@@ -74,7 +74,7 @@ set wildmenu
 set cmdheight=1
 set updatetime=50
 set shortmess+=c
-set colorcolumn=80
+" set colorcolumn=80
 set noshowmode
 set background=dark
 set splitbelow splitright
@@ -82,7 +82,7 @@ set termguicolors
 set guicursor=i-ci-ve:block-blinkwait175-blinkoff150-blinkon175
 set completeopt=menuone,noinsert,noselect
 set signcolumn=yes
-highlight ColorColumn ctermbg=0 guibg=lightgrey
+" highlight ColorColumn ctermbg=0 guibg=lightgrey
 let g:netrw_banner = 0
 let g:netrw_browse_split = 4
 let g:netrw_winsize = 25
