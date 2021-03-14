@@ -137,7 +137,7 @@ endfunction
 
 " The lightline configuration
 let g:lightline = {
-    \ 'colorscheme': 'seoul256',
+    \ 'colorscheme': 'wombat',
     \ 'active': {
     \   'left': [['mode', 'paste'], ['gitbranch', 'readonly', 'shortpath', 'modified']],
     \   'right': [['lineinfo', 'lsp'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
