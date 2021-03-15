@@ -6,7 +6,8 @@ local lspconfig = require'lspconfig'
 local vim = vim
 
 local on_attach_vim = function(client)
-    require'completion'.on_attach(client)
+  -- Not used
+  -- require'completion'.on_attach(client)
 end
 
 local construct_statusline = function()

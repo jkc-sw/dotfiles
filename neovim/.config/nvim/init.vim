@@ -14,13 +14,11 @@ Plug 'itchyny/lightline.vim'
 Plug 'pprovost/vim-ps1'
 Plug 'kergoth/vim-bitbake'
 Plug 'godlygeek/tabular'
-" Plug 'sheerun/vim-polyglot'
 Plug 'andymass/vim-matlab'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'glepnir/lspsaga.nvim'
-Plug 'nvim-lua/completion-nvim'
 Plug 'tjdevries/nlua.nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'tpope/vim-fugitive'
@@ -35,6 +33,21 @@ Plug 'ngemily/vim-vp4'
 Plug 'modille/groovy.vim'
 Plug 'tjdevries/colorbuddy.vim'
 Plug 'tjdevries/gruvbuddy.nvim'
+Plug 'onsails/lspkind-nvim'
+Plug 'hrsh7th/nvim-compe'
+
+" Not working
+" Plug 'sheerun/vim-polyglot'
+
+" Not used
+" Plug 'nvim-lua/completion-nvim'
+
+" Maybe future
+" Plug 'kyazdani42/nvim-tree.lua'
+
+" Always the last
+Plug 'ryanoasis/vim-devicons'
+Plug 'kyazdani42/nvim-web-devicons'
 call plug#end()
 
 " if define headless update
@@ -74,7 +87,6 @@ set wildmenu
 set cmdheight=1
 set updatetime=50
 set shortmess+=c
-" set colorcolumn=80
 set noshowmode
 set background=dark
 set splitbelow splitright
@@ -82,7 +94,6 @@ set termguicolors
 set guicursor=i-ci-ve:block-blinkwait175-blinkoff150-blinkon175
 set completeopt=menuone,noinsert,noselect
 set signcolumn=yes
-" highlight ColorColumn ctermbg=0 guibg=lightgrey
 let g:netrw_banner = 0
 let g:netrw_browse_split = 4
 let g:netrw_winsize = 25
@@ -90,6 +101,10 @@ set nofoldenable
 set scrolloff=15 " Make sure that cursor won't be too high
 set cursorline
 let g:vimsyn_embed = 'l'
+
+" Not used
+" highlight ColorColumn ctermbg=0 guibg=lightgrey
+" set colorcolumn=80
 
 " Color setting
 lua require('colorbuddy').colorscheme('gruvbuddy')
@@ -105,13 +120,47 @@ lua require('colorbuddy').colorscheme('gruvbuddy')
 " " colorscheme ayu
 
 " lsp setup
-let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 augroup nowhitespaceattheend
     autocmd!
     autocmd BufEnter * lua require'completion'.on_attach()
 augroup END
 " configure my lsp setup
 lua require'jerry.lsp.config'.general_lsp()
+
+" Not used
+let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
+
+" lsp autocomplete
+lua << EOF
+require('lspkind').init{}
+require('compe').setup {
+  enabled = true,
+  autocomplete = true,
+  debug = false,
+  min_length = 1,
+  preselect = 'enable',
+  throttle_time = 80,
+  source_timeout = 200,
+  incomplete_delay = 400,
+  max_abbr_width = 100,
+  max_kind_width = 100,
+  max_menu_width = 100,
+  documentation = true,
+
+  source = {
+    path = true,
+    buffer = true,
+    calc = true,
+    vsnip = true,
+    nvim_lsp = true,
+    nvim_lua = true,
+    spell = true,
+    tags = true,
+    snippets_nvim = true,
+    treesitter = true,
+  },
+}
+EOF
 
 " Treesitter setup
 lua << EOF
@@ -124,6 +173,9 @@ require'nvim-treesitter.configs'.setup{
     }
 }
 EOF
+
+" DevIcon
+lua require'nvim-web-devicons'.setup{}
 
 " Straight from the lsp help page
 function! LspStatus()
