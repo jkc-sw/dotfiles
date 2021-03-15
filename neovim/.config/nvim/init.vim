@@ -119,11 +119,6 @@ lua require('colorbuddy').colorscheme('gruvbuddy')
 " colorscheme gruvbox
 " " colorscheme ayu
 
-" lsp setup
-augroup nowhitespaceattheend
-    autocmd!
-    autocmd BufEnter * lua require'completion'.on_attach()
-augroup END
 " configure my lsp setup
 lua require'jerry.lsp.config'.general_lsp()
 
