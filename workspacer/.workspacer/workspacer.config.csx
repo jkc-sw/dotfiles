@@ -33,8 +33,8 @@ Action<IConfigContext> doConfig = context =>
     context.Keybinds.Subscribe(mod | KeyModifiers.Shift, Keys.Down,      () => context.Workspaces.FocusedWorkspace.SwapFocusAndPreviousWindow(),      "swap focus and previous window");
     context.Keybinds.Subscribe(mod,                      Keys.H,         () => context.Workspaces.FocusedWorkspace.ShrinkPrimaryArea(),               "shrink primary area");
     context.Keybinds.Subscribe(mod,                      Keys.L,         () => context.Workspaces.FocusedWorkspace.ExpandPrimaryArea(),               "expand primary area");
-    context.Keybinds.Subscribe(mod,                      Keys.Oemcomma,  () => context.Workspaces.FocusedWorkspace.IncrementNumberOfPrimaryWindows(), "increment # primary windows");
-    context.Keybinds.Subscribe(mod,                      Keys.OemPeriod, () => context.Workspaces.FocusedWorkspace.DecrementNumberOfPrimaryWindows(), "decrement # primary windows");
+    context.Keybinds.Subscribe(mod,                      Keys.OemPeriod, () => context.Workspaces.FocusedWorkspace.IncrementNumberOfPrimaryWindows(), "increment # primary windows");
+    context.Keybinds.Subscribe(mod,                      Keys.Oemcomma,  () => context.Workspaces.FocusedWorkspace.DecrementNumberOfPrimaryWindows(), "decrement # primary windows");
     context.Keybinds.Subscribe(mod,                      Keys.T,         () => context.Windows.ToggleFocusedWindowTiling(),                           "toggle tiling for focused window");
     context.Keybinds.Subscribe(mod | KeyModifiers.Shift, Keys.Q,         context.Quit,                                                                "quit workspacer");
     context.Keybinds.Subscribe(mod,                      Keys.Q,         context.Restart,                                                             "restart workspacer");
