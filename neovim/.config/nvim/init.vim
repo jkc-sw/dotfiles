@@ -304,22 +304,24 @@ func! TogglePasteMode()
 endfun
 
 " Keyboard remap
-nnoremap <leader>h     <cmd> wincmd h<CR>
-nnoremap <leader>j     <cmd> wincmd j<CR>
-nnoremap <leader>k     <cmd> wincmd k<CR>
-nnoremap <leader>l     <cmd> wincmd l<CR>
-nnoremap <leader>u     <cmd> UndotreeShow<CR>
-nnoremap <leader>pv    <cmd> vertical topleft wincmd v<bar> :Ex <bar> :vertical resize 30<CR>
-nnoremap <leader>pp    <cmd> call TogglePasteMode()<CR>
-nnoremap <leader>V     <cmd> exec("lua require('jerry.telescope.pickers').vimrc_files{}") <bar> lcd ~/repos/dotfiles/neovim/.config/nvim <CR>
-nnoremap <leader>w     <cmd> w<CR>
+nnoremap <leader>h      <cmd> wincmd h<CR>
+nnoremap <leader>j      <cmd> wincmd j<CR>
+nnoremap <leader>k      <cmd> wincmd k<CR>
+nnoremap <leader>l      <cmd> wincmd l<CR>
+nnoremap <leader>u      <cmd> UndotreeShow<CR>
+nnoremap <leader>pv     <cmd> vertical topleft wincmd v<bar> Ex <bar> vertical resize 30<CR>
+nnoremap <leader>pp     <cmd> call TogglePasteMode()<CR>
+nnoremap <leader>v      <cmd> vertical rightbelow split ~/repos/dotfiles/neovim/.config/nvim/init.vim <bar> vertical resize 210 <bar> lcd ~/repos/dotfiles/neovim/.config/nvim <CR>
+nnoremap <leader>V      <cmd> exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
+nnoremap <leader>w      <cmd> w<CR>
+nnoremap <leader>r     <cmd> wincmd L <bar> vert resize 210<CR>
 
 " Telescope navigation
-nnoremap <c-p>         <cmd> call FileFuzzySearch()<CR>
-nnoremap <leader>b     <cmd> call BufferFuzzySearch()<CR>
-nnoremap <leader>o     <cmd> call ListSymbols()<CR>
-nnoremap Q             <cmd> call WordFuzzySearch()<CR>
-nnoremap <leader>ps    <cmd> call GlobalFuzzySearch()<CR>
+nnoremap <c-p>          <cmd> call FileFuzzySearch()<CR>
+nnoremap <leader>b      <cmd> call BufferFuzzySearch()<CR>
+nnoremap <leader>o      <cmd> call ListSymbols()<CR>
+nnoremap Q              <cmd> call WordFuzzySearch()<CR>
+nnoremap <leader>ps     <cmd> call GlobalFuzzySearch()<CR>
 
 nnoremap <leader><c-]>  <cmd> lua vim.lsp.buf.definition()<CR>
 nnoremap <leader>g<c-]> <cmd> lua require'lspsaga.provider'.preview_definition()<CR>
@@ -334,11 +336,11 @@ vnoremap <leader>ga     <cmd> '<,'>lua require('lspsaga.codeaction').range_code_
 nnoremap <leader>K      <cmd> lua require('lspsaga.hover').render_hover_doc()<CR>
 nnoremap <leader><c-k>  <cmd> lua require('lspsaga.signaturehelp').signature_help()<CR>
 
-nnoremap <leader>go    <cmd> lua vim.lsp.diagnostic.set_loclist() <CR>
-nnoremap <leader>gn    <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, severity = 'Error' }<CR>
-nnoremap <leader>gp    <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity = 'Error' }<CR>
-nnoremap <leader>gN    <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, severity_limit = 'Warning' }<CR>
-nnoremap <leader>gP    <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity_limit = 'Warning' }<CR>
+nnoremap <leader>go     <cmd> lua vim.lsp.diagnostic.set_loclist() <CR>
+nnoremap <leader>gn     <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, severity = 'Error' }<CR>
+nnoremap <leader>gp     <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity = 'Error' }<CR>
+nnoremap <leader>gN     <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, severity_limit = 'Warning' }<CR>
+nnoremap <leader>gP     <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity_limit = 'Warning' }<CR>
 
 vnoremap <leader>p "_dP
 nnoremap ]c ]czz
