@@ -309,12 +309,12 @@ nnoremap <leader>j      <cmd> wincmd j<CR>
 nnoremap <leader>k      <cmd> wincmd k<CR>
 nnoremap <leader>l      <cmd> wincmd l<CR>
 nnoremap <leader>u      <cmd> UndotreeShow<CR>
-nnoremap <leader>pv     <cmd> vertical topleft wincmd v<bar> Ex <bar> vertical resize 30<CR>
+nnoremap <leader>pv     <cmd> vertical topleft wincmd v<bar> Ex <bar> vertical resize 50<CR>
 nnoremap <leader>pp     <cmd> call TogglePasteMode()<CR>
-nnoremap <leader>v      <cmd> vertical rightbelow split ~/repos/dotfiles/neovim/.config/nvim/init.vim <bar> vertical resize 210 <bar> lcd ~/repos/dotfiles/neovim/.config/nvim <CR>
+nnoremap <leader>v      <cmd> vertical rightbelow split ~/repos/dotfiles/neovim/.config/nvim/init.vim <bar> exec 'vertical resize'.luaeval('math.floor(0.66*vim.o.columns)') <bar> lcd ~/repos/dotfiles/neovim/.config/nvim <CR>
 nnoremap <leader>V      <cmd> exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
 nnoremap <leader>w      <cmd> w<CR>
-nnoremap <leader>r     <cmd> wincmd L <bar> vert resize 210<CR>
+nnoremap <leader>r      <cmd> wincmd L <bar> exec 'vertical resize'.luaeval('math.floor(0.66*vim.o.columns)') <CR>
 
 " Telescope navigation
 nnoremap <c-p>          <cmd> call FileFuzzySearch()<CR>
