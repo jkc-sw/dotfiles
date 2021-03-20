@@ -32,10 +32,10 @@ fi
 export FZF_DEFAULT_OPTS="--color=dark"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-# # cpu managements
-# alias cinfo='sudo modprobe msr && sudo cpupower frequency-info'
-# alias cmonitor='sudo modprobe msr && sudo turbostat --show Core,CPU,Avg_MHz,Busy%,Bzy_MHz,TSC_MHz,CoreTmp,PkgTmp,PkgWatt,RAMWatt'
-# alias cperf='sudo modprobe msr && sudo cpupower frequency-set -g performance'
+# cpu managements
+alias cinfo='sudo modprobe msr && sudo cpupower frequency-info'
+alias cmonitor='sudo modprobe msr && sudo turbostat --show Core,CPU,Avg_MHz,Busy%,Bzy_MHz,TSC_MHz,CoreTmp,PkgTmp,PkgWatt,RAMWatt'
+alias cperf='sudo modprobe msr && sudo cpupower frequency-set -g performance'
 
 # shortcut to start nvim
 nv() {
