@@ -303,6 +303,40 @@ func! TogglePasteMode()
     endif
 endfun
 
+" function to quickly organize my window
+func! FocusOnRight()
+    let buffers = tabpagebuflist()
+    let curr_buffer = bufnr()
+
+    if len(buffers) == 1
+        silent exec 'vertical botright split | vertical resize '.float2nr(floor(0.66*str2float(&columns)))
+    else
+        let curr_buff_index = index(buffers, curr_buffer)
+        if curr_buff_index == (len(buffers) - 1)
+            let curr_buffer = buffers[-2]
+            let buffers[-2] = buffers[-1]
+            let buffers[-1] = curr_buffer
+        endif
+
+        let cleared = v:false
+        for w in range(0, len(buffers) - 1)
+            if w == curr_buff_index
+                continue
+            endif
+
+            if !cleared
+                silent exec 'buffer '.buffers[w]
+                silent only!
+                let cleared = v:true
+            else
+                silent exec 'belowright sbuffer '.buffers[w]
+            endif
+        endfor
+
+        silent exec 'vertical botright sbuffer '.curr_buffer.' | vertical resize '.float2nr(floor(0.66*str2float(&columns)))
+    endif
+endfun
+
 " Keyboard remap
 nnoremap <leader>h      <cmd> wincmd h<CR>
 nnoremap <leader>j      <cmd> wincmd j<CR>
@@ -314,7 +348,7 @@ nnoremap <leader>pp     <cmd> call TogglePasteMode()<CR>
 nnoremap <leader>v      <cmd> vertical rightbelow split ~/repos/dotfiles/neovim/.config/nvim/init.vim <bar> exec 'vertical resize'.luaeval('math.floor(0.66*vim.o.columns)') <bar> lcd ~/repos/dotfiles/neovim/.config/nvim <CR>
 nnoremap <leader>V      <cmd> exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
 nnoremap <leader>w      <cmd> w<CR>
-nnoremap <leader>r      <cmd> wincmd L <bar> exec 'vertical resize'.luaeval('math.floor(0.66*vim.o.columns)') <CR>
+nnoremap <leader>r      <cmd> call FocusOnRight()<CR>
 
 " Telescope navigation
 nnoremap <c-p>          <cmd> call FileFuzzySearch()<CR>
