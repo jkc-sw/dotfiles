@@ -332,6 +332,10 @@ func! FocusOnRight()
             break
         endif
 
+        if !buflisted(b)
+            continue
+        endif
+
         if index(buffers, b) == -1
             let buffers = insert(buffers, b)
         endif
