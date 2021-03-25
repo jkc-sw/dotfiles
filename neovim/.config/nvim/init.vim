@@ -304,13 +304,33 @@ func! TogglePasteMode()
 endfun
 
 " function to quickly organize my window
+let g:focus_on_right_ratio = 0.66
 func! FocusOnRight()
-    let buffers = tabpagebuflist()
+    if g:focus_on_right_ratio > 1
+        let g:focus_on_right_ratio = 1
+    elseif g:focus_on_right_ratio < 0
+        let g:focus_on_right_ratio = 0
+    endif
+
+    let buffers_orig = tabpagebuflist()
     let curr_buffer = bufnr()
 
-    if len(buffers) == 1
+    if len(buffers_orig) == 1
         silent exec 'vertical botright split | vertical resize '.float2nr(floor(0.66*str2float(&columns)))
     else
+        let buffers = []
+        for idx in range(len(buffers_orig)-1, 0, -1)
+            let b = buffers_orig[idx]
+
+            if len(buffers) >= 3
+                break
+            endif
+
+            if index(buffers, b) == -1
+                let buffers = insert(buffers, b)
+            endif
+        endfor
+
         let curr_buff_index = index(buffers, curr_buffer)
         if curr_buff_index == (len(buffers) - 1)
             let curr_buffer = buffers[-2]
