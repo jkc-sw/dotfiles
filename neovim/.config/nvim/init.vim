@@ -304,56 +304,71 @@ func! TogglePasteMode()
 endfun
 
 " function to quickly organize my window
-let g:focus_on_right_ratio = 0.66
 func! FocusOnRight()
+    if !exists('g:focus_on_right_ratio')
+        let g:focus_on_right_ratio = 0.66
+    endif
     if g:focus_on_right_ratio > 1
         let g:focus_on_right_ratio = 1
     elseif g:focus_on_right_ratio < 0
         let g:focus_on_right_ratio = 0
     endif
 
+    if !exists('g:focus_on_right_max_windows')
+        let g:focus_on_right_max_windows = 3
+    endif
+    if g:focus_on_right_max_windows < 2
+        let g:focus_on_right_max_windows = 2
+    endif
+
     let buffers_orig = tabpagebuflist()
     let curr_buffer = bufnr()
 
-    if len(buffers_orig) == 1
-        silent exec 'vertical botright split | vertical resize '.float2nr(floor(0.66*str2float(&columns)))
-    else
-        let buffers = []
-        for idx in range(len(buffers_orig)-1, 0, -1)
-            let b = buffers_orig[idx]
+    let buffers = []
+    for idx in range(len(buffers_orig)-1, 0, -1)
+        let b = buffers_orig[idx]
 
-            if len(buffers) >= 3
-                break
-            endif
-
-            if index(buffers, b) == -1
-                let buffers = insert(buffers, b)
-            endif
-        endfor
-
-        let curr_buff_index = index(buffers, curr_buffer)
-        if curr_buff_index == (len(buffers) - 1)
-            let curr_buffer = buffers[-2]
-            let buffers[-2] = buffers[-1]
-            let buffers[-1] = curr_buffer
+        if len(buffers) >= g:focus_on_right_max_windows
+            break
         endif
 
-        let cleared = v:false
-        for w in range(0, len(buffers) - 1)
-            if w == curr_buff_index
-                continue
+        if index(buffers, b) == -1
+            let buffers = insert(buffers, b)
+        endif
+    endfor
+
+    if len(buffers_orig) == 1
+        silent exec 'vertical botright split | vertical resize '.float2nr(floor(g:focus_on_right_ratio*str2float(&columns)))
+    else
+        if len(buffers) == 1
+            silent exec 'buffer '.buffers[0]
+            silent only!
+        else
+            let curr_buff_index = index(buffers, curr_buffer)
+
+            if (len(buffers) > 1) && (curr_buff_index == (len(buffers) - 1))
+                let curr_buffer = buffers[-2]
+                let buffers[-2] = buffers[-1]
+                let buffers[-1] = curr_buffer
             endif
 
-            if !cleared
-                silent exec 'buffer '.buffers[w]
-                silent only!
-                let cleared = v:true
-            else
-                silent exec 'belowright sbuffer '.buffers[w]
-            endif
-        endfor
+            let cleared = v:false
+            for w in range(0, len(buffers) - 1)
+                if w == curr_buff_index
+                    continue
+                endif
 
-        silent exec 'vertical botright sbuffer '.curr_buffer.' | vertical resize '.float2nr(floor(0.66*str2float(&columns)))
+                if !cleared
+                    silent exec 'buffer '.buffers[w]
+                    silent only!
+                    let cleared = v:true
+                else
+                    silent exec 'belowright sbuffer '.buffers[w]
+                endif
+            endfor
+        endif
+
+        silent exec 'vertical botright sbuffer '.curr_buffer.' | vertical resize '.float2nr(floor(g:focus_on_right_ratio*str2float(&columns)))
     endif
 endfun
 
