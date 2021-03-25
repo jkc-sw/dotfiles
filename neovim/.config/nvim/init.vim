@@ -326,6 +326,8 @@ nnoremap <leader>ps     <cmd> call GlobalFuzzySearch()<CR>
 nnoremap <leader><c-]>  <cmd> lua vim.lsp.buf.definition()<CR>
 nnoremap <leader>g<c-]> <cmd> lua require'lspsaga.provider'.preview_definition()<CR>
 nnoremap <leader>gd     <cmd> lua vim.lsp.buf.declaration()<CR>
+nnoremap <leader>gf     <cmd> lua vim.lsp.buf.formatting()<CR>
+vnoremap <leader>gf     <cmd> lua vim.lsp.buf.formatting()<CR>
 nnoremap <leader>gD     <cmd> lua vim.lsp.buf.implementation()<CR>
 nnoremap <leader>g0     <cmd> lua require'telescope.builtin'.lsp_document_symbols{}<CR>
 nnoremap <leader>gr     <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
