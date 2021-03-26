@@ -218,6 +218,14 @@ require('telescope').setup({
         file_previewer   = require('telescope.previewers').vim_buffer_cat.new,
         grep_previewer   = require('telescope.previewers').vim_buffer_vimgrep.new,
         qflist_previewer = require('telescope.previewers').vim_buffer_qflist.new,
+        layout_defaults = {
+            horizontal = {
+                mirror = true,
+            },
+            vertical = {
+                mirror = true,
+            },
+        },
         mappings = {
           i = {
             ["<C-q>"] = actions.send_to_qflist,
