@@ -211,6 +211,7 @@ let g:lightline = {
 " Configure the sorter
 lua <<EOF
 local actions = require('telescope.actions')
+local action_set = require('telescope.actions.set')
 require('telescope').setup({
     defaults = {
         file_sorter = require('telescope.sorters').get_fzy_sorter,
@@ -227,9 +228,13 @@ require('telescope').setup({
             },
         },
         mappings = {
-          i = {
-            ["<C-q>"] = actions.send_to_qflist,
-          },
+            i = {
+                ["<C-q>"] = actions.send_to_qflist,
+                ["<CR>"] = function(prompt_nr)
+                    actions.select_vertical(prompt_nr)
+                    vim.cmd [[call FocusOnRight()]]
+                end,
+            },
         }
     },
     extensions = {
@@ -331,6 +336,8 @@ func! FocusOnRight()
 
     let buffers_orig = tabpagebuflist()
     let curr_buffer = bufnr()
+    let right_width = float2nr(floor(g:focus_on_right_ratio*str2float(&columns)))
+    let curr_width = winwidth(0)
 
     let buffers = []
     for idx in range(len(buffers_orig)-1, 0, -1)
@@ -350,7 +357,7 @@ func! FocusOnRight()
     endfor
 
     if len(buffers_orig) == 1
-        silent exec 'vertical botright split | vertical resize '.float2nr(floor(g:focus_on_right_ratio*str2float(&columns)))
+        silent exec 'vertical botright split | vertical resize '.right_width
     else
         if len(buffers) == 1
             silent exec 'buffer '.buffers[0]
@@ -358,7 +365,7 @@ func! FocusOnRight()
         else
             let curr_buff_index = index(buffers, curr_buffer)
 
-            if (len(buffers) > 1) && (curr_buff_index == (len(buffers) - 1))
+            if (len(buffers) > 1) && (curr_buff_index == (len(buffers) - 1)) && (curr_width == right_width)
                 let curr_buffer = buffers[-2]
                 let buffers[-2] = buffers[-1]
                 let buffers[-1] = curr_buffer
@@ -380,7 +387,7 @@ func! FocusOnRight()
             endfor
         endif
 
-        silent exec 'vertical botright sbuffer '.curr_buffer.' | vertical resize '.float2nr(floor(g:focus_on_right_ratio*str2float(&columns)))
+        silent exec 'vertical botright sbuffer '.curr_buffer.' | vertical resize '.right_width
     endif
 endfun
 
