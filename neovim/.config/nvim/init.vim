@@ -337,14 +337,22 @@ func! FocusOnRight(...)
         let g:focus_on_right_max_windows = 2
     endif
 
-    let opt = (a:0 > 0)? a:1 : { 'toggle_enable': v:true }
+    let opt = (a:0 > 0)? a:1 : { 'toggle_enable': v:true, 'toggle_offset': -2 }
     if !has_key(opt, 'toggle_enable')
         let opt['toggle_enable'] = v:true
+    endif
+    if !has_key(opt, 'toggle_offset')
+        let opt['toggle_offset'] = -2
+    endif
+
+    if -1*opt['toggle_offset'] > g:focus_on_right_max_windows
+        throw "The toggle_offset should not set higher than ".string(-1*g:focus_on_right_max_windows)
     endif
 
     let buffers_orig = tabpagebuflist()
     let curr_buffer = bufnr()
     let right_width = float2nr(floor(g:focus_on_right_ratio*str2float(&columns)))
+    let right_height = float2nr(floor(g:focus_on_right_ratio*str2float(&columns)))
     let curr_width = winwidth(0)
 
     let buffers = []
@@ -374,13 +382,14 @@ func! FocusOnRight(...)
             let curr_buff_index = index(buffers, curr_buffer)
 
             let toggle_enable = opt['toggle_enable']
-            let toggle_enable = toggle_enable && len(buffers) > 1
-            let toggle_enable = toggle_enable && curr_buff_index == (len(buffers) - 1)
-            let toggle_enable = toggle_enable && curr_width == right_width
+                \ && len(buffers) > 1
+                \ && len(buffers) >= (-1*opt['toggle_offset'])
+                \ && curr_buff_index == (len(buffers) - 1)
+                \ && curr_width == right_width
 
             if toggle_enable
-                let curr_buffer = buffers[-2]
-                let buffers[-2] = buffers[-1]
+                let curr_buffer = buffers[opt['toggle_offset']]
+                let buffers[opt['toggle_offset']] = buffers[-1]
                 let buffers[-1] = curr_buffer
             endif
 
@@ -416,6 +425,7 @@ nnoremap <leader>v      <cmd> vertical rightbelow split ~/repos/dotfiles/neovim/
 nnoremap <leader>V      <cmd> exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
 nnoremap <leader>w      <cmd> w<CR>
 nnoremap <leader>r      <cmd> call FocusOnRight()<CR>
+nnoremap <leader>c      <cmd> call FocusOnRight({'toggle_offset': -3})<CR>
 
 " Telescope navigation
 nnoremap <c-p>          <cmd> call FileFuzzySearch()<CR>
