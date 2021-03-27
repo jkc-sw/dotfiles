@@ -232,7 +232,10 @@ require('telescope').setup({
                 ["<C-q>"] = actions.send_to_qflist,
                 ["<CR>"] = function(prompt_nr)
                     actions.select_vertical(prompt_nr)
-                    vim.cmd [[call FocusOnRight()]]
+                    vim.cmd [[
+                    let opt = {'toggle_enable': v:false}
+                    call FocusOnRight(opt)
+                    ]]
                 end,
             },
         }
@@ -317,7 +320,7 @@ func! TogglePasteMode()
 endfun
 
 " function to quickly organize my window
-func! FocusOnRight()
+func! FocusOnRight(...)
     if !exists('g:focus_on_right_ratio')
         let g:focus_on_right_ratio = 0.66
     endif
@@ -332,6 +335,11 @@ func! FocusOnRight()
     endif
     if g:focus_on_right_max_windows < 2
         let g:focus_on_right_max_windows = 2
+    endif
+
+    let opt = (a:0 > 0)? a:1 : { 'toggle_enable': v:true }
+    if !has_key(opt, 'toggle_enable')
+        let opt['toggle_enable'] = v:true
     endif
 
     let buffers_orig = tabpagebuflist()
@@ -365,7 +373,12 @@ func! FocusOnRight()
         else
             let curr_buff_index = index(buffers, curr_buffer)
 
-            if (len(buffers) > 1) && (curr_buff_index == (len(buffers) - 1)) && (curr_width == right_width)
+            let toggle_enable = opt['toggle_enable']
+            let toggle_enable = toggle_enable && len(buffers) > 1
+            let toggle_enable = toggle_enable && curr_buff_index == (len(buffers) - 1)
+            let toggle_enable = toggle_enable && curr_width == right_width
+
+            if toggle_enable
                 let curr_buffer = buffers[-2]
                 let buffers[-2] = buffers[-1]
                 let buffers[-1] = curr_buffer
