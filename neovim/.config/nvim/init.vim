@@ -422,7 +422,7 @@ nnoremap <leader>l      <cmd> wincmd l<CR>
 nnoremap <leader>u      <cmd> UndotreeShow<CR>
 nnoremap <leader>pv     <cmd> vertical topleft wincmd v<bar> Ex <bar> vertical resize 50<CR>
 nnoremap <leader>pp     <cmd> call TogglePasteMode()<CR>
-nnoremap <leader>v      <cmd> vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <bar> lcd ~/repos/dotfiles/neovim/.config/nvim <bar> call FocusOnRight() <CR>
+nnoremap <leader>v      <cmd> vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <bar> call FocusOnRight() <CR>
 nnoremap <leader>V      <cmd> exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
 nnoremap <leader>w      <cmd> w<CR>
 nnoremap <leader>r      <cmd> call FocusOnRight()<CR>
