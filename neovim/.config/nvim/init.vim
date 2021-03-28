@@ -323,7 +323,7 @@ endfun
 " function to quickly organize my window
 func! FocusOnRight(...)
     if !exists('g:focus_on_right_ratio')
-        let g:focus_on_right_ratio = 0.66
+        let g:focus_on_right_ratio = 0.6
     endif
     if g:focus_on_right_ratio > 1
         let g:focus_on_right_ratio = 1
