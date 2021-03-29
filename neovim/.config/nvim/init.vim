@@ -189,12 +189,12 @@ endfunction
 let g:lightline = {
     \ 'colorscheme': 'wombat',
     \ 'active': {
-    \   'left': [['mode', 'paste'], ['gitbranch', 'readonly', 'shortpath', 'modified']],
+    \   'left': [['mode', 'paste'], ['gitbranch', 'readonly', 'filename', 'modified']],
     \   'right': [['lineinfo', 'lsp'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
     \ },
     \ 'inactive': {
-    \   'left': [['shortpath']],
-    \   'right': [['lineinfo'], ['percent']]
+    \   'right': [['shortpath']],
+    \   'left': [['lineinfo'], ['percent']]
     \ },
     \ 'component': {
     \   'mode': '%{lightline#mode()}',
