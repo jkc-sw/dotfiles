@@ -353,8 +353,9 @@ func! FocusOnRight(...)
     let buffers_orig = tabpagebuflist()
     let curr_buffer = bufnr()
     let right_width = float2nr(floor(g:focus_on_right_ratio*str2float(&columns)))
-    let right_height = float2nr(floor(g:focus_on_right_ratio*str2float(&columns)))
+    let right_height = &lines - &cmdheight - 1
     let curr_width = winwidth(0)
+    let curr_height = winheight(0)
 
     let buffers = []
     for idx in range(len(buffers_orig)-1, 0, -1)
@@ -387,6 +388,7 @@ func! FocusOnRight(...)
                 \ && len(buffers) >= (-1*opt['toggle_offset'])
                 \ && curr_buff_index == (len(buffers) - 1)
                 \ && curr_width == right_width
+                \ && curr_height == right_height
 
             if toggle_enable
                 let curr_buffer = buffers[opt['toggle_offset']]
