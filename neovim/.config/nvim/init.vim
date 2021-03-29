@@ -36,6 +36,9 @@ Plug 'tjdevries/gruvbuddy.nvim'
 Plug 'onsails/lspkind-nvim'
 Plug 'hrsh7th/nvim-compe'
 
+" Local
+Plug $HOME.'/repos/focus-side.vim'
+
 " Not working
 " Plug 'sheerun/vim-polyglot'
 
@@ -233,10 +236,7 @@ require('telescope').setup({
                 ["<C-v>"] = actions.select_default,
                 ["<CR>"] = function(prompt_nr)
                     actions.select_vertical(prompt_nr)
-                    vim.cmd [[
-                    let opt = {'toggle_enable': v:false}
-                    call FocusOnRight(opt)
-                    ]]
+                    vim.cmd [[ FocusSideNoToggle ]]
                 end,
             },
         }
@@ -320,102 +320,6 @@ func! TogglePasteMode()
     endif
 endfun
 
-" function to quickly organize my window
-func! FocusOnRight(...)
-    if !exists('g:focus_on_right_ratio')
-        let g:focus_on_right_ratio = 0.6
-    endif
-    if g:focus_on_right_ratio > 1
-        let g:focus_on_right_ratio = 1
-    elseif g:focus_on_right_ratio < 0
-        let g:focus_on_right_ratio = 0
-    endif
-
-    if !exists('g:focus_on_right_max_windows')
-        let g:focus_on_right_max_windows = 3
-    endif
-    if g:focus_on_right_max_windows < 2
-        let g:focus_on_right_max_windows = 2
-    endif
-
-    let opt = (a:0 > 0)? a:1 : { 'toggle_enable': v:true, 'toggle_offset': -2 }
-    if !has_key(opt, 'toggle_enable')
-        let opt['toggle_enable'] = v:true
-    endif
-    if !has_key(opt, 'toggle_offset')
-        let opt['toggle_offset'] = -2
-    endif
-
-    if -1*opt['toggle_offset'] > g:focus_on_right_max_windows
-        throw "The toggle_offset should not set higher than ".string(-1*g:focus_on_right_max_windows)
-    endif
-
-    let buffers_orig = tabpagebuflist()
-    let curr_buffer = bufnr()
-    let right_width = float2nr(floor(g:focus_on_right_ratio*str2float(&columns)))
-    let right_height = &lines - &cmdheight - 1
-    let curr_width = winwidth(0)
-    let curr_height = winheight(0)
-
-    let buffers = []
-    for idx in range(len(buffers_orig)-1, 0, -1)
-        let b = buffers_orig[idx]
-
-        if len(buffers) >= g:focus_on_right_max_windows
-            break
-        endif
-
-        if !buflisted(b)
-            continue
-        endif
-
-        if index(buffers, b) == -1
-            let buffers = insert(buffers, b)
-        endif
-    endfor
-
-    if len(buffers_orig) == 1
-        silent exec 'vertical botright split | vertical resize '.right_width
-    else
-        if len(buffers) == 1
-            silent exec 'buffer '.buffers[0]
-            silent only!
-        else
-            let curr_buff_index = index(buffers, curr_buffer)
-
-            let toggle_enable = opt['toggle_enable']
-                \ && len(buffers) > 1
-                \ && len(buffers) >= (-1*opt['toggle_offset'])
-                \ && curr_buff_index == (len(buffers) - 1)
-                \ && curr_width == right_width
-                \ && curr_height == right_height
-
-            if toggle_enable
-                let curr_buffer = buffers[opt['toggle_offset']]
-                let buffers[opt['toggle_offset']] = buffers[-1]
-                let buffers[-1] = curr_buffer
-            endif
-
-            let cleared = v:false
-            for w in range(0, len(buffers) - 1)
-                if w == curr_buff_index
-                    continue
-                endif
-
-                if !cleared
-                    silent exec 'buffer '.buffers[w]
-                    silent only!
-                    let cleared = v:true
-                else
-                    silent exec 'belowright sbuffer '.buffers[w]
-                endif
-            endfor
-        endif
-
-        silent exec 'vertical botright sbuffer '.curr_buffer.' | vertical resize '.right_width
-    endif
-endfun
-
 " Keyboard remap
 nnoremap <leader>h      <cmd> wincmd h<CR>
 nnoremap <leader>j      <cmd> wincmd j<CR>
@@ -424,11 +328,11 @@ nnoremap <leader>l      <cmd> wincmd l<CR>
 nnoremap <leader>u      <cmd> UndotreeShow<CR>
 nnoremap <leader>pv     <cmd> vertical topleft wincmd v<bar> Ex <bar> vertical resize 50<CR>
 nnoremap <leader>pp     <cmd> call TogglePasteMode()<CR>
-nnoremap <leader>v      <cmd> vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <bar> call FocusOnRight() <CR>
+nnoremap <leader>v      <cmd> vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <bar> FocusSide <CR>
 nnoremap <leader>V      <cmd> exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
 nnoremap <leader>w      <cmd> w<CR>
-nnoremap <leader>r      <cmd> call FocusOnRight()<CR>
-nnoremap <leader>c      <cmd> call FocusOnRight({'toggle_offset': -3})<CR>
+nnoremap <leader>r      <cmd> FocusSide<CR>
+nnoremap <leader>c      <cmd> FocusSideOffset -3<CR>
 
 " Telescope navigation
 nnoremap <c-p>          <cmd> call FileFuzzySearch()<CR>
