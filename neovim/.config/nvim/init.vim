@@ -236,7 +236,7 @@ require('telescope').setup({
                 ["<C-v>"] = actions.select_default,
                 ["<CR>"] = function(prompt_nr)
                     actions.select_vertical(prompt_nr)
-                    vim.cmd [[ FocusSideNoToggle ]]
+                    vim.cmd [[ FSNoToggle ]]
                 end,
             },
         }
@@ -328,11 +328,11 @@ nnoremap <leader>l      <cmd> wincmd l<CR>
 nnoremap <leader>u      <cmd> UndotreeShow<CR>
 nnoremap <leader>pv     <cmd> vertical topleft wincmd v<bar> Ex <bar> vertical resize 50<CR>
 nnoremap <leader>pp     <cmd> call TogglePasteMode()<CR>
-nnoremap <leader>v      <cmd> vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <bar> FocusSide <CR>
+nnoremap <leader>v      <cmd> vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <bar> FS <CR>
 nnoremap <leader>V      <cmd> exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
 nnoremap <leader>w      <cmd> w<CR>
-nnoremap <leader>r      <cmd> FocusSide<CR>
-nnoremap <leader>c      <cmd> FocusSideOffset -3<CR>
+nnoremap <leader>r      <cmd> FS<CR>
+nnoremap <leader>c      <cmd> FSOffset -3<CR>
 
 " Telescope navigation
 nnoremap <c-p>          <cmd> call FileFuzzySearch()<CR>
@@ -347,7 +347,6 @@ nnoremap <leader>gd     <cmd> lua vim.lsp.buf.declaration()<CR>
 nnoremap <leader>gf     <cmd> lua vim.lsp.buf.formatting()<CR>
 vnoremap <leader>gf     <cmd> lua vim.lsp.buf.formatting()<CR>
 nnoremap <leader>gD     <cmd> lua vim.lsp.buf.implementation()<CR>
-nnoremap <leader>g0     <cmd> lua require'telescope.builtin'.lsp_document_symbols{}<CR>
 nnoremap <leader>gr     <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
 nnoremap <leader>gR     <cmd> lua require('lspsaga.rename').rename()<CR>
 nnoremap <leader>1gD    <cmd> lua vim.lsp.buf.type_definition()<CR>
