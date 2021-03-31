@@ -322,7 +322,7 @@ func! TogglePasteMode()
     endif
 endfun
 
-" Keyboard remap
+" Key map
 nnoremap <leader>h      <cmd> wincmd h<CR>
 nnoremap <leader>j      <cmd> wincmd j<CR>
 nnoremap <leader>k      <cmd> wincmd k<CR>
@@ -336,7 +336,6 @@ nnoremap <leader>w      <cmd> w<CR>
 nnoremap <leader>r      <cmd> FS<CR>
 nnoremap <leader>c      <cmd> FSOffset -3<CR>
 
-" Telescope navigation
 nnoremap <c-p>          <cmd> call FileFuzzySearch()<CR>
 nnoremap <leader>b      <cmd> call BufferFuzzySearch()<CR>
 nnoremap <leader>o      <cmd> call ListSymbols()<CR>
@@ -364,6 +363,7 @@ nnoremap <leader>gN     <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, s
 nnoremap <leader>gP     <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity_limit = 'Warning' }<CR>
 
 vnoremap <leader>p "_dP
+nnoremap <leader>tm vip:Tab/\|/<cr>
 nnoremap ]c ]czz
 nnoremap [c [czz
 inoremap <C-c> <ESC>
