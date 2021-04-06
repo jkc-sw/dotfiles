@@ -333,7 +333,6 @@ nnoremap <leader>pv     <cmd> vertical topleft wincmd v<bar> Ex <bar> vertical r
 nnoremap <leader>pp     <cmd> call TogglePasteMode()<CR>
 nnoremap <leader>v      <cmd> vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <bar> FS <CR>
 nnoremap <leader>V      <cmd> exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
-nnoremap <leader>w      <cmd> w<CR>
 nnoremap <leader>r      <cmd> FS<CR>
 nnoremap <leader>c      <cmd> FSOffset -3<CR>
 
