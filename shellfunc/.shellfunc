@@ -61,7 +61,6 @@ dr() {
 }
 
 # try to use bat in man
-export BAT_THEME=gruvbox
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # nvm stuff
