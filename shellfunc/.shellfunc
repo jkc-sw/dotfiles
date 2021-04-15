@@ -25,8 +25,10 @@ export EDITOR=nvim
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 if command -v fd &>/dev/null; then
     export FZF_DEFAULT_COMMAND='fd --hidden --type file'
+    export FZF_ALT_C_COMMAND="fd --hidden --type directory"
 elif command -v fdfind &>/dev/null; then
     export FZF_DEFAULT_COMMAND='fdfind --hidden --type file'
+    export FZF_ALT_C_COMMAND="fdfind --hidden --type directory"
     alias fd=fdfind
 fi
 export FZF_DEFAULT_OPTS="--color=dark"
