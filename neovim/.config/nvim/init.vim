@@ -345,7 +345,7 @@ nnoremap <leader><c-]>  <cmd> lua vim.lsp.buf.definition()<CR>
 nnoremap <leader>g<c-]> <cmd> lua require'lspsaga.provider'.preview_definition()<CR>
 nnoremap <leader>gd     <cmd> lua vim.lsp.buf.declaration()<CR>
 nnoremap <leader>gf     <cmd> lua vim.lsp.buf.formatting()<CR>
-vnoremap <leader>gf     <cmd> '<,'>lua vim.lsp.buf.range_formatting()<CR>
+vnoremap <leader>gF     <cmd> '<,'>lua vim.lsp.buf.range_formatting()<CR>
 nnoremap <leader>gD     <cmd> lua vim.lsp.buf.implementation()<CR>
 nnoremap <leader>gr     <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
 nnoremap <leader>gR     <cmd> lua require('lspsaga.rename').rename()<CR>
