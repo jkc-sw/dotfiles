@@ -342,20 +342,20 @@ nnoremap Q              <cmd> call WordFuzzySearch()<CR>
 nnoremap <leader>ps     <cmd> call GlobalFuzzySearch()<CR>
 
 nnoremap <leader><c-]>  <cmd> lua vim.lsp.buf.definition()<CR>
-nnoremap <leader>g<c-]> <cmd> lua require'lspsaga.provider'.preview_definition()<CR>
 nnoremap <leader>gd     <cmd> lua vim.lsp.buf.declaration()<CR>
 nnoremap <leader>gf     <cmd> lua vim.lsp.buf.formatting()<CR>
 vnoremap <leader>gF     <cmd> '<,'>lua vim.lsp.buf.range_formatting()<CR>
 nnoremap <leader>gD     <cmd> lua vim.lsp.buf.implementation()<CR>
-nnoremap <leader>gr     <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
+nnoremap <leader>gr     <cmd> lua require('telescope.builtin').lsp_references()<CR>
 nnoremap <leader>gR     <cmd> lua require('lspsaga.rename').rename()<CR>
 nnoremap <leader>1gD    <cmd> lua vim.lsp.buf.type_definition()<CR>
 nnoremap <leader>ga     <cmd> lua require('lspsaga.codeaction').code_action()<CR>
 vnoremap <leader>ga     <cmd> '<,'>lua require('lspsaga.codeaction').range_code_action()<CR>
-nnoremap <leader>K      <cmd> lua require('lspsaga.hover').render_hover_doc()<CR>
-nnoremap <leader><c-k>  <cmd> lua require('lspsaga.signaturehelp').signature_help()<CR>
+nnoremap <leader>K      <cmd> lua vim.lsp.buf.hover()<CR>
 
 nnoremap <leader>go     <cmd> lua vim.lsp.diagnostic.set_loclist() <CR>
+nnoremap <leader>gs     <cmd> lua print(vim.inspect(vim.lsp.get_active_clients())) <CR>
+nnoremap <leader>gg     <cmd> lua vim.lsp.stop_client(vim.lsp.get_active_clients()); vim.cmd [[e]] <CR>
 nnoremap <leader>gn     <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, severity = 'Error' }<CR>
 nnoremap <leader>gp     <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity = 'Error' }<CR>
 nnoremap <leader>gN     <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, severity_limit = 'Warning' }<CR>
@@ -375,10 +375,10 @@ vnoremap : ;
 " nnoremap <leader><c-]> <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
 " nnoremap <leader>1gD   <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
 " nnoremap <leader>gr    <cmd> lua vim.lsp.buf.references()<CR>
-
-" TODO remove after some testing
-" nnoremap <leader>K     <cmd> lua vim.lsp.buf.hover()<CR>
-" nnoremap <leader><c-k> <cmd> lua vim.lsp.buf.signature_help()<CR>
+" nnoremap <leader>gr     <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
+" nnoremap <leader>g<c-]> <cmd> lua require'lspsaga.provider'.preview_definition()<CR>
+" nnoremap <leader>K      <cmd> lua require('lspsaga.hover').render_hover_doc()<CR>
+" nnoremap <leader>gk     <cmd> lua require('lspsaga.signaturehelp').signature_help()<CR>
 
 " Takes too long for big project
 " nnoremap <leader>gW    <cmd> lua require'telescope.builtin'.lsp_workspace_symbols{}<CR>
