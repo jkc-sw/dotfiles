@@ -340,6 +340,7 @@ nnoremap <leader>b      <cmd> call BufferFuzzySearch()<CR>
 nnoremap <leader>o      <cmd> call ListSymbols()<CR>
 nnoremap Q              <cmd> call WordFuzzySearch()<CR>
 nnoremap <leader>ps     <cmd> call GlobalFuzzySearch()<CR>
+nnoremap <leader>q      <cmd> lua require('telescope.builtin').quickfix()<CR>
 
 nnoremap <leader><c-]>  <cmd> lua vim.lsp.buf.definition()<CR>
 nnoremap <leader>gd     <cmd> lua vim.lsp.buf.declaration()<CR>
