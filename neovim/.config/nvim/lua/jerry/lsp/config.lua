@@ -7,7 +7,7 @@ local vim = vim
 
 local on_attach_vim = function(client)
   -- Not used
-  -- require'completion'.on_attach(client)
+    -- require'completion'.on_attach(client)
 end
 
 local construct_statusline = function()
@@ -94,7 +94,7 @@ local general_lsp = function()
     lspconfig.pyls.setup{
       on_attach=on_attach_vim,
       settings={
-        pyls={plugins={pycodestyle={maxLineLength=100}}}
+        pyls={plugins={pycodestyle={maxLineLength=150}}}
       }
     }
   end
