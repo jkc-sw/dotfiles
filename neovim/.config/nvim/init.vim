@@ -322,24 +322,9 @@ func! TogglePasteMode()
     endif
 endfun
 
-" function to get list of terminal id
-func! GetTerminalIdList()
-    return uniq(map(filter(getbufinfo(), 'has_key(v:val.variables, "terminal_job_id")'), 'v:val.variables.terminal_job_id'))
-endfunc
-
 " function to create terminal mapping
-func! NewTerminalMapping(k, cmd)
-    let termlist = GetTerminalIdList()
-    " echom 'termlist = '.list2str(termlist)
-    if empty(termlist)
-        split | terminal
-        hide
-        let termlist = GetTerminalIdList()
-    endif
-
-    let c = "<cmd>call chansend(" . termlist[0] . ", '" . a:cmd . "'." . '"\n"' . ")<cr>"
-    " echom 'c = '.c
-    call nvim_set_keymap('n', a:k, c, {'silent': v:true, 'noremap': v:true})
+func! NTM(k, cmd)
+    call jerry#term#NewTerminalMapping(a:k, a:cmd)
 endfunc
 
 " Key map
