@@ -322,6 +322,17 @@ func! TogglePasteMode()
     endif
 endfun
 
+" function to create terminal mapping
+func! NewTerminalMapping(k, cmd)
+    if exists('b:terminal_job_id')
+        let c = "<cmd>call chansend(" . b:terminal_job_id . ", '" . a:cmd . "'." . '"\n"' . ")<cr>"
+        " echom 'c = '.c
+        call nvim_set_keymap('n', a:k, c, {'silent': v:true, 'noremap': v:true})
+    else
+        echoerr 'This can only be run when current buffer is the terminal buffer'
+    endif
+endfunc
+
 " Key map
 nnoremap <leader>h      <cmd> wincmd h<CR>
 nnoremap <leader>j      <cmd> wincmd j<CR>
@@ -426,3 +437,4 @@ augroup LuaHighlight
     autocmd!
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup END
+
