@@ -10,10 +10,10 @@ func! GetTerminalId()
     if empty(tlist)
         split | terminal
         hide
-        let tlint = GetTerminalIdList()
+        let tlist = GetTerminalIdList()
     endif
 
-    return tlint[0]
+    return tlist[0]
 endfunc
 
 " function to create terminal mapping
