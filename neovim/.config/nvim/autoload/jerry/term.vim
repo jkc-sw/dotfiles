@@ -19,7 +19,7 @@ endfunc
 " function to create terminal mapping
 func! jerry#term#NewTerminalMapping(k, cmd)
     let c = "<cmd>call chansend(jerry#term#GetTerminalId(), '" . a:cmd . "'." . '"\n"' . ")<cr>"
-    echom 'c = '.c
+    echom "jerry#term#NewTerminalMapping maps " . a:k . " to " . c
     call nvim_set_keymap('n', a:k, c, {'silent': v:true, 'noremap': v:true})
 endfunc
 
