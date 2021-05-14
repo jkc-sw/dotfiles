@@ -335,7 +335,7 @@ nnoremap <leader>l      <cmd> wincmd l<CR>
 nnoremap <leader>u      <cmd> UndotreeShow<CR>
 nnoremap <leader>pv     <cmd> vertical topleft wincmd v<bar> Ex <bar> vertical resize 50<CR>
 nnoremap <leader>pp     <cmd> call TogglePasteMode()<CR>
-nnoremap <leader>v      <cmd> vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <bar> FS <CR>
+nnoremap <leader>v      <cmd> vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <CR>
 nnoremap <leader>V      <cmd> exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
 nnoremap <leader>r      <cmd> FS<CR>
 nnoremap <leader>c      <cmd> FSOffset -3<CR>
@@ -372,6 +372,10 @@ nnoremap <leader>tm vip:Tab/\|/<cr>
 nnoremap ]c ]czz
 nnoremap [c [czz
 inoremap <C-c> <ESC>
+nnoremap ; :
+nnoremap : ;
+vnoremap ; :
+vnoremap : ;
 
 " TODO remove after some testing
 " nnoremap <leader><c-]> <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
@@ -390,10 +394,6 @@ inoremap <C-c> <ESC>
 " vnoremap K :m '<-2<CR>gv=gv
 " nnoremap <silent> <Leader>+ :vertical resize +5<CR>
 " nnoremap <silent> <Leader>- :vertical resize -5<CR>
-" nnoremap ; :
-" nnoremap : ;
-" vnoremap ; :
-" vnoremap : ;
 
 " Use toclip to send content to clipboard
 augroup toClipBoard
