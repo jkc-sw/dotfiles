@@ -372,10 +372,6 @@ nnoremap <leader>tm vip:Tab/\|/<cr>
 nnoremap ]c ]czz
 nnoremap [c [czz
 inoremap <C-c> <ESC>
-nnoremap ; :
-nnoremap : ;
-vnoremap ; :
-vnoremap : ;
 
 " TODO remove after some testing
 " nnoremap <leader><c-]> <cmd> lua require('lspsaga.provider').lsp_finder()<CR>
@@ -394,6 +390,10 @@ vnoremap : ;
 " vnoremap K :m '<-2<CR>gv=gv
 " nnoremap <silent> <Leader>+ :vertical resize +5<CR>
 " nnoremap <silent> <Leader>- :vertical resize -5<CR>
+" nnoremap ; :
+" nnoremap : ;
+" vnoremap ; :
+" vnoremap : ;
 
 " Use toclip to send content to clipboard
 augroup toClipBoard
