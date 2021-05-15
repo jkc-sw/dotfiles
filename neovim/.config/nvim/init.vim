@@ -104,13 +104,11 @@ set nofoldenable
 set scrolloff=15 " Make sure that cursor won't be too high
 set cursorline
 let g:vimsyn_embed = 'l'
+let g:loaded_clipboard_provider = 1 " I don't need nvim to sync clipboard for me, I have my own tool
 
 " Not used
 " highlight ColorColumn ctermbg=0 guibg=lightgrey
 " set colorcolumn=80
-
-" Color setting
-lua require('colorbuddy').colorscheme('gruvbuddy')
 
 " " Color setting
 " if exists('+termguicolors')
@@ -122,68 +120,11 @@ lua require('colorbuddy').colorscheme('gruvbuddy')
 " colorscheme gruvbox
 " " colorscheme ayu
 
-" configure my lsp setup
-lua require'jerry.lsp.config'.general_lsp()
+" load everything lua
+lua require('jerry')
 
 " Not used
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
-
-" lsp autocomplete
-lua << EOF
-require('lspkind').init{}
-require('compe').setup {
-  enabled = true,
-  autocomplete = true,
-  debug = false,
-  min_length = 1,
-  preselect = 'enable',
-  throttle_time = 80,
-  source_timeout = 200,
-  incomplete_delay = 400,
-  max_abbr_width = 100,
-  max_kind_width = 100,
-  max_menu_width = 100,
-  documentation = true,
-
-  source = {
-    path = true,
-    buffer = true,
-    calc = true,
-    vsnip = true,
-    nvim_lsp = true,
-    nvim_lua = true,
-    spell = true,
-    tags = true,
-    snippets_nvim = true,
-    treesitter = true,
-  },
-}
-EOF
-
-" Treesitter setup
-lua << EOF
-require'nvim-treesitter.configs'.setup{
-    ensure_installed = "maintained",
-    highlight = { enable = true },
-    indent = {
-        enable = true,
-        disable = { 'python' }
-    }
-}
-EOF
-
-" DevIcon
-lua require'nvim-web-devicons'.setup{}
-
-" Straight from the lsp help page
-function! LspStatus()
-    return luaeval("require'jerry.lsp.config'.construct_statusline{}")
-endfunction
-
-" Shorten the path
-function! CorrentFileShortener()
-    return pathshorten(expand('%'))
-endfunction
 
 " The lightline configuration
 let g:lightline = {
@@ -205,122 +146,21 @@ let g:lightline = {
     \   'lineinfo': '%3l:%-2c', 'line': '%l', 'column': '%c', 'close': '%999X X ', 'winnr': '%{winnr()}'
     \ },
     \ 'component_function': {
-    \   'lsp': 'LspStatus',
+    \   'lsp': 'jerry#common#LspStatus',
     \   'gitbranch': 'FugitiveStatusline',
-    \   'shortpath': 'CorrentFileShortener'
+    \   'shortpath': 'jerry#common#CorrentFileShortener'
     \ },
     \ }
-
-" Configure the sorter
-lua <<EOF
-local actions = require('telescope.actions')
-local action_set = require('telescope.actions.set')
-require('telescope').setup({
-    defaults = {
-        file_sorter = require('telescope.sorters').get_fzy_sorter,
-        color_devicons = true,
-        file_previewer   = require('telescope.previewers').vim_buffer_cat.new,
-        grep_previewer   = require('telescope.previewers').vim_buffer_vimgrep.new,
-        qflist_previewer = require('telescope.previewers').vim_buffer_qflist.new,
-        prompt_position = 'top',
-        sorting_strategy = 'ascending',
-        layout_defaults = {
-            horizontal = {
-                mirror = true,
-            },
-            vertical = {
-                mirror = true,
-            },
-        },
-        mappings = {
-            i = {
-                ["<C-q>"] = actions.send_to_qflist,
-                ["<C-v>"] = actions.select_default,
-                ["<C-h>"] = function(prompt_nr)
-                    actions.select_vertical(prompt_nr)
-                    vim.cmd [[ FSNoToggle ]]
-                end,
-            },
-        }
-    },
-    extensions = {
-        fzy_native = {
-            override_generic_sorter = false,
-            override_file_sorter = true,
-        }
-    }
-})
-require('telescope').load_extension('fzy_native')
-EOF
-
-" Configure the lspsaga
-lua require('lspsaga').init_lsp_saga()
 
 " Whether if I want to use fzf or telescope
 let g:rg_derive_root='true'
 let g:use_fzf = 0
-
-" function to search through files
-func! FileFuzzySearch()
-    if g:use_fzf
-        :Files
-    else
-        lua require'telescope.builtin'.find_files{find_command = vim.split(vim.env.FZF_DEFAULT_COMMAND, ' ')}
-    endif
-endfun
-
-" function to search through buffer
-func! BufferFuzzySearch()
-    if g:use_fzf
-        :Buffers
-    else
-        lua require'telescope.builtin'.buffers{}
-    endif
-endfun
 
 " rg function to use later
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
   \   'rg -- '.shellescape(<q-args>), 1,
   \   fzf#vim#with_preview(), <bang>0)
-
-" function to search string globally
-func! WordFuzzySearch()
-    if g:use_fzf
-        exec 'Rg '.expand('<cword>')
-    else
-        lua require('telescope.builtin').grep_string()
-    endif
-endfun
-
-" function to find references
-func! ListSymbols()
-    if g:use_fzf
-        echom "List symbols from fzf is not supported"
-    else
-        lua require('telescope.builtin').lsp_document_symbols()
-    endif
-endfun
-
-" function to search string globally for a string
-func! GlobalFuzzySearch()
-    if g:use_fzf
-        let word = input('Grep For >')
-        exec 'Rg '.word
-    else
-        lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For >") })
-    endif
-endfun
-
-" function to toggle the paste mode for c-v paste to work
-func! TogglePasteMode()
-    if &paste == 1
-        set nopaste
-        set expandtab
-    else
-        set paste
-    endif
-endfun
 
 " function to create terminal mapping
 func! NTM(k, cmd)
@@ -334,17 +174,17 @@ nnoremap <leader>k      <cmd> wincmd k<CR>
 nnoremap <leader>l      <cmd> wincmd l<CR>
 nnoremap <leader>u      <cmd> UndotreeShow<CR>
 nnoremap <leader>pv     <cmd> vertical topleft wincmd v<bar> Ex <bar> vertical resize 50<CR>
-nnoremap <leader>pp     <cmd> call TogglePasteMode()<CR>
+nnoremap <leader>pp     <cmd> call jerry#common#TogglePasteMode()<CR>
 nnoremap <leader>v      <cmd> vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <CR>
 nnoremap <leader>V      <cmd> exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
 nnoremap <leader>r      <cmd> FS<CR>
 nnoremap <leader>c      <cmd> FSOffset -3<CR>
 
-nnoremap <c-p>          <cmd> call FileFuzzySearch()<CR>
-nnoremap <leader>b      <cmd> call BufferFuzzySearch()<CR>
-nnoremap <leader>o      <cmd> call ListSymbols()<CR>
-nnoremap Q              <cmd> call WordFuzzySearch()<CR>
-nnoremap <leader>ps     <cmd> call GlobalFuzzySearch()<CR>
+nnoremap <c-p>          <cmd> call jerry#common#FileFuzzySearch()<CR>
+nnoremap <leader>b      <cmd> call jerry#common#BufferFuzzySearch()<CR>
+nnoremap <leader>o      <cmd> call jerry#common#ListSymbols()<CR>
+nnoremap Q              <cmd> call jerry#common#WordFuzzySearch()<CR>
+nnoremap <leader>ps     <cmd> call jerry#common#GlobalFuzzySearch()<CR>
 nnoremap <leader>q      <cmd> lua require('telescope.builtin').quickfix()<CR>
 
 nnoremap <leader><c-]>  <cmd> lua vim.lsp.buf.definition()<CR>
@@ -411,15 +251,9 @@ augroup inlayHint
     autocmd BufEnter,BufWinEnter,TabEnter *.rs :lua require'lsp_extensions'.inlay_hints{}
 augroup END
 
-" Trim the whitespaces
-fun! TrimWhitespace()
-    let l:save = winsaveview()
-    keeppatterns %s/\s\+$//e
-    call winrestview(l:save)
-endfun
 augroup nowhitespaceattheend
     autocmd!
-    autocmd BufWritePre * :call TrimWhitespace()
+    autocmd BufWritePre * :call jerry#common#TrimWhitespace()
 augroup END
 
 augroup matlabFileDetection
