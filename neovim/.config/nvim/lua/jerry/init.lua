@@ -1,7 +1,12 @@
 
+require('jerry.helpers')
+
 require('colorbuddy').colorscheme('gruvbuddy')
-require'jerry.lsp.config'.general_lsp()
+
+require('jerry.lsp.config').general_lsp()
+
 require('lspkind').init{}
+
 require('compe').setup {
   enabled = true,
   autocomplete = true,
@@ -30,7 +35,7 @@ require('compe').setup {
   },
 }
 
-require'nvim-treesitter.configs'.setup{
+require('nvim-treesitter.configs').setup{
     ensure_installed = "maintained",
     highlight = { enable = true },
     indent = {
@@ -39,10 +44,9 @@ require'nvim-treesitter.configs'.setup{
     }
 }
 
-require'nvim-web-devicons'.setup{}
+require('nvim-web-devicons').setup{}
 
 local actions = require('telescope.actions')
-local action_set = require('telescope.actions.set')
 require('telescope').setup({
     defaults = {
         file_sorter = require('telescope.sorters').get_fzy_sorter,
@@ -77,6 +81,7 @@ require('telescope').setup({
         }
     }
 })
+
 require('telescope').load_extension('fzy_native')
 
 require('lspsaga').init_lsp_saga()
