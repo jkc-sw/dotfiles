@@ -1,4 +1,6 @@
 
+S = require('jerry.term').send
+
 require('jerry.helpers')
 
 require('colorbuddy').colorscheme('gruvbuddy')

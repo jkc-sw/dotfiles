@@ -1,7 +1,7 @@
 
 function P(...)
-  print(vim.inspect(...))
-  return ...
+    local objects = vim.tbl_map(vim.inspect, {...})
+    print(unpack(objects))
 end
 
 if pcall(require, 'plenary') then
