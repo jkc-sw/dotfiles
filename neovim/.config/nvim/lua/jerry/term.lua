@@ -56,8 +56,26 @@ local function send(cmd, opt)
   end
 end
 
+local function send_visual(opt)
+  opt = opt or {}
+  local id = opt.term_id or get_term_id(opt.term_idx)
+
+  local rstart, _ = unpack(vim.api.nvim_buf_get_mark(0, '<'))
+  local rend, _ = unpack(vim.api.nvim_buf_get_mark(0, '>'))
+
+  if rstart == rend then
+    rend = rstart + 1
+  end
+  local lines = vim.api.nvim_buf_get_lines(0, rstart - 1, rend - 1, false)
+
+  local cmd = table.concat(lines, '\n')
+
+  send(cmd, opt)
+end
+
 return {
-  send = send
+  send = send,
+  send_visual = send_visual,
 }
 
 -- vim:et sw=2 ts=2 sts=2

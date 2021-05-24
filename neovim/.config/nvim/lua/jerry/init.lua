@@ -1,7 +1,8 @@
 
-S = require('jerry.term').send
-
 require('jerry.helpers')
+
+S = function(...) R('jerry.term').send(...) end
+SV = function(...) R('jerry.term').send_visual(...) end
 
 require('colorbuddy').colorscheme('gruvbuddy')
 
