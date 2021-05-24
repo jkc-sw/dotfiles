@@ -17,6 +17,9 @@ addThisPath "$HOME/.cargo/bin"
 # add local bin
 addThisPath "$HOME/.local/bin"
 
+addThisPath "/usr/local/sbin"
+addThisPath "/usr/sbin"
+
 # some configuration to shell
 export TERM=xterm-256color
 export EDITOR=nvim
