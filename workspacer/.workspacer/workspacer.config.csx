@@ -92,4 +92,4 @@ Action<IConfigContext> doConfig = context =>
 };
 return doConfig;
 
-# vim:filetype=cs
+// vim:filetype=cs
