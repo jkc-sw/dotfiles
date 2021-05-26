@@ -88,5 +88,8 @@ Action<IConfigContext> doConfig = context =>
     context.WindowRouter.AddFilter((window) => !window.Title.Contains("Windows Sandbox"));
     context.WindowRouter.AddFilter((window) => !window.Title.Contains("Snip"));
     context.WindowRouter.AddFilter((window) => !window.Title.Contains("Sketch"));
+    context.WindowRouter.AddFilter((window) => !window.Title.Contains("VMware"));
 };
 return doConfig;
+
+# vim:filetype=cs
