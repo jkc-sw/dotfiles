@@ -31,7 +31,7 @@ Plug 'romgrk/nvim-treesitter-context'
 Plug 'haringsrob/nvim_context_vt'
 Plug 'modille/groovy.vim'
 Plug 'tjdevries/colorbuddy.vim'
-Plug 'bluz71/vim-nightfly-guicolors'
+Plug 'navarasu/onedark.nvim'
 Plug 'tjdevries/gruvbuddy.nvim'
 Plug 'onsails/lspkind-nvim'
 Plug 'hrsh7th/nvim-compe'
@@ -95,7 +95,7 @@ set cmdheight=1
 set updatetime=50
 set shortmess+=c
 set noshowmode
-set background=dark
+" set background=dark
 set splitbelow splitright
 set termguicolors
 set guicursor=i-ci-ve:block-blinkwait175-blinkoff150-blinkon175
@@ -124,7 +124,8 @@ let g:loaded_clipboard_provider = 1 " I don't need nvim to sync clipboard for me
 " colorscheme gruvbox
 " " colorscheme ayu
 
-colorscheme nightfly
+" let g:onedark_style = 'darker'
+colorscheme onedark
 
 " load everything lua
 lua require('jerry')
@@ -134,7 +135,7 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 
 " The lightline configuration
 let g:lightline = {
-    \ 'colorscheme': 'nightfly',
+    \ 'colorscheme': 'onedark',
     \ 'active': {
     \   'left': [['mode', 'paste'], ['gitbranch', 'readonly', 'filename', 'modified']],
     \   'right': [['lineinfo', 'lsp'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
