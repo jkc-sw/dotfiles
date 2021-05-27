@@ -29,12 +29,16 @@ Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/playground'
 Plug 'romgrk/nvim-treesitter-context'
+Plug 'haringsrob/nvim_context_vt'
 Plug 'modille/groovy.vim'
 Plug 'tjdevries/colorbuddy.vim'
 Plug 'tjdevries/gruvbuddy.nvim'
 Plug 'onsails/lspkind-nvim'
 Plug 'hrsh7th/nvim-compe'
 Plug 'dhruvasagar/vim-testify'
+
+" Trying
+Plug 'rmagatti/auto-session'
 
 " Local
 Plug $HOME.'/repos/focus-side.vim'
