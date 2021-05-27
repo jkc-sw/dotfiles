@@ -5,7 +5,7 @@ S = function(...) R('jerry.term').send(...) end
 SV = function() R('jerry.term').send_visual() end
 SL = function() R('jerry.term').send(vim.fn.getline('.')) end
 
-require('colorbuddy').colorscheme('gruvbuddy')
+-- require('colorbuddy').colorscheme('gruvbuddy')
 
 require('jerry.lsp.config').general_lsp()
 

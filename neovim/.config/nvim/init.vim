@@ -8,7 +8,6 @@ Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'sainnhe/gruvbox-material'
-Plug 'flazz/vim-colorschemes'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'itchyny/lightline.vim'
 Plug 'pprovost/vim-ps1'
@@ -32,6 +31,7 @@ Plug 'romgrk/nvim-treesitter-context'
 Plug 'haringsrob/nvim_context_vt'
 Plug 'modille/groovy.vim'
 Plug 'tjdevries/colorbuddy.vim'
+Plug 'bluz71/vim-nightfly-guicolors'
 Plug 'tjdevries/gruvbuddy.nvim'
 Plug 'onsails/lspkind-nvim'
 Plug 'hrsh7th/nvim-compe'
@@ -124,6 +124,8 @@ let g:loaded_clipboard_provider = 1 " I don't need nvim to sync clipboard for me
 " colorscheme gruvbox
 " " colorscheme ayu
 
+colorscheme nightfly
+
 " load everything lua
 lua require('jerry')
 
@@ -132,7 +134,7 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 
 " The lightline configuration
 let g:lightline = {
-    \ 'colorscheme': 'wombat',
+    \ 'colorscheme': 'nightfly',
     \ 'active': {
     \   'left': [['mode', 'paste'], ['gitbranch', 'readonly', 'filename', 'modified']],
     \   'right': [['lineinfo', 'lsp'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
