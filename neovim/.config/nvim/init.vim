@@ -135,7 +135,7 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 
 " The lightline configuration
 let g:lightline = {
-    \ 'colorscheme': 'onedark',
+    \ 'colorscheme': 'jellybeans',
     \ 'active': {
     \   'left': [['mode', 'paste'], ['gitbranch', 'readonly', 'filename', 'modified']],
     \   'right': [['lineinfo', 'lsp'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
