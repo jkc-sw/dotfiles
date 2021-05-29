@@ -99,6 +99,11 @@ local general_lsp = function()
     }
   end
 
+  lspconfig.pyright.setup{
+    on_attach=on_attach_vim
+  }
+
+
   -- my custom section
 
   -- hdl
