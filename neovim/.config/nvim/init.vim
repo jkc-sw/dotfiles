@@ -109,6 +109,7 @@ set scrolloff=15 " Make sure that cursor won't be too high
 set cursorline
 let g:vimsyn_embed = 'l'
 let g:loaded_clipboard_provider = 1 " I don't need nvim to sync clipboard for me, I have my own tool
+set grepprg=rg\ --line-number\ --color=never
 
 " Not used
 " highlight ColorColumn ctermbg=0 guibg=lightgrey
