@@ -37,12 +37,6 @@ Plug 'onsails/lspkind-nvim'
 Plug 'hrsh7th/nvim-compe'
 Plug 'dhruvasagar/vim-testify'
 
-" Trying
-Plug 'rmagatti/auto-session'
-
-" Local
-Plug $HOME.'/repos/focus-side.vim'
-
 " Not working
 " Plug 'sheerun/vim-polyglot'
 
