@@ -37,6 +37,9 @@ Plug 'onsails/lspkind-nvim'
 Plug 'hrsh7th/nvim-compe'
 Plug 'dhruvasagar/vim-testify'
 
+" Local
+Plug $HOME.'/repos/focus-side.vim'
+
 " Not working
 " Plug 'sheerun/vim-polyglot'
 
