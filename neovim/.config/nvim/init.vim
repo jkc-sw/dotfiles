@@ -167,50 +167,47 @@ command! -bang -nargs=* Rg
   \   'rg -- '.shellescape(<q-args>), 1,
   \   fzf#vim#with_preview(), <bang>0)
 
-" function to create terminal mapping
-func! NTM(k, cmd)
-    call jerry#term#NewTerminalMapping(a:k, a:cmd)
-endfunc
-
 " Key map
-nnoremap <leader>h      <cmd> wincmd h<CR>
-nnoremap <leader>j      <cmd> wincmd j<CR>
-nnoremap <leader>k      <cmd> wincmd k<CR>
-nnoremap <leader>l      <cmd> wincmd l<CR>
-nnoremap <leader>u      <cmd> UndotreeShow<CR>
-nnoremap <leader>pv     <cmd> vertical topleft wincmd v<bar> Ex <bar> vertical resize 50<CR>
-nnoremap <leader>pp     <cmd> call jerry#common#TogglePasteMode()<CR>
-nnoremap <leader>v      <cmd> vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <CR>
-nnoremap <leader>V      <cmd> exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
-nnoremap <leader>r      <cmd> FS<CR>
-nnoremap <leader>c      <cmd> FSOffset -3<CR>
+nnoremap <leader>h     <cmd>  wincmd h<CR>
+nnoremap <leader>j     <cmd>  wincmd j<CR>
+nnoremap <leader>k     <cmd>  wincmd k<CR>
+nnoremap <leader>l     <cmd>  wincmd l<CR>
+nnoremap <leader>u     <cmd>  UndotreeShow<CR>
+nnoremap <leader>pv    <cmd>  vertical topleft wincmd v<bar> Ex <bar> vertical resize 50<CR>
+nnoremap <leader>pp    <cmd>  call jerry#common#TogglePasteMode()<CR>
+nnoremap <leader>v     <cmd>  vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <CR>
+nnoremap <leader>V     <cmd>  exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
+nnoremap <leader>r     <cmd>  FS<CR>
+nnoremap <leader>c     <cmd>  FSOffset -3<CR>
+nnoremap <leader>E     <cmd>  exec getline('.')<cr>
+vnoremap <leader>E     :<c-u> exec join(getline("'<", "'>"), '<bar>')<cr>
 
-nnoremap <c-p>          <cmd> call jerry#common#FileFuzzySearch()<CR>
-nnoremap <leader>b      <cmd> call jerry#common#BufferFuzzySearch()<CR>
-nnoremap <leader>o      <cmd> call jerry#common#ListSymbols()<CR>
-nnoremap Q              <cmd> call jerry#common#WordFuzzySearch()<CR>
-nnoremap <leader>ps     <cmd> call jerry#common#GlobalFuzzySearch()<CR>
-nnoremap <leader>q      <cmd> lua require('telescope.builtin').quickfix()<CR>
+nnoremap <c-p>         <cmd>  call jerry#common#FileFuzzySearch()<CR>
+nnoremap <leader>b     <cmd>  call jerry#common#BufferFuzzySearch()<CR>
+nnoremap <leader>o     <cmd>  call jerry#common#ListSymbols()<CR>
+nnoremap Q             <cmd>  call jerry#common#WordFuzzySearch()<CR>
+nnoremap <leader>ps    <cmd>  call jerry#common#GlobalFuzzySearch()<CR>
+nnoremap <leader>q     <cmd>  lua require('telescope.builtin').quickfix()<CR>
 
-nnoremap <leader><c-]>  <cmd> lua vim.lsp.buf.definition()<CR>
-nnoremap <leader>gd     <cmd> lua vim.lsp.buf.declaration()<CR>
-nnoremap <leader>gf     <cmd> lua vim.lsp.buf.formatting()<CR>
-vnoremap <leader>gF     <cmd> '<,'>lua vim.lsp.buf.range_formatting()<CR>
-nnoremap <leader>gD     <cmd> lua vim.lsp.buf.implementation()<CR>
-nnoremap <leader>gr     <cmd> lua require('telescope.builtin').lsp_references()<CR>
-nnoremap <leader>gR     <cmd> lua require('lspsaga.rename').rename()<CR>
-nnoremap <leader>1gD    <cmd> lua vim.lsp.buf.type_definition()<CR>
-nnoremap <leader>ga     <cmd> lua require('lspsaga.codeaction').code_action()<CR>
-vnoremap <leader>ga     <cmd> '<,'>lua require('lspsaga.codeaction').range_code_action()<CR>
-nnoremap <leader>K      <cmd> lua vim.lsp.buf.hover()<CR>
+nnoremap <leader><c-]> <cmd>  lua vim.lsp.buf.definition()<CR>
+nnoremap <leader>gd    <cmd>  lua vim.lsp.buf.declaration()<CR>
+nnoremap <leader>gf    <cmd>  lua vim.lsp.buf.formatting()<CR>
+vnoremap <leader>gF    <cmd>  '<,'>lua vim.lsp.buf.range_formatting()<CR>
+nnoremap <leader>gD    <cmd>  lua vim.lsp.buf.implementation()<CR>
+nnoremap <leader>gr    <cmd>  lua require('telescope.builtin').lsp_references()<CR>
+nnoremap <leader>gR    <cmd>  lua require('lspsaga.rename').rename()<CR>
+nnoremap <leader>1gD   <cmd>  lua vim.lsp.buf.type_definition()<CR>
+nnoremap <leader>ga    <cmd>  lua require('lspsaga.codeaction').code_action()<CR>
+vnoremap <leader>ga    <cmd>  '<,'>lua require('lspsaga.codeaction').range_code_action()<CR>
+nnoremap <leader>K     <cmd>  lua vim.lsp.buf.hover()<CR>
 
-nnoremap <leader>go     <cmd> lua vim.lsp.diagnostic.set_loclist() <CR>
-nnoremap <leader>gs     <cmd> lua print(vim.inspect(vim.lsp.get_active_clients())) <CR>
-nnoremap <leader>gg     <cmd> lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>
-nnoremap <leader>gn     <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, severity = 'Error' }<CR>
-nnoremap <leader>gp     <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity = 'Error' }<CR>
-nnoremap <leader>gN     <cmd> lua vim.lsp.diagnostic.goto_next { wrap = false, severity_limit = 'Warning' }<CR>
-nnoremap <leader>gP     <cmd> lua vim.lsp.diagnostic.goto_prev { wrap = false, severity_limit = 'Warning' }<CR>
+nnoremap <leader>go    <cmd>  lua vim.lsp.diagnostic.set_loclist() <CR>
+nnoremap <leader>gs    <cmd>  lua print(vim.inspect(vim.lsp.get_active_clients())) <CR>
+nnoremap <leader>gg    <cmd>  lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>
+nnoremap <leader>gn    <cmd>  lua vim.lsp.diagnostic.goto_next { wrap = false, severity = 'Error' }<CR>
+nnoremap <leader>gp    <cmd>  lua vim.lsp.diagnostic.goto_prev { wrap = false, severity = 'Error' }<CR>
+nnoremap <leader>gN    <cmd>  lua vim.lsp.diagnostic.goto_next { wrap = false, severity_limit = 'Warning' }<CR>
+nnoremap <leader>gP    <cmd>  lua vim.lsp.diagnostic.goto_prev { wrap = false, severity_limit = 'Warning' }<CR>
 
 vnoremap <leader>p "_dP
 nnoremap <leader>tm vip:Tab/\|/<cr>
