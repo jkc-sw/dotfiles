@@ -11,12 +11,8 @@ function addThisPath() {
     esac
 }
 
-# add cargo path
 addThisPath "$HOME/.cargo/bin"
-
-# add local bin
 addThisPath "$HOME/.local/bin"
-
 addThisPath "/usr/local/sbin"
 addThisPath "/usr/sbin"
 
@@ -60,7 +56,7 @@ nvt() {
 
 # add a command to start docker instance
 dr() {
-    args=(use u18)
+    args=(use u20)
     args+=("$@")
     ~/repos/dev-env-ansible/rr.sh "${args[@]}"
 }
