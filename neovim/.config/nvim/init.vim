@@ -180,7 +180,7 @@ nnoremap <leader>V     <cmd>  exec("lua require('jerry.telescope.pickers').find_
 nnoremap <leader>r     <cmd>  FS<CR>
 nnoremap <leader>cc    <cmd>  FSOffset -3<CR>
 nnoremap <leader>E     <cmd>  exec getline('.')<cr>
-vnoremap <leader>E     :<c-u> exec join(getline("'<", "'>"), '<bar>')<cr>
+vnoremap <leader>E     :<c-u> exec join(filter(getline("'<", "'>"), 'v:val !~ "^\".*"'), '<bar>')<cr>
 
 nnoremap <c-p>         <cmd>  call jerry#common#FileFuzzySearch()<CR>
 nnoremap <leader>b     <cmd>  call jerry#common#BufferFuzzySearch()<CR>
