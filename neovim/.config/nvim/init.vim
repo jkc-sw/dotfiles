@@ -31,11 +31,11 @@ Plug 'romgrk/nvim-treesitter-context'
 Plug 'haringsrob/nvim_context_vt'
 Plug 'modille/groovy.vim'
 Plug 'tjdevries/colorbuddy.vim'
-Plug 'navarasu/onedark.nvim'
 Plug 'tjdevries/gruvbuddy.nvim'
 Plug 'onsails/lspkind-nvim'
 Plug 'hrsh7th/nvim-compe'
 Plug 'dhruvasagar/vim-testify'
+Plug 'arzg/vim-colors-xcode'
 
 " Local
 Plug $HOME.'/repos/focus-side.vim'
@@ -45,6 +45,7 @@ Plug $HOME.'/repos/focus-side.vim'
 
 " Not used
 " Plug 'nvim-lua/completion-nvim'
+" Plug 'navarasu/onedark.nvim'
 
 " Maybe future
 " Plug 'kyazdani42/nvim-tree.lua'
@@ -92,7 +93,7 @@ set cmdheight=1
 set updatetime=50
 set shortmess+=c
 set noshowmode
-" set background=dark
+set background=dark
 set splitbelow splitright
 set termguicolors
 set guicursor=i-ci-ve:block-blinkwait175-blinkoff150-blinkon175
@@ -122,8 +123,10 @@ set grepprg=rg\ --line-number\ --color=never
 " colorscheme gruvbox
 " " colorscheme ayu
 
-" let g:onedark_style = 'darker'
-colorscheme onedark
+" " let g:onedark_style = 'darker'
+" colorscheme onedark
+
+colorscheme xcodedarkhc
 
 " load everything lua
 lua require('jerry')
