@@ -70,7 +70,6 @@ require('telescope').setup({
         },
         mappings = {
             i = {
-                ["<C-q>"] = actions.send_to_qflist,
                 ["<C-h>"] = function(prompt_nr)
                     actions.select_vertical(prompt_nr)
                     vim.cmd [[ FSNoToggle ]]
