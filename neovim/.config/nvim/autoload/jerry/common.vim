@@ -18,6 +18,15 @@ func! jerry#common#FileFuzzySearch()
     endif
 endfun
 
+" function to search through lines
+func! jerry#common#LinesFuzzySearch()
+    if g:use_fzf
+        :Lines
+    else
+        lua require'telescope.builtin'.current_buffer_fuzzy_find{}
+    endif
+endfun
+
 " function to search through buffer
 func! jerry#common#BufferFuzzySearch()
     if g:use_fzf

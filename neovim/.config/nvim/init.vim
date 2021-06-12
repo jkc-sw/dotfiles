@@ -186,6 +186,7 @@ nnoremap <leader>E     <cmd>  exec getline('.')<cr>
 vnoremap <leader>E     :<c-u> exec join(filter(getline("'<", "'>"), 'v:val !~ "^\".*"'), '<bar>')<cr>
 
 nnoremap <c-p>         <cmd>  call jerry#common#FileFuzzySearch()<CR>
+nnoremap <leader>/     <cmd>  call jerry#common#LinesFuzzySearch()<CR>
 nnoremap <leader>b     <cmd>  call jerry#common#BufferFuzzySearch()<CR>
 nnoremap <leader>o     <cmd>  call jerry#common#ListSymbols()<CR>
 nnoremap Q             <cmd>  call jerry#common#WordFuzzySearch()<CR>
