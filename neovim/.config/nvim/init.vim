@@ -138,7 +138,7 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 let g:lightline = {
     \ 'colorscheme': 'jellybeans',
     \ 'active': {
-    \   'left': [['mode', 'paste'], ['gitbranch', 'readonly', 'filename', 'modified']],
+    \   'left': [['mode', 'paste'], ['asyncjob', 'gitbranch', 'readonly', 'filename', 'modified']],
     \   'right': [['lineinfo', 'lsp'], ['percent'], ['fileformat', 'fileencoding', 'filetype']]
     \ },
     \ 'inactive': {
@@ -154,6 +154,7 @@ let g:lightline = {
     \   'lineinfo': '%3l:%-2c', 'line': '%l', 'column': '%c', 'close': '%999X X ', 'winnr': '%{winnr()}'
     \ },
     \ 'component_function': {
+    \   'asyncjob': 'jerry#common#AsyncJobReport',
     \   'lsp': 'jerry#common#LspStatus',
     \   'gitbranch': 'FugitiveStatusline',
     \   'shortpath': 'jerry#common#CorrentFileShortener'

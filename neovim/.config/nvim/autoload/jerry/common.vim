@@ -9,6 +9,11 @@ function! jerry#common#CorrentFileShortener()
     return pathshorten(expand('%'))
 endfunction
 
+" A wrapper function to report async job status
+function! jerry#common#AsyncJobReport()
+    return luaeval("require('jerry.asyncjob').job_report()")
+endfunc
+
 " function to search through files
 func! jerry#common#FileFuzzySearch()
     if g:use_fzf
