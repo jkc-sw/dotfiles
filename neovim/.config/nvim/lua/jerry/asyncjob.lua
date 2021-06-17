@@ -36,22 +36,34 @@ local function run(ocmd, cmd, ...)
     on_stderr = store_line(errs),
     on_exit = vim.schedule_wrap(function(_, code)
       njobs = njobs - 1
-      if code ~= 0 then
-        error(table.concat(errs, "\n"))
-      end
 
       -- local tabcmd = ocmd .. " " .. cmd .. ' ' .. table.concat(args, " ")
       -- if #tabcmd > 30 then
       --   tabcmd = tabcmd:sub(1, 30)
       -- end
 
-      vim.cmd(ocmd)
-      vim.api.nvim_buf_set_lines(0, 0, -1, false, outs)
-      vim.bo.readonly = false
-      vim.bo.modifiable = true
-      vim.bo.modeline = true
-      vim.bo.buftype = 'nowrite'
-      vim.bo.swapfile = false
+      if #outs > 0 then
+        vim.cmd(ocmd)
+        vim.api.nvim_buf_set_lines(0, 0, -1, false, outs)
+        vim.bo.readonly = false
+        vim.bo.modifiable = true
+        vim.bo.modeline = true
+        vim.bo.buftype = 'nowrite'
+        vim.bo.swapfile = false
+      else
+        print(string.format('Command %s returns code 0', cmd .. table.concat(args, ' ')))
+      end
+
+      if code ~= 0 then
+        local emsg = string.format('Program exited with error code %d', code)
+
+        if #errs > 0 then
+          emsg = string.format('%s\n%s', table.concat(errs, "\n"))
+        end
+
+        error(emsg)
+      end
+
     end)
   }):start()
 end
