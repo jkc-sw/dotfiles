@@ -5,6 +5,10 @@ S = function(...) R('jerry.term').send(...) end
 SV = function() R('jerry.term').send_visual() end
 SL = function() R('jerry.term').send(vim.fn.getline('.')) end
 
+RT = function(...) R('jerry.asyncjob').run_to_tab(...) end
+RS = function(...) R('jerry.asyncjob').run_to_split(...) end
+RV = function(...) R('jerry.asyncjob').run_to_vsplit(...) end
+
 -- require('colorbuddy').colorscheme('gruvbuddy')
 
 require('jerry.lsp.config').general_lsp()

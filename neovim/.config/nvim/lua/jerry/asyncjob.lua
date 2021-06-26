@@ -17,12 +17,7 @@ local function store_line(t)
   end
 end
 
-local function run(ocmd, cmd, ...)
-  local args = ...
-  if type(args) ~= 'table' then
-    args = {args}
-  end
-
+local function run(ocmd, cmd, args)
   local outs = {}
   local errs = {}
   Job:new({
@@ -76,16 +71,16 @@ local function run(ocmd, cmd, ...)
   }):start()
 end
 
-local function run_to_tab(cmd, ...)
-  run('tabnew', cmd, ...)
+local function run_to_tab(cmd, args)
+  run('tabnew', cmd, args)
 end
 
-local function run_to_split(cmd, ...)
-  run('split', cmd, ...)
+local function run_to_split(cmd, args)
+  run('split', cmd, args)
 end
 
-local function run_to_vsplit(cmd, ...)
-  run('vsplit', cmd, ...)
+local function run_to_vsplit(cmd, args)
+  run('vsplit', cmd, args)
 end
 
 return {
