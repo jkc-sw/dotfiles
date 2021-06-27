@@ -17,12 +17,7 @@ local function store_line(t)
   end
 end
 
-local function run(ocmd, cmd, ...)
-  local args = ...
-  if type(args) ~= 'table' then
-    args = {args}
-  end
-
+local function run(ocmd, cmd, args)
   local outs = {}
   local errs = {}
   Job:new({
@@ -42,21 +37,16 @@ local function run(ocmd, cmd, ...)
       local lerrs = errs
       local locmd = ocmd
       local lcmd = cmd
-      -- outs = nil -- Prevent memory leak
-      -- errs = nil -- Prevent memory leak
-      -- args = nil -- Prevent memory leak
-      -- ocmd = nil -- Prevent memory leak
-      -- cmd = nil -- Prevent memory leak
 
       if #louts > 0 or (#lerrs > 0 and code ~= 0) then
         vim.cmd(locmd)
 
         if #louts > 0 then
-          vim.api.nvim_buf_set_lines(0, -1, -1, false, louts)
+          vim.api.nvim_buf_set_lines(0, 0, -1, false, louts)
         end
 
         if #lerrs > 0 then
-          vim.api.nvim_buf_set_lines(0, -1, -1, false, lerrs)
+          vim.api.nvim_buf_set_lines(0, 0, -1, false, lerrs)
         end
 
         vim.bo.readonly = false
@@ -76,16 +66,16 @@ local function run(ocmd, cmd, ...)
   }):start()
 end
 
-local function run_to_tab(cmd, ...)
-  run('tabnew', cmd, ...)
+local function run_to_tab(cmd, args)
+  run('tabnew', cmd, args)
 end
 
-local function run_to_split(cmd, ...)
-  run('split', cmd, ...)
+local function run_to_split(cmd, args)
+  run('split', cmd, args)
 end
 
-local function run_to_vsplit(cmd, ...)
-  run('vsplit', cmd, ...)
+local function run_to_vsplit(cmd, args)
+  run('vsplit', cmd, args)
 end
 
 return {
