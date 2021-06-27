@@ -37,21 +37,16 @@ local function run(ocmd, cmd, args)
       local lerrs = errs
       local locmd = ocmd
       local lcmd = cmd
-      -- outs = nil -- Prevent memory leak
-      -- errs = nil -- Prevent memory leak
-      -- args = nil -- Prevent memory leak
-      -- ocmd = nil -- Prevent memory leak
-      -- cmd = nil -- Prevent memory leak
 
       if #louts > 0 or (#lerrs > 0 and code ~= 0) then
         vim.cmd(locmd)
 
         if #louts > 0 then
-          vim.api.nvim_buf_set_lines(0, -1, -1, false, louts)
+          vim.api.nvim_buf_set_lines(0, 0, -1, false, louts)
         end
 
         if #lerrs > 0 then
-          vim.api.nvim_buf_set_lines(0, -1, -1, false, lerrs)
+          vim.api.nvim_buf_set_lines(0, 0, -1, false, lerrs)
         end
 
         vim.bo.readonly = false
