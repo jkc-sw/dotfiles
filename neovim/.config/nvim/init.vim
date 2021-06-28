@@ -108,6 +108,8 @@ set cursorline
 let g:vimsyn_embed = 'l'
 let g:loaded_clipboard_provider = 1 " I don't need nvim to sync clipboard for me, I have my own tool
 set grepprg=rg\ --line-number\ --color=never
+set regexpengine=1
+set redrawtime=15000
 
 " Not used
 " highlight ColorColumn ctermbg=0 guibg=lightgrey
@@ -271,5 +273,10 @@ augroup END
 augroup LuaHighlight
     autocmd!
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
+augroup END
+
+augroup DisableSomeSyntax
+    autocmd!
+    autocmd BufEnter,BufWinEnter,TabEnter *.groovy,*.html syntax off
 augroup END
 
