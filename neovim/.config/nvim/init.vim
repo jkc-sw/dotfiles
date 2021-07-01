@@ -187,6 +187,8 @@ nnoremap <leader>r     <cmd>  FS<CR>
 nnoremap <leader>cc    <cmd>  FSOffset -3<CR>
 nnoremap <leader>E     <cmd>  exec getline('.')<cr>
 vnoremap <leader>E     :<c-u> exec join(filter(getline("'<", "'>"), 'v:val !~ "^\".*"'), '<bar>')<cr>
+nnoremap <leader>T     <cmd>  lua SL()<cr>
+vnoremap <leader>T     :<c-u> lua SV()<cr>
 
 nnoremap <c-p>         <cmd>  call jerry#common#FileFuzzySearch()<CR>
 nnoremap <leader>/     <cmd>  call jerry#common#LinesFuzzySearch()<CR>

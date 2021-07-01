@@ -63,6 +63,8 @@ local function send_visual(opt)
   local rstart, _ = unpack(vim.api.nvim_buf_get_mark(0, '<'))
   local rend, _ = unpack(vim.api.nvim_buf_get_mark(0, '>'))
 
+  rend = rend + 1 -- for some reason, it doesn't get the last line
+
   if rstart == rend then
     rend = rstart + 1
   end
