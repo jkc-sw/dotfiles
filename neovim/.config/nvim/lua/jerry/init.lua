@@ -65,9 +65,9 @@ require('telescope').setup({
         file_previewer   = require('telescope.previewers').vim_buffer_cat.new,
         grep_previewer   = require('telescope.previewers').vim_buffer_vimgrep.new,
         qflist_previewer = require('telescope.previewers').vim_buffer_qflist.new,
-        prompt_position = 'top',
         sorting_strategy = 'ascending',
-        layout_defaults = {
+        layout_config = {
+            prompt_position = 'top',
             horizontal = {
                 mirror = true,
             },
