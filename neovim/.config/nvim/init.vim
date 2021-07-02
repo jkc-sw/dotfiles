@@ -13,7 +13,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'pprovost/vim-ps1'
 Plug 'kergoth/vim-bitbake'
 Plug 'godlygeek/tabular'
-Plug 'andymass/vim-matlab'
+Plug 'daeyun/vim-matlab'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'neovim/nvim-lspconfig'
