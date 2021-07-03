@@ -279,6 +279,6 @@ augroup END
 
 augroup DisableSomeSyntax
     autocmd!
-    autocmd BufEnter,BufWinEnter,TabEnter *.groovy,*.html syntax off
+    autocmd BufEnter,BufWinEnter,TabEnter *.groovy,*.html set syntax=
 augroup END
 
