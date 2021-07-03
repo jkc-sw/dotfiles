@@ -13,7 +13,6 @@ Plug 'itchyny/lightline.vim'
 Plug 'pprovost/vim-ps1'
 Plug 'kergoth/vim-bitbake'
 Plug 'godlygeek/tabular'
-Plug 'daeyun/vim-matlab'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'neovim/nvim-lspconfig'
@@ -39,6 +38,7 @@ Plug 'arzg/vim-colors-xcode'
 
 " Local
 Plug $HOME.'/repos/focus-side.vim'
+Plug $HOME.'/repos/vim-matlab.vim'
 
 " Not working
 " Plug 'sheerun/vim-polyglot'
