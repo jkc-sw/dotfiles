@@ -1,17 +1,13 @@
+
 " Plugin manager section
 "   Install this plugin manager from https://github.com/junegunn/vim-plug
 call plug#begin('~/.vim/plugged')
-Plug 'gruvbox-community/gruvbox'
-Plug 'vim-utils/vim-man'
 Plug 'mbbill/undotree'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-Plug 'sainnhe/gruvbox-material'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'itchyny/lightline.vim'
-Plug 'pprovost/vim-ps1'
-Plug 'kergoth/vim-bitbake'
 Plug 'godlygeek/tabular'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -28,13 +24,22 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/playground'
 Plug 'romgrk/nvim-treesitter-context'
 Plug 'haringsrob/nvim_context_vt'
-Plug 'modille/groovy.vim'
-Plug 'tjdevries/colorbuddy.vim'
-Plug 'tjdevries/gruvbuddy.nvim'
 Plug 'onsails/lspkind-nvim'
 Plug 'hrsh7th/nvim-compe'
 Plug 'dhruvasagar/vim-testify'
+
+" Language support
+Plug 'modille/groovy.vim'
+Plug 'kergoth/vim-bitbake'
+Plug 'pprovost/vim-ps1'
+
+" Color scheme
 Plug 'arzg/vim-colors-xcode'
+" Plug 'tjdevries/gruvbuddy.nvim'
+" Plug 'tjdevries/colorbuddy.vim'
+" Plug 'sainnhe/gruvbox-material'
+" Plug 'gruvbox-community/gruvbox'
+" Plug 'navarasu/onedark.nvim'
 
 " Local
 Plug $HOME.'/repos/focus-side.vim'
@@ -45,7 +50,7 @@ Plug $HOME.'/repos/vim-matlab.vim'
 
 " Not used
 " Plug 'nvim-lua/completion-nvim'
-" Plug 'navarasu/onedark.nvim'
+" Plug 'vim-utils/vim-man'
 
 " Maybe future
 " Plug 'kyazdani42/nvim-tree.lua'
@@ -53,6 +58,7 @@ Plug $HOME.'/repos/vim-matlab.vim'
 " Always the last
 Plug 'ryanoasis/vim-devicons'
 Plug 'kyazdani42/nvim-web-devicons'
+
 call plug#end()
 
 " if define headless update
