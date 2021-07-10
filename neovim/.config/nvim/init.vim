@@ -1,7 +1,8 @@
 
 " Plugin manager section
-"   Install this plugin manager from https://github.com/junegunn/vim-plug
 call plug#begin('~/.vim/plugged')
+
+" Editing
 Plug 'mbbill/undotree'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
@@ -9,24 +10,35 @@ Plug 'tpope/vim-repeat'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'itchyny/lightline.vim'
 Plug 'godlygeek/tabular'
+Plug 'dhruvasagar/vim-testify'
+
+" Git
+Plug 'tpope/vim-fugitive'
+
+" Fuzzy stuff
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'neovim/nvim-lspconfig'
-Plug 'glepnir/lspsaga.nvim'
-Plug 'tjdevries/nlua.nvim'
-Plug 'nvim-lua/lsp_extensions.nvim'
-Plug 'tpope/vim-fugitive'
+
+" Telescope
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
+
+" LSP
+Plug 'neovim/nvim-lspconfig'
+Plug 'onsails/lspkind-nvim'
+Plug 'hrsh7th/nvim-compe'
+Plug 'glepnir/lspsaga.nvim'
+Plug 'tjdevries/nlua.nvim'
+Plug 'nvim-lua/lsp_extensions.nvim'
+Plug 'ray-x/lsp_signature.nvim'
+
+" Tree sitter
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/playground'
 Plug 'romgrk/nvim-treesitter-context'
 Plug 'haringsrob/nvim_context_vt'
-Plug 'onsails/lspkind-nvim'
-Plug 'hrsh7th/nvim-compe'
-Plug 'dhruvasagar/vim-testify'
 
 " Language support
 Plug 'modille/groovy.vim'
@@ -263,9 +275,10 @@ augroup toClipBoard
         " \| endif
 augroup END
 
-augroup inlayHint
+augroup Lsp
     autocmd!
     autocmd BufEnter,BufWinEnter,TabEnter *.rs :lua require'lsp_extensions'.inlay_hints{}
+    autocmd BufReadPost,FileReadPost lua require "lsp_signature".on_attach()
 augroup END
 
 augroup nowhitespaceattheend
