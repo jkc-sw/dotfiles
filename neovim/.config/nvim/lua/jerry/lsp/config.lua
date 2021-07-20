@@ -82,6 +82,10 @@ local general_lsp = function()
   local tsserver = lspconfig.tsserver
   tsserver.setup{on_attach=on_attach_vim}
 
+  -- -- haskell -- Cannot get it to work, not sure how to handle the import/setup the haskell project for xmonad
+  -- local hls = lspconfig.hls
+  -- hls.setup{on_attach=on_attach_vim}
+
   -- cmake
   lspconfig.cmake.setup{
     cmd = {vars.lsp_condaenv_bin..'cmake-language-server'},
@@ -90,7 +94,7 @@ local general_lsp = function()
 
   -- python
   if vim.fn.executable('pyls') == 1 then
-    lspconfig.pyls.setup{
+    lspconfig.pylsp.setup{
       on_attach=on_attach_vim,
       settings={
         pyls={plugins={pycodestyle={maxLineLength=150}}}
