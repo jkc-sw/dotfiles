@@ -1,24 +1,15 @@
---
--- xmonad example config file.
---
--- A template showing all available configuration hooks,
--- and how to override the defaults in your own xmonad.hs conf file.
---
--- Normally, you'd only override those defaults you care about.
---
 
 import XMonad
 import Data.Monoid
 import System.Exit
 import XMonad.Util.Run
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.DynamicLog (dynamicLogWithPP, defaultPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
+import XMonad.Hooks.DynamicLog (dynamicLog)
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
--- The preferred terminal program, which is used in a binding below and by
--- certain contrib modules.
---
 myTerminal      = "kitty"
 
 -- Whether focus follows the mouse pointer.
@@ -128,7 +119,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
 
     -- Restart xmonad
-    , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
+    , ((modm              , xK_q     ), spawn "killall xmobar; xmonad --recompile; xmonad --restart")
 
     -- Run xmessage with a summary of the default keybindings (useful for beginners)
     , ((modm .|. shiftMask, xK_slash ), spawn ("echo \"" ++ help ++ "\" | xmessage -file -"))
@@ -240,6 +231,10 @@ myEventHook = mempty
 -- By default, do nothing.
 myStartupHook = return ()
 
+-- Get the number of windows
+windowCount :: X (Maybe String)
+windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
+
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 
@@ -248,8 +243,6 @@ myStartupHook = return ()
 main = do
     xmproc <- spawnPipe "xmobar ~/.config/xmobar/xmobarrc"
 
-    -- Status bars and logging
-    myLogHook <- dynamicLogWithPP $ defaultPP { ppOutput = hPutStrLn xmproc, ppOrder = \(ws:_:t:_) -> [ws,t] }
     xmonad $ docks def {
       -- simple stuff
         terminal           = myTerminal,
@@ -269,7 +262,19 @@ main = do
         layoutHook         = myLayout,
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
-        logHook            = myLogHook,
+        logHook            = dynamicLogWithPP $ xmobarPP
+            { ppOutput = hPutStrLn xmproc                           -- xmobar on monitor 1
+            , ppCurrent = xmobarColor "#98be65" "" . wrap "[" "]"           -- Current workspace
+            , ppVisible = xmobarColor "#98be65" ""              -- Visible but not current workspace
+            , ppHidden = xmobarColor "#82AAFF" "" . wrap "*" "" -- Hidden workspaces
+            , ppHiddenNoWindows = xmobarColor "#c792ea" ""     -- Hidden workspaces (no windows)
+            , ppTitle = xmobarColor "#b3afc2" "" . shorten 60               -- Title of active window
+            , ppSep =  " : "                    -- Separator character
+            , ppUrgent = xmobarColor "#C45500" "" . wrap "!" "!"            -- Urgent workspace
+            , ppExtras  = [windowCount]                                     -- # of windows current workspace
+            , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]                    -- order of things in xmobar
+            },
+        -- logHook = dynamicLogWithPP $ defaultPP { ppOutput = hPutStrLn xmproc, ppOrder = \(ws:_:t:_) -> [ws,t] },
         startupHook        = myStartupHook
     }
 
@@ -323,4 +328,7 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "mod-button1  Set the window to floating mode and move by dragging",
     "mod-button2  Raise the window to the top of the stack",
     "mod-button3  Set the window to floating mode and resize by dragging"]
+
+
+-- vim:et sw=4 ts=4 sts=4
 
