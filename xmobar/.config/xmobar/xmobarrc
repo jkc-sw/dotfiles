@@ -19,11 +19,18 @@ Config { font = "xft:FuraCode Nerd Font Mono:weight=bold:pixelsize=14:antialias=
                               "--normal", "green", "--high", "red"] 10
                     , Run Memory ["-t", "Mem: <usedratio>%"] 10
                     , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+                    -- , Run Alsa "default" "Master"
+                    --     [ "--template", "<volumestatus>"
+                    --     , "--suffix"  , "True"
+                    --     , "--"
+                    --     , "--on", ""
+                    --     ]
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{%cpu% | %memory% | <fc=#ee9a00>%date%</fc>"
+       -- , template = "%StdinReader% }{ %alsa:default:Master% | %cpu% | %memory% | <fc=#ee9a00>%date%</fc>"
+       , template = "%StdinReader% }{ %cpu% | %memory% | <fc=#ee9a00>%date%</fc>"
        }
 
 -- vim:et sw=4 ts=4 sts=4 filetype=haskell

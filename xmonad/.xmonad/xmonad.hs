@@ -6,10 +6,13 @@ import XMonad.Util.Run
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog (dynamicLogWithPP, defaultPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
 import XMonad.Layout.SimpleFloat
+import Graphics.X11.ExtraTypes.XF86
+import XMonad.Util.Ungrab
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+-- My terminal to use
 myTerminal      = "kitty"
 
 -- Whether focus follows the mouse pointer.
@@ -109,11 +112,12 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Deincrement the number of windows in the master area
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
 
-    -- Toggle the status bar gap
-    -- Use this binding with avoidStruts from Hooks.ManageDocks.
-    -- See also the statusBar function from Hooks.DynamicLog.
-    --
-    -- , ((modm              , xK_b     ), sendMessage ToggleStruts)
+    -- Screenshot
+    , ((modm              , xK_s     ), unGrab *> spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -m \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
+    , ((modm .|. shiftMask, xK_s     ), unGrab *> spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -s \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
+
+    -- Lock the screen
+    , ((modm .|. shiftMask, xK_l     ), spawn "xscreensaver-command -lock")
 
     -- Quit xmonad
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
@@ -142,6 +146,13 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
         | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
         , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+    ++
+
+    -- Manipulate volume
+    [ ((0, xF86XK_AudioMute),        spawn "amixer -q set Master toggle")
+    , ((0, xF86XK_AudioLowerVolume), spawn "amixer -q set Master 5%-")
+    , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master 5%+")
+    ]
 
 
 ------------------------------------------------------------------------
@@ -242,6 +253,7 @@ windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace
 --
 main = do
     xmproc <- spawnPipe "xmobar ~/.config/xmobar/xmobarrc"
+    -- spawn "nautilus --no-desktop -n &" -- The flag doesn't exist anymore
 
     xmonad $ docks def {
       -- simple stuff
@@ -314,6 +326,7 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "Deincrement the number of windows in the master area           : mod-period (mod-.)",
     "",
     "-- quit, or restart",
+    "Lock screen                                                    : mod-Shift-l",
     "Quit xmonad                                                    : mod-Shift-q",
     "Restart xmonad                                                 : mod-q",
     "Switch to workSpace N                                          : mod-[1..9]",
