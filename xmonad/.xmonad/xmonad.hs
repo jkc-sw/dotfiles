@@ -5,7 +5,7 @@ import System.Exit
 import XMonad.Util.Run
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog (dynamicLogWithPP, defaultPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
-import XMonad.Hooks.DynamicLog (dynamicLog)
+import XMonad.Layout.SimpleFloat
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -14,7 +14,7 @@ myTerminal      = "kitty"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = True
+myFocusFollowsMouse = False
 
 -- Whether clicking on a window to focus also passes the click to the window
 myClickJustFocuses :: Bool
@@ -44,8 +44,8 @@ myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
-myNormalBorderColor  = "#dddddd"
-myFocusedBorderColor = "#ff0000"
+myNormalBorderColor  = "#282c34"
+myFocusedBorderColor = "#46d9ff"
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -174,7 +174,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full)
+myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full ||| simpleFloat)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -263,18 +263,17 @@ main = do
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
         logHook            = dynamicLogWithPP $ xmobarPP
-            { ppOutput = hPutStrLn xmproc                           -- xmobar on monitor 1
-            , ppCurrent = xmobarColor "#98be65" "" . wrap "[" "]"           -- Current workspace
-            , ppVisible = xmobarColor "#98be65" ""              -- Visible but not current workspace
-            , ppHidden = xmobarColor "#82AAFF" "" . wrap "*" "" -- Hidden workspaces
-            , ppHiddenNoWindows = xmobarColor "#c792ea" ""     -- Hidden workspaces (no windows)
-            , ppTitle = xmobarColor "#b3afc2" "" . shorten 60               -- Title of active window
-            , ppSep =  " : "                    -- Separator character
-            , ppUrgent = xmobarColor "#C45500" "" . wrap "!" "!"            -- Urgent workspace
-            , ppExtras  = [windowCount]                                     -- # of windows current workspace
-            , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]                    -- order of things in xmobar
+            { ppOutput          = hPutStrLn xmproc                        --  xmobar on monitor 1
+            , ppCurrent         = xmobarColor "#98be65" "" . wrap "[" "]" --  Current workspace
+            , ppVisible         = xmobarColor "#98be65" ""                --  Visible but not current workspace
+            , ppHidden          = xmobarColor "#82AAFF" "" . wrap "*" ""  --  Hidden workspaces
+            , ppHiddenNoWindows = xmobarColor "#c792ea" ""                --  Hidden workspaces (no windows)
+            , ppTitle           = xmobarColor "#b3afc2" "" . shorten 60   --  Title of active window
+            , ppSep             = " : "                                   --  Separator character
+            , ppUrgent          = xmobarColor "#C45500" "" . wrap "!" "!" --  Urgent workspace
+            , ppExtras          = [windowCount]                           --  # of windows current workspace
+            , ppOrder           = \(ws:l:t:ex) -> [ws,l]++ex++[t]         --  order of things in xmobar
             },
-        -- logHook = dynamicLogWithPP $ defaultPP { ppOutput = hPutStrLn xmproc, ppOrder = \(ws:_:t:_) -> [ws,t] },
         startupHook        = myStartupHook
     }
 
@@ -283,51 +282,51 @@ help :: String
 help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "",
     "-- launching and killing programs",
-    "mod-Shift-Enter  Launch xterminal",
-    "mod-p            Launch dmenu",
-    "mod-Shift-p      Launch gmrun",
-    "mod-Shift-c      Close/kill the focused window",
-    "mod-Space        Rotate through the available layout algorithms",
-    "mod-Shift-Space  Reset the layouts on the current workSpace to default",
-    "mod-n            Resize/refresh viewed windows to the correct size",
+    "Launch xterminal                                               : mod-Shift-Enter",
+    "Launch dmenu                                                   : mod-p",
+    "Launch gmrun                                                   : mod-Shift-p",
+    "Close/kill the focused window                                  : mod-Shift-c",
+    "Rotate through the available layout algorithms                 : mod-Space",
+    "Reset the layouts on the current workSpace to default          : mod-Shift-Space",
+    "Resize/refresh viewed windows to the correct size              : mod-n",
     "",
     "-- move focus up or down the window stack",
-    "mod-Tab        Move focus to the next window",
-    "mod-Shift-Tab  Move focus to the previous window",
-    "mod-j          Move focus to the next window",
-    "mod-k          Move focus to the previous window",
-    "mod-m          Move focus to the master window",
+    "Move focus to the next window                                  : mod-Tab",
+    "Move focus to the previous window                              : mod-Shift-Tab",
+    "Move focus to the next window                                  : mod-j",
+    "Move focus to the previous window                              : mod-k",
+    "Move focus to the master window                                : mod-m",
     "",
     "-- modifying the window order",
-    "mod-Return   Swap the focused window and the master window",
-    "mod-Shift-j  Swap the focused window with the next window",
-    "mod-Shift-k  Swap the focused window with the previous window",
+    "Swap the focused window and the master window                  : mod-Return",
+    "Swap the focused window with the next window                   : mod-Shift-j",
+    "Swap the focused window with the previous window               : mod-Shift-k",
     "",
     "-- resizing the master/slave ratio",
-    "mod-h  Shrink the master area",
-    "mod-l  Expand the master area",
+    "Shrink the master area                                         : mod-h",
+    "Expand the master area                                         : mod-l",
     "",
     "-- floating layer support",
-    "mod-t  Push window back into tiling; unfloat and re-tile it",
+    "Push window back into tiling; unfloat and re-tile it           : mod-t",
     "",
     "-- increase or decrease number of windows in the master area",
-    "mod-comma  (mod-,)   Increment the number of windows in the master area",
-    "mod-period (mod-.)   Deincrement the number of windows in the master area",
+    "Increment the number of windows in the master area             : mod-comma  (mod-,)",
+    "Deincrement the number of windows in the master area           : mod-period (mod-.)",
     "",
     "-- quit, or restart",
-    "mod-Shift-q  Quit xmonad",
-    "mod-q        Restart xmonad",
-    "mod-[1..9]   Switch to workSpace N",
+    "Quit xmonad                                                    : mod-Shift-q",
+    "Restart xmonad                                                 : mod-q",
+    "Switch to workSpace N                                          : mod-[1..9]",
     "",
     "-- Workspaces & screens",
-    "mod-Shift-[1..9]   Move client to workspace N",
-    "mod-{w,e,r}        Switch to physical/Xinerama screens 1, 2, or 3",
-    "mod-Shift-{w,e,r}  Move client to screen 1, 2, or 3",
+    "Move client to workspace N                                     : mod-Shift-[1..9]",
+    "Switch to physical/Xinerama screens 1, 2, or 3                 : mod-{w,e,r}",
+    "Move client to screen 1, 2, or 3                               : mod-Shift-{w,e,r}",
     "",
-    "-- Mouse bindings: default actions bound to mouse events",
-    "mod-button1  Set the window to floating mode and move by dragging",
-    "mod-button2  Raise the window to the top of the stack",
-    "mod-button3  Set the window to floating mode and resize by dragging"]
+    "default actions bound to mouse events                          : -- Mouse bindings",
+    "Set the window to floating mode and move by dragging           : mod-button1",
+    "Raise the window to the top of the stack                       : mod-button2",
+    "Set the window to floating mode and resize by dragging         : mod-button3"]
 
 
 -- vim:et sw=4 ts=4 sts=4

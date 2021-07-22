@@ -1,5 +1,5 @@
-Config { font = "-misc-fixed-*-*-*-*-14-*-*-*-*-*-*-*"
-       , additionalFonts = []
+Config { font = "xft:FuraCode Nerd Font Mono:weight=bold:pixelsize=14:antialias=true:hinting=true"
+       , additionalFonts = [ "xft:FuraCode Nerd Font Mono:pixelsize=14:antialias=true:hinting=true" ]
        , borderColor = "black"
        , border = TopB
        , bgColor = "black"
@@ -15,9 +15,9 @@ Config { font = "-misc-fixed-*-*-*-*-14-*-*-*-*-*-*-*"
        , iconRoot = "."
        , allDesktops = True
        , overrideRedirect = True
-       ,  commands = [ Run Cpu ["-L", "3", "-H", "50",
-                               "--normal", "green", "--high", "red"] 10
-                    ,  Run Memory ["-t", "Mem: <usedratio>%"] 10
+       , commands = [ Run Cpu ["-L", "3", "-H", "50",
+                              "--normal", "green", "--high", "red"] 10
+                    , Run Memory ["-t", "Mem: <usedratio>%"] 10
                     , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
                     , Run StdinReader
                     ]
@@ -27,3 +27,4 @@ Config { font = "-misc-fixed-*-*-*-*-14-*-*-*-*-*-*-*"
        }
 
 -- vim:et sw=4 ts=4 sts=4 filetype=haskell
+
