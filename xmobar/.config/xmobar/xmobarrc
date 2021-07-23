@@ -5,7 +5,7 @@ Config { font = "xft:FuraCode Nerd Font Mono:weight=bold:pixelsize=14:antialias=
        , bgColor = "black"
        , fgColor = "grey"
        , alpha = 255
-       , position = Top
+       , position = TopW L 90
        , textOffset = -1
        , iconOffset = -1
        , lowerOnStart = True

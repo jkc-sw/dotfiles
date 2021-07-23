@@ -123,7 +123,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
 
     -- Restart xmonad
-    , ((modm              , xK_q     ), spawn "killall xmobar; xmonad --recompile; xmonad --restart")
+    , ((modm              , xK_q     ), spawn "pkill stalonetray; pkill xmobar; xmonad --recompile; xmonad --restart")
 
     -- Run xmessage with a summary of the default keybindings (useful for beginners)
     , ((modm .|. shiftMask, xK_slash ), spawn ("echo \"" ++ help ++ "\" | xmessage -file -"))
@@ -324,6 +324,10 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "-- increase or decrease number of windows in the master area",
     "Increment the number of windows in the master area             : mod-comma  (mod-,)",
     "Deincrement the number of windows in the master area           : mod-period (mod-.)",
+    ""
+    "-- screen shot",
+    "Taking entire desktop screenshot                               : mod-s",
+    "Taking select area screenshot                                  : mod-shift-s",
     "",
     "-- quit, or restart",
     "Lock screen                                                    : mod-Shift-l",
