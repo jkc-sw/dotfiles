@@ -255,6 +255,8 @@ main = do
     xmproc <- spawnPipe "xmobar ~/.config/xmobar/xmobarrc"
     -- spawn "nautilus --no-desktop -n &" -- The flag doesn't exist anymore
 
+    spawn "stalonetray --config ~/.config/stalonetray/stalonetrayrc"
+
     xmonad $ docks def {
       -- simple stuff
         terminal           = myTerminal,
