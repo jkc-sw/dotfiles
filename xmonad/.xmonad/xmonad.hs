@@ -324,7 +324,7 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "-- increase or decrease number of windows in the master area",
     "Increment the number of windows in the master area             : mod-comma  (mod-,)",
     "Deincrement the number of windows in the master area           : mod-period (mod-.)",
-    ""
+    "",
     "-- screen shot",
     "Taking entire desktop screenshot                               : mod-s",
     "Taking select area screenshot                                  : mod-shift-s",
