@@ -25,12 +25,13 @@ Config { font = "xft:Noto Sans CJK TC:weight=bold:pixelsize=14:antialias=true:hi
                     --     , "--"
                     --     , "--on", ""
                     --     ]
+                    , Run Com "getVolume.sh" [] "myvol" 3
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
        -- , template = "%StdinReader% }{ %alsa:default:Master% | %cpu% | %memory% | <fc=#ee9a00>%date%</fc>"
-       , template = "%StdinReader% }{ %cpu% | %memory% | <fc=#ee9a00>%date%</fc>"
+       , template = "%StdinReader% }{ %cpu% | %memory% | <fc=#ee9a00>%date%</fc> | vol: %myvol%"
        }
 
 -- vim:et sw=4 ts=4 sts=4 filetype=haskell
