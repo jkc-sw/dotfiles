@@ -1,4 +1,4 @@
-Config { font = "xft:FuraCode Nerd Font Mono:weight=bold:pixelsize=14:antialias=true:hinting=true"
+Config { font = "xft:Noto Sans CJK TC:weight=bold:pixelsize=14:antialias=true:hinting=true"
        , additionalFonts = [ "xft:FuraCode Nerd Font Mono:pixelsize=14:antialias=true:hinting=true" ]
        , borderColor = "black"
        , border = TopB
