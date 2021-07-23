@@ -16,9 +16,10 @@ Config { font = "xft:Noto Sans CJK TC:weight=bold:pixelsize=14:antialias=true:hi
        , allDesktops = True
        , overrideRedirect = True
        , commands = [ Run Cpu ["-L", "3", "-H", "50",
-                              "--normal", "green", "--high", "red"] 10
+                        "--normal", "green", "--high", "red"] 10
                     , Run Memory ["-t", "Mem: <usedratio>%"] 10
                     , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+                    , Run Battery [] 300
                     -- , Run Alsa "default" "Master"
                     --     [ "--template", "<volumestatus>"
                     --     , "--suffix"  , "True"
@@ -31,8 +32,7 @@ Config { font = "xft:Noto Sans CJK TC:weight=bold:pixelsize=14:antialias=true:hi
        , sepChar = "%"
        , alignSep = "}{"
        -- , template = "%StdinReader% }{ %alsa:default:Master% | %cpu% | %memory% | <fc=#ee9a00>%date%</fc>"
-       , template = "%StdinReader% }{ %cpu% | %memory% | <fc=#ee9a00>%date%</fc> | vol: %myvol%"
+       , template = "%StdinReader% }{ %cpu% | %memory% | <fc=#ee9a00>%date%</fc> | vol: %myvol% | %battery%"
        }
 
 -- vim:et sw=4 ts=4 sts=4 filetype=haskell
-
