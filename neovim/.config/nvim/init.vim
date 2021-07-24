@@ -237,7 +237,7 @@ nnoremap <leader>gN    <cmd>  lua vim.lsp.diagnostic.goto_next { wrap = false, s
 nnoremap <leader>gP    <cmd>  lua vim.lsp.diagnostic.goto_prev { wrap = false, severity_limit = 'Warning' }<CR>
 
 vnoremap <leader>p "_dP
-nnoremap <leader>tm vip:Tab/\|/<cr>
+nnoremap <leader>fm vip:Tab/\|/<cr>
 nnoremap ]c ]czz
 nnoremap [c [czz
 inoremap <C-c> <ESC>
