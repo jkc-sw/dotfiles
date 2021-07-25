@@ -1,5 +1,5 @@
 import XMonad
-import Dat.Monoid
+import Data.Monoid
 import System.Exit
 import XMonad.Util.Run
 import XMonad.Hooks.ManageDocks
@@ -257,8 +257,8 @@ windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace
 main = do
     xmproc <- spawnPipe "xmobar ~/.config/xmobar/xmobarrc"
     -- spawn "nautilus --no-desktop -n &" -- The flag doesn't exist anymore
-
     spawn "stalonetray --config ~/.config/stalonetray/stalonetrayrc"
+    spawn "feh --bg-scale ~/.xmonad/pure-black.png"
 
     xmonad $ docks $ ewmh def {
         -- simple stuff
