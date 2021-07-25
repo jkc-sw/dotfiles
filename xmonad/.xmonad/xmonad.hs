@@ -1,9 +1,9 @@
-
 import XMonad
 import Data.Monoid
 import System.Exit
 import XMonad.Util.Run
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog (dynamicLogWithPP, defaultPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
 import XMonad.Layout.SimpleFloat
@@ -221,7 +221,7 @@ myManageHook = composeAll
     , className =? "Gimp"           --> doFloat
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore
-    , fullscreenEventHook
+    , isFullscreen --> doFullFloat
     ]
 
 ------------------------------------------------------------------------
@@ -279,7 +279,7 @@ main = do
       -- hooks, layouts
         layoutHook         = myLayout,
         manageHook         = myManageHook,
-        handleEventHook    = myEventHook,
+        handleEventHook    = handleEventHook def <+> fullscreenEventHook <+> myEventHook,
         logHook            = dynamicLogWithPP $ xmobarPP
             { ppOutput          = hPutStrLn xmproc                        --  xmobar on monitor 1
             , ppCurrent         = xmobarColor "#98be65" "" . wrap "[" "]" --  Current workspace
@@ -353,4 +353,3 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
 
 
 -- vim:et sw=4 ts=4 sts=4
-
