@@ -1,5 +1,5 @@
 import XMonad
-import Data.Monoid
+import Dat.Monoid
 import System.Exit
 import XMonad.Util.Run
 import XMonad.Hooks.ManageDocks
@@ -9,6 +9,9 @@ import XMonad.Hooks.DynamicLog (dynamicLogWithPP, defaultPP, wrap, xmobarPP, xmo
 import XMonad.Layout.SimpleFloat
 import Graphics.X11.ExtraTypes.XF86
 import XMonad.Util.Ungrab
+import qualified XMonad.Layout.ToggleLayouts as T (toggleLayouts, ToggleLayout(Toggle))
+import qualified XMonad.Layout.MultiToggle as MT (Toggle(..))
+import XMonad.Layout.MultiToggle.Instances (StdTransformers(NBFULL, MIRROR, NOBORDERS))
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -104,6 +107,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Expand the master area
     , ((modm,               xK_l     ), sendMessage Expand)
 
+    -- Send window to float
+    , ((modm,               xK_f     ), sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStruts)
+
     -- Push window back into tiling
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
 
@@ -189,17 +195,10 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 --
 myLayout = avoidStruts (tiled ||| Mirror tiled ||| Full ||| simpleFloat)
   where
-     -- default tiling algorithm partitions the screen into two panes
-     tiled   = Tall nmaster delta ratio
-
-     -- The default number of windows in the master pane
-     nmaster = 1
-
-     -- Default proportion of screen occupied by master pane
-     ratio   = 1/2
-
-     -- Percent of screen to increment by when resizing panes
-     delta   = 3/100
+     tiled   = Tall nmaster delta ratio  -- default tiling algorithm partitions the screen into two panes
+     nmaster = 1  -- The default number of windows in the master pane
+     ratio   = 1/2  -- Default proportion of screen occupied by master pane
+     delta   = 3/100  -- Percent of screen to increment by when resizing panes
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -262,7 +261,7 @@ main = do
     spawn "stalonetray --config ~/.config/stalonetray/stalonetrayrc"
 
     xmonad $ docks $ ewmh def {
-      -- simple stuff
+        -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
         clickJustFocuses   = myClickJustFocuses,
@@ -272,14 +271,14 @@ main = do
         normalBorderColor  = myNormalBorderColor,
         focusedBorderColor = myFocusedBorderColor,
 
-      -- key bindings
+        -- key bindings
         keys               = myKeys,
         mouseBindings      = myMouseBindings,
 
-      -- hooks, layouts
+        -- hooks, layouts
         layoutHook         = myLayout,
         manageHook         = myManageHook,
-        handleEventHook    = handleEventHook def <+> fullscreenEventHook <+> myEventHook,
+        handleEventHook    = handleEventHook def <+> myEventHook,  --  <+> fullscreenEventHook, -- Use meta-f to switch to full instead
         logHook            = dynamicLogWithPP $ xmobarPP
             { ppOutput          = hPutStrLn xmproc                        --  xmobar on monitor 1
             , ppCurrent         = xmobarColor "#98be65" "" . wrap "[" "]" --  Current workspace
@@ -304,7 +303,10 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "Launch dmenu                                                   : mod-p",
     "Launch gmrun                                                   : mod-Shift-p",
     "Close/kill the focused window                                  : mod-Shift-c",
+    "",
+    "-- Change layout/workspace",
     "Rotate through the available layout algorithms                 : mod-Space",
+    "Toggle full screen layout                                      : mod-f",
     "Reset the layouts on the current workSpace to default          : mod-Shift-Space",
     "Resize/refresh viewed windows to the correct size              : mod-n",
     "",
@@ -346,7 +348,7 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "Switch to physical/Xinerama screens 1, 2, or 3                 : mod-{w,e,r}",
     "Move client to screen 1, 2, or 3                               : mod-Shift-{w,e,r}",
     "",
-    "default actions bound to mouse events                          : -- Mouse bindings",
+    "-- Mouse bindings",
     "Set the window to floating mode and move by dragging           : mod-button1",
     "Raise the window to the top of the stack                       : mod-button2",
     "Set the window to floating mode and resize by dragging         : mod-button3"]
