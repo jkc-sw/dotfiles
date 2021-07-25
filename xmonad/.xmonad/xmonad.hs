@@ -4,6 +4,7 @@ import Data.Monoid
 import System.Exit
 import XMonad.Util.Run
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog (dynamicLogWithPP, defaultPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
 import XMonad.Layout.SimpleFloat
 import Graphics.X11.ExtraTypes.XF86
@@ -219,7 +220,9 @@ myManageHook = composeAll
     [ className =? "MPlayer"        --> doFloat
     , className =? "Gimp"           --> doFloat
     , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore ]
+    , resource  =? "kdesktop"       --> doIgnore
+    , fullscreenEventHook
+    ]
 
 ------------------------------------------------------------------------
 -- Event handling
@@ -258,7 +261,7 @@ main = do
 
     spawn "stalonetray --config ~/.config/stalonetray/stalonetrayrc"
 
-    xmonad $ docks def {
+    xmonad $ docks $ ewmh def {
       -- simple stuff
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
