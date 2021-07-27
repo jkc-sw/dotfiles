@@ -1,21 +1,28 @@
-import XMonad
+
+-- Super awesome reference to borrow the code from
+-- https://github.com/jonascj/.xmonad/blob/master/xmonad.hs
+
 import Data.Monoid
+import Graphics.X11.ExtraTypes.XF86
 import System.Exit
-import XMonad.Util.Run
+import XMonad
+import XMonad.Actions.MouseResize
+import XMonad.Hooks.DynamicBars
+import XMonad.Hooks.DynamicLog (dynamicLogWithPP, defaultPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
-import XMonad.Hooks.EwmhDesktops
-import XMonad.Hooks.DynamicLog (dynamicLogWithPP, defaultPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
-import XMonad.Actions.MouseResize
-import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
-import XMonad.Layout.SimpleFloat
-import XMonad.Layout.NoBorders
-import Graphics.X11.ExtraTypes.XF86
-import XMonad.Util.Ungrab
-import qualified XMonad.Layout.ToggleLayouts as T (toggleLayouts, ToggleLayout(Toggle))
-import qualified XMonad.Layout.MultiToggle as MT (Toggle(..))
-import XMonad.Layout.MultiToggle.Instances (StdTransformers(NBFULL, MIRROR, NOBORDERS))
 import XMonad.Layout.MultiToggle (mkToggle, single, EOT(EOT), (??))
+import XMonad.Layout.MultiToggle.Instances (StdTransformers(NBFULL, MIRROR, NOBORDERS))
+import XMonad.Layout.NoBorders
+import XMonad.Layout.SimpleFloat
+import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
+import XMonad.Util.Run
+import XMonad.Util.Ungrab
+import qualified Data.Time.LocalTime as LT
+import qualified XMonad.Hooks.ManageDocks
+import qualified XMonad.Layout.MultiToggle as MT (Toggle(..))
+import qualified XMonad.Layout.ToggleLayouts as T (toggleLayouts, ToggleLayout(Toggle))
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -112,7 +119,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_s     ), unGrab *> spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -s \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
 
     -- Lock the screen
-    , ((modm .|. shiftMask, xK_l     ), spawn "xscreensaver-command -lock")
+    -- , ((modm .|. shiftMask, xK_l     ), spawn "xscreensaver-command -lock")
+    , ((modm .|. shiftMask, xK_l     ), spawn "xautolock -locknow")
 
     -- Start the arandr
     , ((modm              , xK_a     ), spawn "arandr")
@@ -133,21 +141,31 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- mod-[1..9], Switch to workspace N
     -- mod-shift-[1..9], Move client to workspace N
-    ++ [((m .|. modm, k), windows $ f i)
+    ++
+    [((m .|. modm, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
+    ]
 
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
     -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
-
-    ++ [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
+    ++
+    [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
         | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-        , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+        , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
+    ]
 
     -- Manipulate volume
-    ++ [ ((0, xF86XK_AudioMute),     spawn "amixer -D pulse -q set Master toggle")
+    ++
+    [ ((0, xF86XK_AudioMute),     spawn "amixer -D pulse -q set Master toggle")
     , ((0, xF86XK_AudioLowerVolume), spawn "amixer -D pulse -q set Master 5%-")
     , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -D pulse -q set Master 5%+")
+    ]
+
+    -- Manupulate backlight
+    ++
+    [ ((0, XF86MonBrightnessDown),   spawn "xbacklight -dec 10")
+    , ((0, XF86MonBrightnessUp),   spawn "xbacklight -inc 10")
     ]
 
 
@@ -182,7 +200,7 @@ myLayout = avoidStruts
      delta   = 3/100  -- Percent of screen to increment by when resizing panes
 
 -- Window rules:
-myManageHook = composeAll
+myManageHook = manageDocks <+> composeAll
     [ className =? "MPlayer"        --> doFloat
     , className =? "Gimp"           --> doFloat
     , resource  =? "desktop_window" --> doIgnore
@@ -191,22 +209,24 @@ myManageHook = composeAll
     ]
 
 -- Event handling
-myEventHook = mempty
+myEventHook = do
+    dynStatusBarEventHook barCreator barDestroyer <+> docksEventHook  -- <+> fullscreenEventHook, -- Use meta-f to switch to full instead
 
 -- Startup hook
-myStartupHook = return ()
+myStartupHook = do
+    dynStatusBarStartup barCreator barDestroyer
 
--- Get the number of windows
-windowCount :: X (Maybe String)
-windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
+-- Log hook
+myLogHook = do
+    multiPP myLogPP myLogPP
 
 -- Run xmonad with the settings you specify. No need to modify this.
 main = do
-    xmproc <- spawnPipe "xmobar ~/.config/xmobar/xmobarrc"
-    spawn "stalonetray --config ~/.config/stalonetray/stalonetrayrc"
+    -- xmproc <- spawnPipe "xmobar ~/.config/xmobar/xmobarrc"
+    -- spawn "stalonetray --config ~/.config/stalonetray/stalonetrayrc"
     spawn "feh --bg-scale ~/.xmonad/pure-black.png"
 
-    xmonad $ docks $ ewmh def {
+    xmonad $ docks $ ewmh $ defaultConfig {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
         clickJustFocuses   = myClickJustFocuses,
@@ -219,19 +239,8 @@ main = do
         mouseBindings      = myMouseBindings,
         layoutHook         = myLayout,
         manageHook         = myManageHook,
-        handleEventHook    = handleEventHook def <+> myEventHook,  --  <+> fullscreenEventHook, -- Use meta-f to switch to full instead
-        logHook            = dynamicLogWithPP $ xmobarPP
-            { ppOutput          = hPutStrLn xmproc                        --  xmobar on monitor 1
-            , ppCurrent         = xmobarColor "#98be65" "" . wrap "[" "]" --  Current workspace
-            , ppVisible         = xmobarColor "#98be65" ""                --  Visible but not current workspace
-            , ppHidden          = xmobarColor "#82AAFF" "" . wrap "*" ""  --  Hidden workspaces
-            , ppHiddenNoWindows = xmobarColor "#c792ea" ""                --  Hidden workspaces (no windows)
-            , ppTitle           = xmobarColor "#b3afc2" "" . shorten 60   --  Title of active window
-            , ppSep             = " : "                                   --  Separator character
-            , ppUrgent          = xmobarColor "#C45500" "" . wrap "!" "!" --  Urgent workspace
-            , ppExtras          = [windowCount]                           --  # of windows current workspace
-            , ppOrder           = \(ws:l:t:ex) -> [ws,l]++ex++[t]         --  order of things in xmobar
-            },
+        handleEventHook    = myEventHook,
+        logHook            = myLogHook,
         startupHook        = myStartupHook
     }
 
@@ -291,5 +300,39 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "Set the window to floating mode and move by dragging   : mod-button1",
     "Raise the window to the top of the stack               : mod-button2",
     "Set the window to floating mode and resize by dragging : mod-button3"]
+
+-- Functions to handle the status bar creation
+barCreator :: DynamicStatusBar
+barCreator (S sid) = do
+    t <- liftIO LT.getZonedTime
+    trace (show t ++ ": XMonad barCreator " ++ show sid)
+    if (sid == 0) then spawn "stalonetray -display 0 --config ~/.config/stalonetray/stalonetrayrc" else return ()
+    spawnPipe barcmd
+        where barcmd
+                | sid == 0 = ("xmobar --screen " ++ show sid ++ " ~/.config/xmobar/xmobarrc")
+                | sid >= 1 = ("xmobar --screen " ++ show sid ++ " ~/.config/xmobar/xmobarrc-side")
+
+barDestroyer :: DynamicStatusBarCleanup
+barDestroyer = do
+    t <- liftIO LT.getZonedTime
+    trace (show t ++ ": XMonad barDestroyer")
+
+-- Get the number of windows
+windowCount :: X (Maybe String)
+windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
+
+-- How the status bar is configured
+myLogPP :: PP
+myLogPP = xmobarPP
+    { ppCurrent         = xmobarColor "#98be65" "" . wrap "[" "]" --  Current workspace
+    , ppVisible         = xmobarColor "#98be65" ""                --  Visible but not current workspace
+    , ppHidden          = xmobarColor "#82AAFF" "" . wrap "*" ""  --  Hidden workspaces
+    , ppHiddenNoWindows = xmobarColor "#c792ea" ""                --  Hidden workspaces (no windows)
+    , ppTitle           = xmobarColor "#b3afc2" "" . shorten 60   --  Title of active window
+    , ppSep             = " : "                                   --  Separator character
+    , ppUrgent          = xmobarColor "#C45500" "" . wrap "!" "!" --  Urgent workspace
+    , ppExtras          = [windowCount]                           --  # of windows current workspace
+    , ppOrder           = \(ws:l:t:ex) -> [ws,l]++ex++[t]         --  order of things in xmobar
+    }
 
 -- vim:et sw=4 ts=4 sts=4

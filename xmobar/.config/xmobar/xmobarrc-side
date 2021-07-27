@@ -1,0 +1,26 @@
+Config { font = "xft:Noto Sans CJK TC:weight=bold:pixelsize=14:antialias=true:hinting=true"
+       , additionalFonts = [ "xft:FuraCode Nerd Font Mono:pixelsize=14:antialias=true:hinting=true" ]
+       , borderColor = "black"
+       , border = TopB
+       , bgColor = "black"
+       , fgColor = "grey"
+       , alpha = 255
+       , position = TopW L 90
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "."
+       , allDesktops = True
+       , overrideRedirect = True
+       , commands = [ Run StdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       -- , template = "%StdinReader% }{ %alsa:default:Master% | %cpu% | %memory% | <fc=#ee9a00>%date%</fc>"
+       , template = "%StdinReader% }{"
+       }
+
+-- vim:et sw=4 ts=4 sts=4 filetype=haskell
