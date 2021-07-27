@@ -132,7 +132,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
 
     -- Restart xmonad
-    -- , ((modm              , xK_q     ), spawn "pkill stalonetray; pkill xmobar; xmonad --recompile; xmonad --restart")
     , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
 
     -- Run xmessage with a summary of the default keybindings (useful for beginners)
@@ -222,8 +221,6 @@ myLogHook = do
 
 -- Run xmonad with the settings you specify. No need to modify this.
 main = do
-    -- xmproc <- spawnPipe "xmobar ~/.config/xmobar/xmobarrc"
-    -- spawn "stalonetray --config ~/.config/stalonetray/stalonetrayrc"
     spawn "feh --bg-scale ~/.xmonad/pure-black.png"
 
     xmonad $ docks $ ewmh $ defaultConfig {
@@ -306,7 +303,7 @@ barCreator :: DynamicStatusBar
 barCreator (S sid) = do
     t <- liftIO LT.getZonedTime
     trace (show t ++ ": XMonad barCreator " ++ show sid)
-    if (sid == 0) then spawn "stalonetray -display 0 --config ~/.config/stalonetray/stalonetrayrc" else return ()
+    if (sid == 0) then spawn "stalonetray --config ~/.config/stalonetray/stalonetrayrc" else return ()
     spawnPipe barcmd
         where barcmd
                 | sid == 0 = ("xmobar --screen " ++ show sid ++ " ~/.config/xmobar/xmobarrc")
