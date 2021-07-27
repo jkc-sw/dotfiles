@@ -1,3 +1,10 @@
 #!/bin/sh
 
-echo -n $(amixer -D pulse get Master | awk -F'[]%[]' '/%/ {if ($7 == "off") { print "MM" } else { print $2 }}' | head -n 1)
+out=$(amixer -D pulse get Master | grep '\[' | tr ']%' '[ ')
+onoff=$(echo -n "$out" | cut -d '[' -f 4 | head -n 1)
+vol=$(echo -n "$out" | cut -d '[' -f 2 | head -n 1)
+if [ "$onoff" = 'on' ]; then
+    echo -n "$vol"
+else
+    echo -n "$onoff"
+fi
