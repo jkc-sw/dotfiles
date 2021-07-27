@@ -164,8 +164,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Manupulate backlight
     ++
-    [ ((0, XF86MonBrightnessDown),   spawn "xbacklight -dec 10")
-    , ((0, XF86MonBrightnessUp),   spawn "xbacklight -inc 10")
+    [ ((0, xF86XK_MonBrightnessDown),   spawn "xbacklight -dec 10")
+    , ((0, xF86XK_MonBrightnessUp),   spawn "xbacklight -inc 10")
     ]
 
 
