@@ -28,7 +28,7 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 -- My terminal to use
-myTerminal      = "kitty"
+myTerminal      = "~/repos/kitty/kitty.app/bin/kitty"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -58,7 +58,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
 
     -- launch dmenu
-    , ((modm,               xK_p     ), spawn "dmenu_run")
+    , ((modm,               xK_p     ), spawn ". ~/.shellfunc ; dmenu_run")
 
     -- launch gmrun
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
