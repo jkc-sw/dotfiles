@@ -5,7 +5,7 @@ Config { font = "xft:Noto Sans CJK TC:weight=bold:pixelsize=14:antialias=true:hi
        , bgColor = "black"
        , fgColor = "grey"
        , alpha = 255
-       , position = TopW L 90
+       , position = Top
        , textOffset = -1
        , iconOffset = -1
        , lowerOnStart = True
@@ -19,7 +19,6 @@ Config { font = "xft:Noto Sans CJK TC:weight=bold:pixelsize=14:antialias=true:hi
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       -- , template = "%StdinReader% }{ %alsa:default:Master% | %cpu% | %memory% | <fc=#ee9a00>%date%</fc>"
        , template = "%StdinReader% }{"
        }
 
