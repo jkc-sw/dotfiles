@@ -4,6 +4,7 @@
 
 import Data.Monoid
 import Graphics.X11.ExtraTypes.XF86
+import Graphics.X11.Xlib.Cursor
 import System.Exit
 import XMonad
 import XMonad.Actions.MouseResize
@@ -17,6 +18,7 @@ import XMonad.Layout.MultiToggle.Instances (StdTransformers(NBFULL, MIRROR, NOBO
 import XMonad.Layout.NoBorders
 import XMonad.Layout.SimpleFloat
 import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
+import XMonad.Util.Cursor
 import XMonad.Util.Run
 import XMonad.Util.Ungrab
 import qualified Data.Time.LocalTime as LT
@@ -214,6 +216,7 @@ myEventHook = do
 -- Startup hook
 myStartupHook = do
     dynStatusBarStartup barCreator barDestroyer
+    setDefaultCursor xC_left_ptr
 
 -- Log hook
 myLogHook = do
