@@ -108,7 +108,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Send window to float
     , ((modm,               xK_f     ), sendMessage (MT.Toggle NBFULL)
                                         >> sendMessage ToggleStruts
-                                        >> toggleSmartSpacing
+                                        -- >> toggleSmartSpacing -- Ubuntu 18.04 has 0.13, which this method doesn't exist
                                         )
 
     -- Push window back into tiling
@@ -194,7 +194,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- Layouts:
 myLayout = avoidStruts
     $ smartBorders
-    $ mySpace 8
+    -- $ mySpace 8 -- Ubuntu 18.04 has 0.13, which this method doesn't exist
     $ mouseResize
     $ windowArrange
     $ mkToggle (NBFULL ?? NOBORDERS ?? EOT)
@@ -340,7 +340,7 @@ myLogPP = xmobarPP
     , ppOrder           = \(ws:l:t:ex) -> [ws,l]++ex++[t]         --  order of things in xmobar
     }
 
--- Add space around the window
-mySpace i = spacingRaw False (Border 0 i 0 i) True (Border i 0 i 0) True
+-- -- Add space around the window -- Ubuntu 18.04 has 0.13, which this method doesn't exist
+-- mySpace i = spacingRaw False (Border 0 i 0 i) True (Border i 0 i 0) True
 
 -- vim:et sw=4 ts=4 sts=4
