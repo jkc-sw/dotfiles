@@ -14,6 +14,7 @@ import XMonad.Hooks.DynamicLog (dynamicLogWithPP, defaultPP, wrap, xmobarPP, xmo
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.SetWMName
 import XMonad.Layout.MultiToggle (mkToggle, single, EOT(EOT), (??))
 import XMonad.Layout.MultiToggle.Instances (StdTransformers(NBFULL, MIRROR, NOBORDERS))
 import XMonad.Layout.NoBorders
@@ -227,6 +228,7 @@ myEventHook = do
 myStartupHook = do
     dynStatusBarStartup barCreator barDestroyer
     setDefaultCursor xC_left_ptr
+    setWMName "LG3D"
 
 -- Log hook
 myLogHook = do
