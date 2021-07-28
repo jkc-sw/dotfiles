@@ -45,7 +45,7 @@ myClickJustFocuses = False
 myBorderWidth   = 2
 
 -- The mod key
-myModMask       = mod4Mask
+myModMask       = mod1Mask
 
 -- The default number of workspaces (virtual screens) and their names.
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
