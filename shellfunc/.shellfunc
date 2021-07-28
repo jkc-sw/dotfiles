@@ -21,6 +21,9 @@ addThisPath "/opt/TurboVNC/bin"
 export TERM=xterm-256color
 export EDITOR=nvim
 
+# To have xmonad and matlab play nicely
+export _JAVA_AWT_WM_NONREPARENTING=1
+
 # configuration to rg and fd
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 if command -v fd &>/dev/null; then
