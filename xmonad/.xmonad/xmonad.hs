@@ -17,6 +17,7 @@ import XMonad.Layout.MultiToggle (mkToggle, single, EOT(EOT), (??))
 import XMonad.Layout.MultiToggle.Instances (StdTransformers(NBFULL, MIRROR, NOBORDERS))
 import XMonad.Layout.NoBorders
 import XMonad.Layout.SimpleFloat
+import XMonad.Layout.Spacing
 import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
 import XMonad.Util.Cursor
 import XMonad.Util.Run
@@ -60,7 +61,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
 
     -- launch dmenu
-    , ((modm,               xK_p     ), spawn "dmenu_run")
+    , ((modm,               xK_p     ), spawn ". ~/.shellfunc ; dmenu_run")
 
     -- launch gmrun
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
@@ -105,7 +106,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_l     ), sendMessage Expand)
 
     -- Send window to float
-    , ((modm,               xK_f     ), sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStruts)
+    , ((modm,               xK_f     ), sendMessage (MT.Toggle NBFULL)
+                                        >> sendMessage ToggleStruts
+                                        >> toggleSmartSpacing
+                                        )
 
     -- Push window back into tiling
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
@@ -190,6 +194,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- Layouts:
 myLayout = avoidStruts
     $ smartBorders
+    $ mySpace 8
     $ mouseResize
     $ windowArrange
     $ mkToggle (NBFULL ?? NOBORDERS ?? EOT)
@@ -334,5 +339,8 @@ myLogPP = xmobarPP
     , ppExtras          = [windowCount]                           --  # of windows current workspace
     , ppOrder           = \(ws:l:t:ex) -> [ws,l]++ex++[t]         --  order of things in xmobar
     }
+
+-- Add space around the window
+mySpace i = spacingRaw False (Border 0 i 0 i) True (Border i 0 i 0) True
 
 -- vim:et sw=4 ts=4 sts=4
