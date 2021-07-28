@@ -7,6 +7,7 @@ import Graphics.X11.ExtraTypes.XF86
 import Graphics.X11.Xlib.Cursor
 import System.Exit
 import XMonad
+import XMonad.Actions.CycleWS
 import XMonad.Actions.MouseResize
 import XMonad.Hooks.DynamicBars
 import XMonad.Hooks.DynamicLog (dynamicLogWithPP, defaultPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
@@ -61,10 +62,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
 
     -- launch dmenu
-    , ((modm,               xK_p     ), spawn ". ~/.shellfunc ; dmenu_run")
+    , ((modm .|. shiftMask, xK_p     ), spawn "dmenu_run")
 
-    -- launch gmrun
-    , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
+    -- Switch to the last workspace, similar to tmux last window
+    , ((modm,               xK_a     ), toggleWS)
 
     -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
@@ -76,7 +77,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
 
     -- Resize viewed windows to the correct size
-    , ((modm,               xK_n     ), refresh)
+    , ((modm .|. shiftMask, xK_n     ), refresh)
+
+    -- Move to next/previous workspace
+    , ((modm,               xK_n     ), nextWS)
+    , ((modm,               xK_p     ), prevWS)
 
     -- Move focus to the next window
     , ((modm,               xK_Tab   ), windows W.focusDown)
@@ -129,7 +134,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_l     ), spawn "xautolock -locknow")
 
     -- Start the arandr
-    , ((modm              , xK_a     ), spawn "arandr")
+    , ((modm              , xK_x     ), spawn "arandr")
 
     -- Start the pavucontros
     , ((modm              , xK_v     ), spawn "pavucontrol")
@@ -255,17 +260,20 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "",
     "-- launching and killing programs",
     "Launch terminal                                        : mod-Shift-Enter",
-    "Launch dmenu                                           : mod-p",
+    "Launch dmenu                                           : mod-Shift-p",
     "Launch gmrun                                           : mod-Shift-p",
-    "Launch arandr                                          : mod-a",
+    "Launch arandr                                          : mod-x",
     "Launch pavucontrol                                     : mod-v",
     "Close/kill the focused window                          : mod-Shift-c",
     "",
     "-- Change layout/workspace",
+    "Change to last workspace                               : mod-a",
+    "Change to next workspace                               : mod-n",
+    "Change to prev workspace                               : mod-p",
     "Rotate through the available layout algorithms         : mod-Space",
     "Toggle full screen layout                              : mod-f",
     "Reset the layouts on the current workSpace to default  : mod-Shift-Space",
-    "Resize/refresh viewed windows to the correct size      : mod-n",
+    "Resize/refresh viewed windows to the correct size      : mod-Shift-n",
     "Push window back into tiling; unfloat and re-tile it   : mod-t",
     "",
     "-- move focus",
