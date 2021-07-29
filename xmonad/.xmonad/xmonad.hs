@@ -207,7 +207,7 @@ myLayout = avoidStruts
     $ tiled ||| Mirror tiled ||| Full ||| simpleFloat
   where
      -- tiled   = Tall nmaster delta ratio  -- default tiling algorithm partitions the screen into two panes
-     tiled   = spacing 6 $ Tall nmaster delta ratio  -- use spacing for xmonad 0.13 ubuntu 18.04 for now -- default tiling algorithm partitions the screen into two panes
+     tiled   = smartSpacing 6 $ Tall nmaster delta ratio  -- use spacing for xmonad 0.13 ubuntu 18.04 for now -- default tiling algorithm partitions the screen into two panes
      nmaster = 1  -- The default number of windows in the master pane
      ratio   = 1/2  -- Default proportion of screen occupied by master pane
      delta   = 3/100  -- Percent of screen to increment by when resizing panes
