@@ -131,8 +131,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_s     ), unGrab *> spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -s \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
 
     -- Lock the screen
-    -- , ((modm .|. shiftMask, xK_l     ), spawn "xscreensaver-command -lock")
-    , ((modm .|. shiftMask, xK_l     ), spawn "xautolock -locknow")
+    , ((modm .|. shiftMask, xK_l     ), spawn "xscreensaver-command -lock")
+    -- , ((modm .|. shiftMask, xK_l     ), spawn "xautolock -locknow")
 
     -- Start the arandr
     , ((modm              , xK_x     ), spawn "arandr")
