@@ -93,7 +93,7 @@ local general_lsp = function()
   }
 
   -- python
-  if vim.fn.executable('pyls') == 1 then
+  if vim.fn.executable('pylsp') == 1 then
     lspconfig.pylsp.setup{
       on_attach=on_attach_vim,
       settings={
