@@ -15,6 +15,7 @@ import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
+import XMonad.Layout.Grid
 import XMonad.Layout.MultiToggle (mkToggle, single, EOT(EOT), (??))
 import XMonad.Layout.MultiToggle.Instances (StdTransformers(NBFULL, MIRROR, NOBORDERS))
 import XMonad.Layout.NoBorders
@@ -204,7 +205,7 @@ myLayout = avoidStruts
     $ mouseResize
     $ windowArrange
     $ mkToggle (NBFULL ?? NOBORDERS ?? EOT)
-    $ tiled ||| Mirror tiled ||| Full ||| simpleFloat
+    $ tiled ||| spacing 6 Grid ||| Mirror tiled ||| Full ||| simpleFloat
   where
      -- tiled   = Tall nmaster delta ratio  -- default tiling algorithm partitions the screen into two panes
      tiled   = spacing 6 $ Tall nmaster delta ratio  -- use spacing for xmonad 0.13 ubuntu 18.04 for now -- default tiling algorithm partitions the screen into two panes
