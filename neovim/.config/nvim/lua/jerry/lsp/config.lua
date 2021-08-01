@@ -97,7 +97,7 @@ local general_lsp = function()
     lspconfig.pylsp.setup{
       on_attach=on_attach_vim,
       settings={
-        pyls={plugins={pycodestyle={maxLineLength=150}}}
+        pylsp={plugins={pycodestyle={maxLineLength=150}}}
       }
     }
   end
