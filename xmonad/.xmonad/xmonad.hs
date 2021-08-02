@@ -1,4 +1,3 @@
-a
 -- Super awesome reference to borrow the code from
 -- https://github.com/jonascj/.xmonad/blob/master/xmonad.hs
 
