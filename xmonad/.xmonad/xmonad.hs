@@ -1,4 +1,4 @@
-
+a
 -- Super awesome reference to borrow the code from
 -- https://github.com/jonascj/.xmonad/blob/master/xmonad.hs
 
@@ -19,6 +19,7 @@ import XMonad.Layout.Grid
 import XMonad.Layout.MultiToggle (mkToggle, single, EOT(EOT), (??))
 import XMonad.Layout.MultiToggle.Instances (StdTransformers(NBFULL, MIRROR, NOBORDERS))
 import XMonad.Layout.NoBorders
+import XMonad.Layout.Reflect
 import XMonad.Layout.SimpleFloat
 import XMonad.Layout.Spacing
 import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
@@ -203,6 +204,7 @@ myLayout = avoidStruts
     $ smartBorders
     -- $ mySpace 8 -- Ubuntu 18.04 has 0.13, which this method doesn't exist
     $ mouseResize
+    $ reflectHoriz
     $ windowArrange
     $ mkToggle (NBFULL ?? NOBORDERS ?? EOT)
     $ tiled ||| spacing 6 Grid ||| Mirror tiled ||| Full ||| simpleFloat
@@ -210,7 +212,7 @@ myLayout = avoidStruts
      -- tiled   = Tall nmaster delta ratio  -- default tiling algorithm partitions the screen into two panes
      tiled   = spacing 6 $ Tall nmaster delta ratio  -- use spacing for xmonad 0.13 ubuntu 18.04 for now -- default tiling algorithm partitions the screen into two panes
      nmaster = 1  -- The default number of windows in the master pane
-     ratio   = 1/2  -- Default proportion of screen occupied by master pane
+     ratio   = 0.618  -- Default proportion of screen occupied by master pane
      delta   = 3/100  -- Percent of screen to increment by when resizing panes
 
 -- Window rules:
