@@ -107,10 +107,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_k     ), windows W.swapUp    )
 
     -- Shrink the master area
-    , ((modm,               xK_h     ), sendMessage Shrink)
+    , ((modm,               xK_l     ), sendMessage Shrink)  -- This is flipped, since I want the master pane on the right
 
     -- Expand the master area
-    , ((modm,               xK_l     ), sendMessage Expand)
+    , ((modm,               xK_h     ), sendMessage Expand)  -- This is flipped, since I want the master pane on the right
 
     -- Send window to float
     , ((modm,               xK_f     ), sendMessage (MT.Toggle NBFULL)
