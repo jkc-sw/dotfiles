@@ -23,8 +23,6 @@ antigen apply
 #===============================================================================
 # User configuration
 #===============================================================================
-eval "$(starship init zsh)"
-
 # custom setup
 . "$HOME/.shellfunc"
 if [[ -d "$HOME/.vim/plugged/fzf" ]]; then
@@ -42,6 +40,8 @@ if [[ -x "$HOME/.vim/plugged/fzf/bin/fzf" ]]; then
     fi
     alias his='eval "$(history | tac | sed -n "s/[ 0-9]\+\(.*\)/\1/p" | fzf)"'
 fi
+
+eval "$(starship init zsh)"
 
 # source asdf
 . "$ASDF_DIR/asdf.sh"
