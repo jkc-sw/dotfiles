@@ -1,5 +1,6 @@
 -- Super awesome reference to borrow the code from
 -- https://github.com/jonascj/.xmonad/blob/master/xmonad.hs
+-- https://www.youtube.com/watch?v=FX26s8INUYo&t=80s
 
 import Data.Monoid
 import Graphics.X11.ExtraTypes.XF86
