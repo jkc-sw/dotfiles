@@ -8,14 +8,14 @@ export ZSH_PLUG_DIR=$HOME/.config/zsh
 #===============================================================================
 # Function to source files if they exist
 function zsh_add_file() {
-    [ -f "$ZSH_PLUG_DIR/$1" ] && source "$ZSH_PLUG_DIR/$1"
+    test -f "$ZSH_PLUG_DIR/$1" && source "$ZSH_PLUG_DIR/$1"
 }
 
 function zsh_add_plugin() {
-    PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
-    if [ -d "$ZSH_PLUG_DIR/plugins/$PLUGIN_NAME" ]; then
+    PLUGIN_NAME=$(echo -n $1 | cut -d "/" -f 2)
+    if test -d "$ZSH_PLUG_DIR/plugins/$PLUGIN_NAME"; then
         # For plugins
-        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
+        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh"
         zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
     else
         git clone "https://github.com/$1.git" "$ZSH_PLUG_DIR/plugins/$PLUGIN_NAME"
