@@ -1,23 +1,5 @@
 #!/bin/bash
 
 . "$HOME/.shellfunc"
-if [[ -d "$HOME/.vim/plugged/fzf" ]]; then
-    addThisPath "$HOME/.vim/plugged/fzf/bin"
-    . "$HOME/.vim/plugged/fzf/shell/completion.bash"
-    . "$HOME/.vim/plugged/fzf/shell/key-bindings.bash"
-fi
-set -o vi
-if [[ -x "$HOME/.vim/plugged/fzf/bin/fzf" ]]; then
-    addThisPath "$HOME/.vim/plugged/fzf/bin"
-    if [[ -d "$HOME/.vim/plugged/fzf/shell" ]]; then
-        for f in $(ls  "$HOME/.vim/plugged/fzf/shell/"*.bash); do
-            . "$f"
-        done
-    fi
-    alias his='eval "$(history | tac | sed -n "s/[ 0-9]\+\(.*\)/\1/p" | fzf)"'
-fi
-eval "$(starship init bash)"
 
-# source asdf
-. "$ASDF_DIR/asdf.sh"
-. "$ASDF_DIR/completions/asdf.bash"
+set -o vi

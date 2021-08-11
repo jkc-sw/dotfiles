@@ -1,57 +1,109 @@
 #!/bin/zsh
 
+# The plug in location
+export ZSH_PLUG_DIR=$HOME/.config/zsh
+
 #===============================================================================
-# plugin manager section
+# Thank you, https://github.com/ChristianChiarulli/Machfiles/blob/1e52b9190d5e54d35f305b53d6b5dfe7306c395e/zsh/.config/zsh/zshrc
 #===============================================================================
-source "$HOME/.local/share/antigen/antigen.zsh"
-antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle zsh-users/zsh-syntax-highlighting
+# Function to source files if they exist
+function zsh_add_file() {
+    [ -f "$ZSH_PLUG_DIR/$1" ] && source "$ZSH_PLUG_DIR/$1"
+}
 
-# # Too slow to load
-# antigen bundle marlonrichert/zsh-autocomplete
-# antigen bundle zsh-users/zsh-completions
-# antigen bundle agkozak/zsh-z
+function zsh_add_plugin() {
+    PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
+    if [ -d "$ZSH_PLUG_DIR/plugins/$PLUGIN_NAME" ]; then
+        # For plugins
+        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || \
+        zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
+    else
+        git clone "https://github.com/$1.git" "$ZSH_PLUG_DIR/plugins/$PLUGIN_NAME"
+    fi
+}
 
-# # Even slower to load
-# antigen use oh-my-zsh
-# antigen theme robbyrussell
-# antigen bundle git
-# antigen bundle colored-man-pages
+# function zsh_add_completion() {
+#     PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
+#     if [ -d "$ZSH_PLUG_DIR/plugins/$PLUGIN_NAME" ]; then
+#         # For completions
+# 		completion_file_path=$(ls $ZSH_PLUG_DIR/plugins/$PLUGIN_NAME/_*)
+# 		fpath+="$(dirname "${completion_file_path}")"
+#         zsh_add_file "plugins/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh"
+#     else
+#         git clone "https://github.com/$1.git" "$ZSH_PLUG_DIR/plugins/$PLUGIN_NAME"
+# 		fpath+=$(ls $ZSH_PLUG_DIR/plugins/$PLUGIN_NAME/_*)
+#         [ -f $ZSH_PLUG_DIR/.zccompdump ] && $ZSH_PLUG_DIR/.zccompdump
+#     fi
+# 	completion_file="$(basename "${completion_file_path}")"
+# 	if [ "$2" = true ] && compinit "${completion_file:1}"
+# }
 
-antigen apply
+#===============================================================================
+# Plugins
+#===============================================================================
+zsh_add_plugin "zsh-users/zsh-autosuggestions"
+zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
 
+# #===============================================================================
+# # plugin manager section
+# #===============================================================================
+# source "$HOME/.local/share/antigen/antigen.zsh"
+# antigen bundle zsh-users/zsh-autosuggestions
+# antigen bundle zsh-users/zsh-syntax-highlighting
+#
+# # # Too slow to load
+# # antigen bundle marlonrichert/zsh-autocomplete
+# # antigen bundle zsh-users/zsh-completions
+# # antigen bundle agkozak/zsh-z
+#
+# # # Even slower to load
+# # antigen use oh-my-zsh
+# # antigen theme robbyrussell
+# # antigen bundle git
+# # antigen bundle colored-man-pages
+#
+# antigen apply
 
 #===============================================================================
 # Borrowed from other, check to make sure I understand
+# Thank you, https://github.com/ChristianChiarulli/Machfiles/blob/1e52b9190d5e54d35f305b53d6b5dfe7306c395e/zsh/.config/zsh/zshrc
 #===============================================================================
 # some useful options (man zshoptions)
 setopt autocd extendedglob nomatch menucomplete
 setopt interactive_comments
 stty stop undef		# Disable ctrl-s to freeze terminal.
 zle_highlight=('paste:none')
+
 # beeping is annoying
 unsetopt BEEP
+
 # completions
 autoload -Uz compinit
 zstyle ':completion:*' menu select
 # zstyle ':completion::complete:lsof:*' menu yes select
 zmodload zsh/complist
-# compinit
+compinit
 _comp_options+=(globdots)		# Include hidden files.
+
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
+
 # Colors
 autoload -Uz colors && colors
+
+bindkey -v
 bindkey "^p" up-line-or-beginning-search # Up
 bindkey "^n" down-line-or-beginning-search # Down
 bindkey "^k" up-line-or-beginning-search # Up
 bindkey "^j" down-line-or-beginning-search # Down
+
 autoload edit-command-line; zle -N edit-command-line
+
 HISTFILE="$HOME/.zsh_history"
-HISTSIZE=10000
-SAVEHIST=1000
+HISTSIZE=100000
+SAVEHIST=100000
 setopt INC_APPEND_HISTORY_TIME
 
 #===============================================================================
@@ -59,27 +111,6 @@ setopt INC_APPEND_HISTORY_TIME
 #===============================================================================
 # custom setup
 . "$HOME/.shellfunc"
-if [[ -d "$HOME/.vim/plugged/fzf" ]]; then
-    addThisPath "$HOME/.vim/plugged/fzf/bin"
-    . "$HOME/.vim/plugged/fzf/shell/completion.zsh"
-    . "$HOME/.vim/plugged/fzf/shell/key-bindings.zsh"
-fi
-bindkey -v
-if [[ -x "$HOME/.vim/plugged/fzf/bin/fzf" ]]; then
-    addThisPath "$HOME/.vim/plugged/fzf/bin"
-    if [[ -d "$HOME/.vim/plugged/fzf/shell" ]]; then
-        for f in $(ls  "$HOME/.vim/plugged/fzf/shell/"*.zsh); do
-            . "$f"
-        done
-    fi
-    alias his='eval "$(history | tac | sed -n "s/[ 0-9]\+\(.*\)/\1/p" | fzf)"'
-fi
-
-eval "$(starship init zsh)"
-
-# source asdf
-. "$ASDF_DIR/asdf.sh"
-. "$ASDF_DIR/completions/asdf.bash"
 
 # refresh the ssh tty
 # https://babushk.in/posts/renew-environment-tmux.html
