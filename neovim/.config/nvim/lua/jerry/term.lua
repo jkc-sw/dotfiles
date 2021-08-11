@@ -46,8 +46,8 @@ local function send(cmd, opt)
   opt = opt or {}
   local id = opt.term_id or get_term_id(opt.term_idx)
 
-  if cmd:sub(-string.len(cmd)) ~= '\n' then
-    cmd = cmd .. '\n'
+  if cmd:sub(string.len(cmd)-1) ~= "\r\n" then
+    cmd = cmd .. "\r\n"
   end
 
   local ok, _ = pcall(vim.api.nvim_chan_send, id, cmd)
