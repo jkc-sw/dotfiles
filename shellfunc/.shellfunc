@@ -43,16 +43,18 @@ alias cinfo='sudo modprobe msr && sudo cpupower frequency-info'
 alias cmonitor='sudo modprobe msr && sudo turbostat --show Core,CPU,Avg_MHz,Busy%,Bzy_MHz,TSC_MHz,CoreTmp,PkgTmp,PkgWatt,RAMWatt'
 alias cperf='sudo modprobe msr && sudo cpupower frequency-set -g performance'
 
-SHELLNAME=$(cut -d / -f 3 <<<$SHELL)
+# handle fzf
+if test -n "$SHELLNAME"; then
+    eval "$(starship init $SHELLNAME)"
+    eval "$(zoxide init $SHELLNAME)"
 
-eval "$(starship init $SHELLNAME)"
-
-# Handle the fzf
-if [[ -d "$HOME/.vim/plugged/fzf" ]]; then
-    addThisPath "$HOME/.vim/plugged/fzf/bin"
-    if test -n "$SHELLNAME"; then
-        # . "$HOME/.vim/plugged/fzf/shell/completion.$SHELLNAME"  # Too slow
-        . "$HOME/.vim/plugged/fzf/shell/key-bindings.$SHELLNAME"
+    # Handle the fzf
+    if [[ -d "$HOME/.vim/plugged/fzf" ]]; then
+        addThisPath "$HOME/.vim/plugged/fzf/bin"
+        if test -n "$SHELLNAME"; then
+            # . "$HOME/.vim/plugged/fzf/shell/completion.$SHELLNAME"  # Too slow
+            . "$HOME/.vim/plugged/fzf/shell/key-bindings.$SHELLNAME"
+        fi
     fi
 fi
 
@@ -87,6 +89,17 @@ export NVM_DIR="$HOME/.nvm"
 
 # asdf dir
 export ASDF_DIR="$HOME/repos/asdf"
+
+# function to update plugin
+update-zsh-plugins() {(
+    if test -d "$ZSH_PLUG_DIR"; then
+        cd "$ZSH_PLUG_DIR/plugins"
+        for d in $(fd -t d -d 1); do
+            echo "Git pull $d"
+            git -C "$d" pull -q
+        done
+    fi
+)}
 
 # Source some tools that I don't use often
 sdev() {

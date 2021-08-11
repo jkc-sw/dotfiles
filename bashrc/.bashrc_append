@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export SHELLNAME=bash
 . "$HOME/.shellfunc"
 
 set -o vi

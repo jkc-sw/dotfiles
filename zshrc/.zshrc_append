@@ -110,6 +110,7 @@ setopt INC_APPEND_HISTORY_TIME
 # User configuration
 #===============================================================================
 # custom setup
+export SHELLNAME=zsh
 . "$HOME/.shellfunc"
 
 # refresh the ssh tty
