@@ -63,6 +63,8 @@ fi
 
 # shortcut to start nvim
 nv() {
+    sdev
+
     if tset -d "$HOME/miniconda3/envs/dev_env_ansible"; then
         conda activate "$HOME/miniconda3/envs/dev_env_ansible"
     fi

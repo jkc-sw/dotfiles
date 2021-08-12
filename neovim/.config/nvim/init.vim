@@ -1,83 +1,9 @@
 
-" Plugin manager section
-call plug#begin('~/.vim/plugged')
-
-" Editing
-Plug 'mbbill/undotree'
-Plug 'tomtom/tcomment_vim'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'michaeljsmith/vim-indent-object'
-Plug 'itchyny/lightline.vim'
-Plug 'godlygeek/tabular'
-Plug 'dhruvasagar/vim-testify'
-
-" Git
-Plug 'tpope/vim-fugitive'
-
-" Fuzzy stuff
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-
-" Telescope
-Plug 'nvim-lua/popup.nvim'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-lua/telescope.nvim'
-Plug 'nvim-telescope/telescope-fzy-native.nvim'
-
-" LSP
-Plug 'neovim/nvim-lspconfig'
-Plug 'onsails/lspkind-nvim'
-Plug 'hrsh7th/nvim-compe'
-Plug 'glepnir/lspsaga.nvim'
-Plug 'tjdevries/nlua.nvim'
-Plug 'nvim-lua/lsp_extensions.nvim'
-Plug 'ray-x/lsp_signature.nvim'
-
-" Tree sitter
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'nvim-treesitter/playground'
-Plug 'romgrk/nvim-treesitter-context'
-Plug 'haringsrob/nvim_context_vt'
-
-" Language support
-Plug 'modille/groovy.vim'
-Plug 'kergoth/vim-bitbake'
-Plug 'pprovost/vim-ps1'
-
-" Color scheme
-Plug 'arzg/vim-colors-xcode'
-" Plug 'tjdevries/gruvbuddy.nvim'
-" Plug 'tjdevries/colorbuddy.vim'
-" Plug 'sainnhe/gruvbox-material'
-" Plug 'gruvbox-community/gruvbox'
-" Plug 'navarasu/onedark.nvim'
-
-" Local
-Plug $HOME.'/repos/focus-side.vim'
-Plug $HOME.'/repos/vim-matlab.vim'
-
-" Not working
-" Plug 'sheerun/vim-polyglot'
-
-" Not used
-" Plug 'nvim-lua/completion-nvim'
-" Plug 'vim-utils/vim-man'
-
-" Maybe future
-" Plug 'kyazdani42/nvim-tree.lua'
-
-" Always the last
-Plug 'ryanoasis/vim-devicons'
-Plug 'kyazdani42/nvim-web-devicons'
-
-call plug#end()
-
 " if define headless update
+lua require('jerry.plugins')
 if $ANSIBLE_UPDATE
-    :PlugInstall
-    :PlugUpdate
-    :PlugClean!
+    autocmd User PackerComplete quitall
+    PackerSync
     finish
 endif
 
