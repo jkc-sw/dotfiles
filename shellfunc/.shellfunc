@@ -4,7 +4,7 @@
 # https://unix.stackexchange.com/questions/14895/duplicate-entries-in-path-a-problem
 # Answer from: Gilles
 # answered Jun 13 '11 at 8:34
-function addThisPath() {
+addThisPath() {
     case ":$PATH:" in
     *":$1:"*) :;; # already there
     *) PATH="$1:$PATH";; # or PATH="$PATH:$1"
@@ -27,10 +27,10 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 
 # configuration to rg and fd
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
-if command -v fd &>/dev/null; then
+if command -v fd >/dev/null 2>&1; then
     export FZF_DEFAULT_COMMAND='fd --hidden --type file'
     export FZF_ALT_C_COMMAND="fd --hidden --type directory"
-elif command -v fdfind &>/dev/null; then
+elif command -v fdfind >/dev/null 2>&1; then
     export FZF_DEFAULT_COMMAND='fdfind --hidden --type file'
     export FZF_ALT_C_COMMAND="fdfind --hidden --type directory"
     alias fd=fdfind
@@ -45,14 +45,17 @@ alias cperf='sudo modprobe msr && sudo cpupower frequency-set -g performance'
 
 # handle fzf
 if test -n "$SHELLNAME"; then
-    eval "$(starship init $SHELLNAME)"
-    eval "$(zoxide init $SHELLNAME)"
+    eval "$(starship init "$SHELLNAME")"
+    eval "$(zoxide init "$SHELLNAME")"
 
     # Handle the fzf
-    if [[ -d "$HOME/.vim/plugged/fzf" ]]; then
+    if test -d "$HOME/.vim/plugged/fzf"; then
         addThisPath "$HOME/.vim/plugged/fzf/bin"
         if test -n "$SHELLNAME"; then
+            # # shellcheck source=/dev/null
             # . "$HOME/.vim/plugged/fzf/shell/completion.$SHELLNAME"  # Too slow
+
+            # shellcheck source=/dev/null
             . "$HOME/.vim/plugged/fzf/shell/key-bindings.$SHELLNAME"
         fi
     fi
@@ -60,25 +63,23 @@ fi
 
 # shortcut to start nvim
 nv() {
-    if [[ -d "$HOME/miniconda3/envs/dev_env_ansible" ]]; then
+    if tset -d "$HOME/miniconda3/envs/dev_env_ansible"; then
         conda activate "$HOME/miniconda3/envs/dev_env_ansible"
     fi
 
-    if command -v nvim &>/dev/null; then
+    if command -v nvim >/dev/null 2>&1; then
         nvim -c "lua require'jerry.lsp.config'.alternative_lsp{}" "$@"
     fi
 }
 
 # shortcut to start nvim with host being a tmux
 nvt() {
-    TOCLIP_HOST_TMUX=2 nv $@
+    TOCLIP_HOST_TMUX=2 nv "$@"
 }
 
 # add a command to start docker instance
 dr() {
-    args=(use u20)
-    args+=("$@")
-    ~/repos/dev-env-ansible/rr.sh "${args[@]}"
+    ~/repos/dev-env-ansible/rr.sh use u20 "$@"
 }
 
 # try to use bat in man
@@ -91,9 +92,9 @@ export NVM_DIR="$HOME/.nvm"
 export ASDF_DIR="$HOME/repos/asdf"
 
 # function to update plugin
-update-zsh-plugins() {(
+update_zsh_plugins() {(
     if test -d "$ZSH_PLUG_DIR"; then
-        cd "$ZSH_PLUG_DIR/plugins"
+        cd "$ZSH_PLUG_DIR/plugins" || return
         for d in $(fd -t d -d 1); do
             echo "Git pull $d"
             git -C "$d" pull -q
@@ -103,8 +104,11 @@ update-zsh-plugins() {(
 
 # Source some tools that I don't use often
 sdev() {
+    # shellcheck source=/dev/null
     . "$NVM_DIR/nvm.sh"  # This loads nvm
+    # shellcheck source=/dev/null
     . "$NVM_DIR/bash_completion"  # Too slow
+    # shellcheck source=/dev/null
     . "$ASDF_DIR/asdf.sh"
 }
 
