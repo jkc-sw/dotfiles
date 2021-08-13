@@ -33,7 +33,7 @@ return require('packer').startup(function(use)
   use 'glepnir/lspsaga.nvim'
   use 'tjdevries/nlua.nvim'
   use 'nvim-lua/lsp_extensions.nvim'
-  use 'ray-x/lsp_signature.nvim'
+  -- use 'ray-x/lsp_signature.nvim'  -- some ghost buffers remain
 
   -- Tree sitter
   use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate maintained'}

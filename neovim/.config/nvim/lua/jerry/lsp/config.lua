@@ -6,7 +6,7 @@ local lspconfig = require'lspconfig'
 local vim = vim
 
 local on_attach_vim = function(client)
-  require'lsp_signature'.on_attach()
+  -- require'lsp_signature'.on_attach()  -- This plugin has some ghost buffer remain
 end
 
 local construct_statusline = function()
