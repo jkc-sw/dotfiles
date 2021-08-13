@@ -19,7 +19,7 @@ Config { font = "xft:Noto Sans CJK TC:weight=bold:pixelsize=14:antialias=true:hi
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{"
+       , template = " }{ %StdinReader%"
        }
 
 -- vim:et sw=4 ts=4 sts=4 filetype=haskell

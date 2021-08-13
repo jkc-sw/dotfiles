@@ -31,8 +31,7 @@ Config { font = "xft:Noto Sans CJK TC:weight=bold:pixelsize=14:antialias=true:hi
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       -- , template = "%StdinReader% }{ %alsa:default:Master% | %cpu% | %memory% | <fc=#ee9a00>%date%</fc>"
-       , template = "%StdinReader% }{ %cpu% | %memory% | <fc=#ee9a00>%date%</fc> | vol: %myvol% | %battery%"
+       , template = "%cpu% | %memory% | <fc=#ee9a00>%date%</fc> | vol: %myvol% | %battery% }{ %StdinReader%"
        }
 
 -- vim:et sw=4 ts=4 sts=4 filetype=haskell
