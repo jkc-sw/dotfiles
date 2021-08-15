@@ -177,9 +177,15 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Manupulate backlight
     ++
-    [ ((0, xF86XK_MonBrightnessDown),   spawn "xbacklight -dec 10")
-    , ((0, xF86XK_MonBrightnessUp),   spawn "xbacklight -inc 10")
+    [ ((0, xF86XK_MonBrightnessDown), dimmer)
+    , ((0, xF86XK_MonBrightnessUp), brighter)
+    , ((modm              , xK_b), dimmer)
+    , ((modm .|. shiftMask, xK_b), brighter)
     ]
+
+    where
+        brighter = spawn "xbacklight -inc 10"
+        dimmer = spawn "xbacklight -dec 10"
 
 
 -- Mouse bindings: default actions bound to mouse events
@@ -264,14 +270,14 @@ main = do
 help :: String
 help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "",
-    "-- launching and killing programs",
+    "-- run apps",
     "Launch terminal                                        : mod-Shift-Enter",
     "Launch dmenu                                           : mod-Shift-p",
     "Launch arandr                                          : mod-x",
     "Launch pavucontrol                                     : mod-v",
     "Close/kill the focused window                          : mod-Shift-c",
     "",
-    "-- Change layout/workspace",
+    "-- layout or workspaces",
     "Change to last workspace                               : mod-a",
     "Change to next workspace                               : mod-n",
     "Change to prev workspace                               : mod-p",
@@ -281,17 +287,21 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "Resize/refresh viewed windows to the correct size      : mod-Shift-n",
     "Push window back into tiling; unfloat and re-tile it   : mod-t",
     "",
-    "-- move focus",
-    "Move focus to the next window                          : mod-Tab",
-    "Move focus to the previous window                      : mod-Shift-Tab",
-    "Move focus to the next window                          : mod-j",
-    "Move focus to the previous window                      : mod-k",
-    "Move focus to the master window                        : mod-m",
+    "-- focus",
+    "Focus to the next window                               : mod-Tab",
+    "Focus to the previous window                           : mod-Shift-Tab",
+    "Focus to the next window                               : mod-j",
+    "Focus to the previous window                           : mod-k",
+    "Focus to the master window                             : mod-m",
+    "Focus to physical/Xinerama screens 1, 2, or 3          : mod-{w,e,r}",
+    "Focus to workSpace N                                   : mod-[1..9]",
     "",
-    "-- swap windows",
+    "-- swap move windows",
     "Swap the focused window and the master window          : mod-Return",
     "Swap the focused window with the next window           : mod-Shift-j",
     "Swap the focused window with the previous window       : mod-Shift-k",
+    "Move client to workspace N                             : mod-Shift-[1..9]",
+    "Move client to screen 1, 2, or 3                       : mod-Shift-{w,e,r}",
     "",
     "-- resizing windows",
     "Shrink the master area                                 : mod-h",
@@ -299,20 +309,16 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "Increment the number of windows in the master area     : mod-comma  (mod-,)",
     "Deincrement the number of windows in the master area   : mod-period (mod-.)",
     "",
-    "-- screen shot",
+    "-- screenshot",
     "Taking entire desktop screenshot                       : mod-s",
     "Taking select area screenshot                          : mod-shift-s",
     "",
-    "-- quit, or restart",
+    "-- system",
+    "Brighter screen                                        : mod-Shift-b",
+    "Dimmer screen                                          : mod-b",
     "Lock screen                                            : mod-Shift-l",
     "Quit xmonad                                            : mod-Shift-q",
     "Restart xmonad                                         : mod-q",
-    "Switch to workSpace N                                  : mod-[1..9]",
-    "",
-    "-- Workspaces & screens",
-    "Move client to workspace N                             : mod-Shift-[1..9]",
-    "Switch to physical/Xinerama screens 1, 2, or 3         : mod-{w,e,r}",
-    "Move client to screen 1, 2, or 3                       : mod-Shift-{w,e,r}",
     "",
     "-- Mouse bindings",
     "Set the window to floating mode and move by dragging   : mod-button1",
