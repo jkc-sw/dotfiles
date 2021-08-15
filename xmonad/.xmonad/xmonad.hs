@@ -140,7 +140,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_x     ), spawn "arandr")
 
     -- Start the pavucontros
-    , ((modm              , xK_v     ), spawn "pavucontrol")
+    , ((modm .|. shiftMask, xK_v     ), spawn "pavucontrol")
 
     -- Quit xmonad
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
@@ -170,9 +170,12 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Manipulate volume
     ++
-    [ ((0, xF86XK_AudioMute),     spawn "amixer -D pulse -q set Master toggle")
-    , ((0, xF86XK_AudioLowerVolume), spawn "amixer -D pulse -q set Master 5%-")
-    , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -D pulse -q set Master 5%+")
+    [ ((0, xF86XK_AudioMute), mute)
+    , ((0, xF86XK_AudioLowerVolume), quieter)
+    , ((0, xF86XK_AudioRaiseVolume), louder)
+    , ((modm .|. shiftMask, xK_m), mute)
+    , ((modm              , xK_m), quieter)
+    , ((modm              , xK_v), louder)
     ]
 
     -- Manupulate backlight
@@ -186,6 +189,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     where
         brighter = spawn "xbacklight -inc 10"
         dimmer = spawn "xbacklight -dec 10"
+        mute = spawn "amixer -D pulse -q set Master toggle"
+        quieter = spawn "amixer -D pulse -q set Master 5%-"
+        louder = spawn "amixer -D pulse -q set Master 5%+"
 
 
 -- Mouse bindings: default actions bound to mouse events
@@ -274,7 +280,7 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "Launch terminal                                        : mod-Shift-Enter",
     "Launch dmenu                                           : mod-Shift-p",
     "Launch arandr                                          : mod-x",
-    "Launch pavucontrol                                     : mod-v",
+    "Launch pavucontrol                                     : mod-Shift-v",
     "Close/kill the focused window                          : mod-Shift-c",
     "",
     "-- layout or workspaces",
@@ -316,6 +322,9 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "-- system",
     "Brighter screen                                        : mod-Shift-b",
     "Dimmer screen                                          : mod-b",
+    "Mute Audio                                             : mod-Shift-m",
+    "Louder Audio                                           : mod-v",
+    "Quieter Audio                                          : mod-m",
     "Lock screen                                            : mod-Shift-l",
     "Quit xmonad                                            : mod-Shift-q",
     "Restart xmonad                                         : mod-q",
