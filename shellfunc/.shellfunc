@@ -92,7 +92,7 @@ export NVM_DIR="$HOME/.nvm"
 export ASDF_DIR="$HOME/repos/asdf"
 
 # function to update plugin
-update_zsh_plugins() {(
+update_zsh_plugins() { (
     if test -d "$ZSH_PLUG_DIR"; then
         cd "$ZSH_PLUG_DIR/plugins" || return
         for d in $(fd -t d -d 1); do
@@ -100,7 +100,7 @@ update_zsh_plugins() {(
             git -C "$d" pull -q
         done
     fi
-)}
+) }
 
 # Source some tools that I don't use often
 sdev() {
@@ -112,3 +112,9 @@ sdev() {
     . "$ASDF_DIR/asdf.sh"
 }
 
+# Add the fcitx support
+if command -v fcitx >/dev/null 2>&1; then
+    export GTK_IM_MODULE=fcitx
+    export QT_IM_MODULE=fcitx
+    export XMODIFIERS=@im=fcitx
+fi
