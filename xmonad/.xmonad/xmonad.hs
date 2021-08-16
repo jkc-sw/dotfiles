@@ -173,8 +173,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((0, xF86XK_AudioMute), mute)
     , ((0, xF86XK_AudioLowerVolume), quieter)
     , ((0, xF86XK_AudioRaiseVolume), louder)
-    , ((modm .|. shiftMask, xK_m), mute)
-    , ((modm              , xK_m), quieter)
+    , ((modm .|. shiftMask, xK_z), mute)
+    , ((modm              , xK_z), quieter)
     , ((modm              , xK_v), louder)
     ]
 
@@ -322,9 +322,9 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "-- system",
     "Brighter screen                                        : mod-Shift-b",
     "Dimmer screen                                          : mod-b",
-    "Mute Audio                                             : mod-Shift-m",
+    "Mute Audio                                             : mod-Shift-z",
     "Louder Audio                                           : mod-v",
-    "Quieter Audio                                          : mod-m",
+    "Quieter Audio                                          : mod-z",
     "Lock screen                                            : mod-Shift-l",
     "Quit xmonad                                            : mod-Shift-q",
     "Restart xmonad                                         : mod-q",
