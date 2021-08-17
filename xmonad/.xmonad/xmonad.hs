@@ -134,8 +134,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Lock the screen
     , ((modm .|. shiftMask                , xK_l     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock")
-    , ((modm .|. shiftMask .|. controlMask, xK_l     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock ; sleep 10 ; xset dpms force off")
-    , ((modm .|. shiftMask .|. controlMask, xK_s     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock ; systemctl suspend")
+    , ((modm .|. shiftMask .|. controlMask, xK_l     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock ; systemctl suspend")
     -- , ((modm .|. shiftMask             , xK_l     ), spawn "xautolock -locknow")
 
     -- Start the arandr
@@ -328,8 +327,7 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "Louder Audio                                           : mod-v",
     "Quieter Audio                                          : mod-z",
     "Lock screen                                            : mod-Shift-l",
-    "Lock and turn off screen                               : mod-Ctrl-Shift-l",
-    "Put system to sleep                                    : mod-Ctrl-Shift-s",
+    "Put system to sleep                                    : mod-Ctrl-Shift-l",
     "Quit xmonad                                            : mod-Shift-q",
     "Restart xmonad                                         : mod-q",
     "",
