@@ -133,8 +133,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_s     ), unGrab *> spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -s \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
 
     -- Lock the screen
-    , ((modm .|. shiftMask, xK_l     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock")
-    -- , ((modm .|. shiftMask, xK_l     ), spawn "xautolock -locknow")
+    , ((modm .|. shiftMask                , xK_l     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock")
+    , ((modm .|. shiftMask .|. controlMask, xK_l     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock ; xset dpms force off")
+    , ((modm .|. shiftMask .|. controlMask, xK_s     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock ; xset dpms force off ; systemctl suspend")
+    -- , ((modm .|. shiftMask             , xK_l     ), spawn "xautolock -locknow")
 
     -- Start the arandr
     , ((modm              , xK_x     ), spawn "arandr")
@@ -326,6 +328,8 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "Louder Audio                                           : mod-v",
     "Quieter Audio                                          : mod-z",
     "Lock screen                                            : mod-Shift-l",
+    "Lock and turn off screen                               : mod-Ctrl-Shift-l",
+    "Put system to sleep                                    : mod-Ctrl-Shift-s",
     "Quit xmonad                                            : mod-Shift-q",
     "Restart xmonad                                         : mod-q",
     "",
