@@ -134,8 +134,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Lock the screen
     , ((modm .|. shiftMask                , xK_l     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock")
-    , ((modm .|. shiftMask .|. controlMask, xK_l     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock ; xset dpms force off")
-    , ((modm .|. shiftMask .|. controlMask, xK_s     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock ; xset dpms force off ; systemctl suspend")
+    , ((modm .|. shiftMask .|. controlMask, xK_l     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock ; sleep 10 ; xset dpms force off")
+    , ((modm .|. shiftMask .|. controlMask, xK_s     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock ; systemctl suspend")
     -- , ((modm .|. shiftMask             , xK_l     ), spawn "xautolock -locknow")
 
     -- Start the arandr
