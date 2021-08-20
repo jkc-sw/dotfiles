@@ -70,7 +70,7 @@ local function send_visual(opt)
   end
   local lines = vim.api.nvim_buf_get_lines(0, rstart - 1, rend - 1, false)
 
-  local cmd = table.concat(lines, '\n')
+  local cmd = table.concat(lines, '\r\n')
 
   send(cmd, opt)
 end
