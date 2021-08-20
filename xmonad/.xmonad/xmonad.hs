@@ -254,6 +254,7 @@ myLogHook = do
 -- Run xmonad with the settings you specify. No need to modify this.
 main = do
     spawn "feh --bg-scale ~/.xmonad/pure-black.png"
+    spawn "pgrep compton || compton &"
 
     xmonad $ docks $ ewmh $ defaultConfig {
         terminal           = myTerminal,
