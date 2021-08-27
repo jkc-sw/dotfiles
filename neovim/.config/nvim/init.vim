@@ -128,7 +128,7 @@ nnoremap <leader>pp    <cmd>  call jerry#common#TogglePasteMode()<CR>
 nnoremap <leader>v     <cmd>  vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <CR>
 nnoremap <leader>V     <cmd>  exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
 nnoremap <leader>r     <cmd>  FS<CR>
-nnoremap <leader>cc    <cmd>  FSOffset -3<CR>
+nnoremap <leader>R     <cmd>  FSOffset -3<CR>
 nnoremap <leader>E     <cmd>  exec getline('.')<cr>
 vnoremap <leader>E     :<c-u> exec join(filter(getline("'<", "'>"), 'v:val !~ "^\".*"'), '<bar>')<cr>
 nnoremap <leader>T     <cmd>  lua SL()<cr>
