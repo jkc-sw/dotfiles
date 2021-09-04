@@ -25,6 +25,9 @@ export LANG=en_US.UTF-8
 # To have xmonad and matlab play nicely
 export _JAVA_AWT_WM_NONREPARENTING=1
 
+# To be save
+alias rm='rm -I'
+
 # configuration to rg and fd
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 if command -v fd >/dev/null 2>&1; then
