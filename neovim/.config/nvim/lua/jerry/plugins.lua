@@ -68,9 +68,9 @@ return require('packer').startup(function(use)
   -- Maybe future
   -- use 'kyazdani42/nvim-tree.lua'
 
-  -- Always the last
-  use 'ryanoasis/vim-devicons'
-  use 'kyazdani42/nvim-web-devicons'
+  -- -- Always the last
+  -- use 'ryanoasis/vim-devicons'
+  -- use 'kyazdani42/nvim-web-devicons'
 end)
 
 -- vim:et sw=2 ts=2 sts=2
