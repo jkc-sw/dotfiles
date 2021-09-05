@@ -9,8 +9,6 @@ RT = function(...) R('jerry.asyncjob').run_to_tab(...) end
 RS = function(...) R('jerry.asyncjob').run_to_split(...) end
 RV = function(...) R('jerry.asyncjob').run_to_vsplit(...) end
 
--- require('colorbuddy').colorscheme('gruvbuddy')
-
 require('lualine').setup {
   options = {theme = 'jellybeans'},
   sections = {
@@ -23,11 +21,11 @@ require('lualine').setup {
   },
   inactive_sections = {
     lualine_a = {},
-    lualine_b = {'jerry#common#CorrentFileShortener'},
+    lualine_b = {},
     lualine_c = {'jerry#common#PasteModeReport'},
-    lualine_x = {},
-    lualine_y = {'progress'},
-    lualine_z = {'location'},
+    lualine_x = {'progress'},
+    lualine_y = {'location'},
+    lualine_z = {'jerry#common#CorrentFileShortener'},
   }
 }
 
