@@ -108,7 +108,7 @@ nnoremap <leader>ga     <cmd>  lua require('lspsaga.codeaction').code_action()<C
 vnoremap <leader>ga     <cmd>  '<,'>lua require('lspsaga.codeaction').range_code_action()<CR>
 " nnoremap <leader>K      <cmd>  lua vim.lsp.buf.hover()<CR>
 nnoremap <leader>K      <cmd>  lua require('lspsaga.hover').render_hover_doc()<CR>
-inoremap <leader><c-k>  <cmd>  lua require('lspsaga.signaturehelp').signature_help()<CR>
+inoremap <c-k>          <cmd>  lua require('lspsaga.signaturehelp').signature_help()<CR>
 
 nnoremap <leader>go     <cmd>  lua vim.lsp.diagnostic.set_loclist() <CR>
 nnoremap <leader>gs     <cmd>  lua print(vim.inspect(vim.lsp.get_active_clients())) <CR>
