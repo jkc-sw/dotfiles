@@ -11,6 +11,26 @@ RV = function(...) R('jerry.asyncjob').run_to_vsplit(...) end
 
 -- require('colorbuddy').colorscheme('gruvbuddy')
 
+require('lualine').setup {
+  options = {theme = 'jellybeans'},
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {require('jerry.asyncjob').job_report, 'branch', 'filename'},
+    lualine_c = {'jerry#common#PasteModeReport'},
+    lualine_x = {'fileformat', 'encoding', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location', require'jerry.lsp.config'.construct_statusline},
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {'jerry#common#CorrentFileShortener'},
+    lualine_c = {'jerry#common#PasteModeReport'},
+    lualine_x = {},
+    lualine_y = {'progress'},
+    lualine_z = {'location'},
+  }
+}
+
 require('jerry.lsp.config').general_lsp()
 
 require('lspkind').init{}

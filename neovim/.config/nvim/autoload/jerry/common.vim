@@ -1,18 +1,8 @@
 
-" Straight from the lsp help page
-function! jerry#common#LspStatus()
-    return luaeval("require'jerry.lsp.config'.construct_statusline{}")
-endfunction
-
 " Shorten the path
 function! jerry#common#CorrentFileShortener()
     return pathshorten(expand('%'))
 endfunction
-
-" A wrapper function to report async job status
-function! jerry#common#AsyncJobReport()
-    return luaeval("require('jerry.asyncjob').job_report()")
-endfunc
 
 " function to search through files
 func! jerry#common#FileFuzzySearch()
@@ -66,6 +56,15 @@ func! jerry#common#GlobalFuzzySearch()
         exec 'Rg '.word
     else
         lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For >") })
+    endif
+endfun
+
+" function to return current pasemode status
+func! jerry#common#PasteModeReport()
+    if &paste == 1
+        return 'paste'
+    else
+        return ''
     endif
 endfun
 

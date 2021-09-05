@@ -9,9 +9,11 @@ return require('packer').startup(function(use)
   use 'tpope/vim-surround'
   use 'tpope/vim-repeat'
   use 'michaeljsmith/vim-indent-object'
-  use 'itchyny/lightline.vim'
   use 'godlygeek/tabular'
   use 'dhruvasagar/vim-testify'
+
+  -- Status line
+  use 'hoob3rt/lualine.nvim'
 
   -- Git
   use 'tpope/vim-fugitive'
@@ -64,13 +66,12 @@ return require('packer').startup(function(use)
   -- Not used
   -- use 'nvim-lua/completion-nvim'
   -- use 'vim-utils/vim-man'
+  -- use 'itchyny/lightline.vim'
+  -- use 'ryanoasis/vim-devicons'
+  -- use 'kyazdani42/nvim-web-devicons'
 
   -- Maybe future
   -- use 'kyazdani42/nvim-tree.lua'
-
-  -- -- Always the last
-  -- use 'ryanoasis/vim-devicons'
-  -- use 'kyazdani42/nvim-web-devicons'
 end)
 
 -- vim:et sw=2 ts=2 sts=2
