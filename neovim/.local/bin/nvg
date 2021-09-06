@@ -7,13 +7,13 @@ if test -z "$DISPLAY"; then
 fi
 
 # check if we have kitty
-if command -v kitty >/dev/null 2>&1; then
+if ! command -v kitty >/dev/null 2>&1; then
     echo "Need to have kitty in the PATH" >&2
     exit 1
 fi
 
 # check if we have nvim
-if command -v nvim >/dev/null 2>&1; then
+if ! command -v nvim >/dev/null 2>&1; then
     echo "Need to have nvim in the PATH" >&2
     exit 1
 fi
