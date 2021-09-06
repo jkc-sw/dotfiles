@@ -1,8 +1,8 @@
 
-" " Shorten the path
-" function! jerry#common#CorrentFileShortener()
-"     return pathshorten(expand('%'))
-" endfunction
+" Shorten the path
+function! jerry#common#CorrentFileShortener()
+    return pathshorten(expand('%'))
+endfunction
 
 " function to search through files
 func! jerry#common#FileFuzzySearch()
