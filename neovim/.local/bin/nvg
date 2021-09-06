@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# check if we have a gui
+if test -z "$DISPLAY"; then
+    echo "Need to have a display for this to work" >&2
+    exit 1
+fi
+
+# check if we have kitty
+if command -v kitty >/dev/null 2>&1; then
+    echo "Need to have kitty in the PATH" >&2
+    exit 1
+fi
+
+# check if we have nvim
+if command -v nvim >/dev/null 2>&1; then
+    echo "Need to have nvim in the PATH" >&2
+    exit 1
+fi
+
+# check if I need to activate conda
+if test -d "$HOME/miniconda3/envs/dev_env_ansible"; then
+    conda activate "$HOME/miniconda3/envs/dev_env_ansible"
+fi
+
+# pass the command now to kitty
+kitty nvim -c "lua require'jerry.lsp.config'.alternative_lsp{}" "$@"
