@@ -10,14 +10,16 @@ RS = function(...) R('jerry.asyncjob').run_to_split(...) end
 RV = function(...) R('jerry.asyncjob').run_to_vsplit(...) end
 
 require('lualine').setup {
-  options = {theme = 'jellybeans'},
+  options = {
+    theme = 'jellybeans'
+  },
   sections = {
     lualine_a = {'mode'},
-    lualine_b = {require('jerry.asyncjob').job_report, 'branch', 'filename'},
+    lualine_b = {require('jerry.asyncjob').job_report, 'branch', {'filename', path = 1}},
     lualine_c = {'jerry#common#PasteModeReport'},
     lualine_x = {'fileformat', 'encoding', 'filetype'},
     lualine_y = {'progress'},
-    lualine_z = {'location', require'jerry.lsp.config'.construct_statusline},
+    lualine_z = {'location', {'diagnostics', sources = {'nvim_lsp'}, sections = {'error', 'warn'}}},
   },
   inactive_sections = {
     lualine_a = {},

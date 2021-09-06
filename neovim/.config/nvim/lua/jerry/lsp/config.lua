@@ -9,18 +9,18 @@ local on_attach_vim = function(client)
   -- require'lsp_signature'.on_attach()  -- This plugin has some ghost buffer remain
 end
 
-local construct_statusline = function()
-  if not vim.tbl_isempty(vim.lsp.buf_get_clients(0)) then
-    local ecnt = vim.lsp.diagnostic.get_count(vim.fn.bufnr('%'), [[Error]]) or 0
-    local wcnt = vim.lsp.diagnostic.get_count(vim.fn.bufnr('%'), [[Warning]]) or 0
-    local err = (ecnt > 0) and string.format(' %d', ecnt) or ''
-    local spacer = (ecnt > 0) and ' ' or ''
-    local wan = (wcnt > 0) and string.format(' %d', wcnt) or ''
-    local line = string.format('%s%s%s', err, spacer, wan)
-    return line
-  end
-  return ''
-end
+-- local construct_statusline = function()
+--   if not vim.tbl_isempty(vim.lsp.buf_get_clients(0)) then
+--     local ecnt = vim.lsp.diagnostic.get_count(vim.fn.bufnr('%'), [[Error]]) or 0
+--     local wcnt = vim.lsp.diagnostic.get_count(vim.fn.bufnr('%'), [[Warning]]) or 0
+--     local err = (ecnt > 0) and string.format(' %d', ecnt) or ''
+--     local spacer = (ecnt > 0) and ' ' or ''
+--     local wan = (wcnt > 0) and string.format(' %d', wcnt) or ''
+--     local line = string.format('%s%s%s', err, spacer, wan)
+--     return line
+--   end
+--   return ''
+-- end
 
 local general_lsp = function()
 
@@ -125,7 +125,7 @@ return {
   general_lsp = general_lsp,
   on_attach_vim = on_attach_vim,
   alternative_lsp = alternative_lsp,
-  construct_statusline = construct_statusline
+  -- construct_statusline = construct_statusline
 }
 
 -- vim:et ts=2 sw=2
