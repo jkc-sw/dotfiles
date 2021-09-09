@@ -106,8 +106,10 @@ nnoremap <leader>gR     <cmd>  lua require('lspsaga.rename').rename()<CR>
 nnoremap <leader>1gD    <cmd>  lua vim.lsp.buf.type_definition()<CR>
 nnoremap <leader>ga     <cmd>  lua require('lspsaga.codeaction').code_action()<CR>
 vnoremap <leader>ga     <cmd>  '<,'>lua require('lspsaga.codeaction').range_code_action()<CR>
-" nnoremap <leader>K      <cmd>  lua vim.lsp.buf.hover()<CR>
-nnoremap <leader>K      <cmd>  lua require('lspsaga.hover').render_hover_doc()<CR>
+nnoremap <leader>K      <cmd>  lua vim.lsp.buf.hover()<CR>
+" " TODO once the bus is closed, bring this back in
+" " Case: https://github.com/glepnir/lspsaga.nvim/issues/241
+" nnoremap <leader>K      <cmd>  lua require('lspsaga.hover').render_hover_doc()<CR>
 inoremap <c-k>          <cmd>  lua require('lspsaga.signaturehelp').signature_help()<CR>
 
 nnoremap <leader>go     <cmd>  lua vim.lsp.diagnostic.set_loclist() <CR>
