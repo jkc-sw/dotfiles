@@ -107,12 +107,14 @@ update_zsh_plugins() { (
 
 # Source some tools that I don't use often
 sdev() {
-    # shellcheck source=/dev/null
-    . "$NVM_DIR/nvm.sh"  # This loads nvm
-    # shellcheck source=/dev/null
-    . "$NVM_DIR/bash_completion"  # Too slow
-    # shellcheck source=/dev/null
-    . "$ASDF_DIR/asdf.sh"
+    if test -z "$NVM_BIN"; then
+        # shellcheck source=/dev/null
+        . "$NVM_DIR/nvm.sh"  # This loads nvm
+        # shellcheck source=/dev/null
+        . "$NVM_DIR/bash_completion"  # Too slow
+        # shellcheck source=/dev/null
+        . "$ASDF_DIR/asdf.sh"
+    fi
 }
 
 # Add the fcitx support
