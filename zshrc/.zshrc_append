@@ -110,8 +110,8 @@ setopt INC_APPEND_HISTORY_TIME
 # User configuration
 #===============================================================================
 # custom setup
-export SHELLNAME=zsh
 . "$HOME/.shellfunc"
+add_shell_specific zsh
 
 # refresh the ssh tty
 # https://babushk.in/posts/renew-environment-tmux.html

@@ -46,23 +46,24 @@ alias cinfo='sudo modprobe msr && sudo cpupower frequency-info'
 alias cmonitor='sudo modprobe msr && sudo turbostat --show Core,CPU,Avg_MHz,Busy%,Bzy_MHz,TSC_MHz,CoreTmp,PkgTmp,PkgWatt,RAMWatt'
 alias cperf='sudo modprobe msr && sudo cpupower frequency-set -g performance'
 
-# handle fzf
-if test -n "$SHELLNAME"; then
-    eval "$(starship init "$SHELLNAME")"
-    eval "$(zoxide init "$SHELLNAME")"
+# handle shell specific
+add_shell_specific() {
+    forshell="$1"
+    eval "$(starship init "$forshell")"
+    eval "$(zoxide init "$forshell")"
 
     # Handle the fzf
     if test -d "$HOME/.vim/plugged/fzf"; then
         addThisPath "$HOME/.vim/plugged/fzf/bin"
-        if test -n "$SHELLNAME"; then
+        if test -n "$forshell"; then
             # # shellcheck source=/dev/null
-            # . "$HOME/.vim/plugged/fzf/shell/completion.$SHELLNAME"  # Too slow
+            # . "$HOME/.vim/plugged/fzf/shell/completion.$forshell"  # Too slow
 
             # shellcheck source=/dev/null
-            . "$HOME/.vim/plugged/fzf/shell/key-bindings.$SHELLNAME"
+            . "$HOME/.vim/plugged/fzf/shell/key-bindings.$forshell"
         fi
     fi
-fi
+}
 
 # shortcut to start nvim
 nv() {

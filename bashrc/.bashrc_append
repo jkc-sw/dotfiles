@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export SHELLNAME=bash
 . "$HOME/.shellfunc"
+add_shell_specific bash
 
 set -o vi
