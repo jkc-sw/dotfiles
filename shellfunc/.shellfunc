@@ -31,11 +31,11 @@ alias rm='rm -I'
 # configuration to rg and fd
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 if command -v fd >/dev/null 2>&1; then
-    export FZF_DEFAULT_COMMAND='fd --hidden --type file'
-    export FZF_ALT_C_COMMAND="fd --hidden --type directory"
+    export FZF_DEFAULT_COMMAND='fd --follow --hidden --type file'
+    export FZF_ALT_C_COMMAND="fd --follow --hidden --type directory"
 elif command -v fdfind >/dev/null 2>&1; then
-    export FZF_DEFAULT_COMMAND='fdfind --hidden --type file'
-    export FZF_ALT_C_COMMAND="fdfind --hidden --type directory"
+    export FZF_DEFAULT_COMMAND='fdfind --follow --hidden --type file'
+    export FZF_ALT_C_COMMAND="fdfind --follow --hidden --type directory"
     alias fd=fdfind
 fi
 export FZF_DEFAULT_OPTS="--color=dark"
