@@ -129,12 +129,14 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
 
     -- Screenshot
-    , ((modm              , xK_s     ), unGrab *> spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -m \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
-    , ((modm .|. shiftMask, xK_s     ), unGrab *> spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -s \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
+    -- , ((modm              , xK_s     ), unGrab *> spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -m \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
+    -- , ((modm .|. shiftMask, xK_s     ), unGrab *> spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -s \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
+    , ((modm              , xK_s     ), spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -m \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
+    , ((modm .|. shiftMask, xK_s     ), spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -s \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
 
     -- Lock the screen
-    , ((modm .|. shiftMask                , xK_l     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock")
-    , ((modm .|. shiftMask .|. controlMask, xK_l     ), spawn "pgrep xscreensaver || ( xscreensaver -no-splash & ) ; xscreensaver-command -lock ; sleep 10 ; systemctl suspend")
+    , ((modm .|. shiftMask                , xK_l     ), spawn "xscreensaver-command -lock")
+    , ((modm .|. shiftMask .|. controlMask, xK_l     ), spawn "xscreensaver-command -lock ; sleep 10 ; systemctl suspend")
     -- , ((modm .|. shiftMask             , xK_l     ), spawn "xautolock -locknow")
 
     -- Start the arandr
@@ -255,6 +257,10 @@ myLogHook = do
 main = do
     spawn "feh --bg-scale ~/.xmonad/pure-black.png"
     spawn "pgrep compton || compton &"
+    -- spawn "pgrep xscreensaver || xscreensaver -no-splash &"
+    -- spawn "pgrep lxsession || lxsession &"
+    -- spawn "pgrep nm-applet || nm-applet &"
+    -- spawn "pgrep volumeicon || volumeicon &"
 
     xmonad $ docks $ ewmh $ defaultConfig {
         terminal           = myTerminal,
