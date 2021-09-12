@@ -108,7 +108,7 @@ update_zsh_plugins() { (
 
 # Source some tools that I don't use often
 sdev() {
-    if test -z "$NVM_BIN"; then
+    if ! command -v nvm >/dev/null 2>&1; then
         # shellcheck source=/dev/null
         . "$NVM_DIR/nvm.sh"  # This loads nvm
         # shellcheck source=/dev/null
