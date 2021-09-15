@@ -83,7 +83,7 @@ nnoremap <leader>V      <cmd>  exec("lua require('jerry.telescope.pickers').find
 nnoremap <leader>r      <cmd>  FS<CR>
 nnoremap <leader>R      <cmd>  FSOffset -3<CR>
 nnoremap <leader>E      <cmd>  exec getline('.')<cr>
-vnoremap <leader>E      :<c-u> exec join(filter(getline("'<", "'>"), 'v:val !~ "^\".*"'), '<bar>')<cr>
+vnoremap <leader>E      <cmd>  '<,'>source<cr>
 nnoremap <leader>T      <cmd>  lua SL()<cr>
 vnoremap <leader>T      :<c-u> lua SV()<cr>
 
