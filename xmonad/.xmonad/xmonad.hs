@@ -20,6 +20,7 @@ import XMonad.Layout.MultiToggle (mkToggle, single, EOT(EOT), (??))
 import XMonad.Layout.MultiToggle.Instances (StdTransformers(NBFULL, MIRROR, NOBORDERS))
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Reflect
+import XMonad.Layout.Renamed
 import XMonad.Layout.SimpleFloat
 import XMonad.Layout.Spacing
 import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
@@ -216,19 +217,29 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
 -- Layouts:
 myLayout = avoidStruts
-    $ smartBorders
-    -- $ mySpace 8 -- Ubuntu 18.04 has 0.13, which this method doesn't exist
-    $ mouseResize
-    $ reflectHoriz
-    $ windowArrange
-    $ mkToggle (NBFULL ?? NOBORDERS ?? EOT)
-    $ tiled ||| spacing 6 Grid ||| Mirror tiled ||| Full ||| simpleFloat
+    $ applyToMany
+    $ tiled
+        ||| grid
+        ||| full
+        ||| simpleFloat
   where
-     -- tiled   = Tall nmaster delta ratio  -- default tiling algorithm partitions the screen into two panes
-     tiled   = spacing 6 $ Tall nmaster delta ratio  -- use spacing for xmonad 0.13 ubuntu 18.04 for now -- default tiling algorithm partitions the screen into two panes
-     nmaster = 1  -- The default number of windows in the master pane
-     ratio   = 0.618  -- Default proportion of screen occupied by master pane
-     delta   = 3/100  -- Percent of screen to increment by when resizing panes
+    applyToMany = smartBorders
+        . mouseResize
+        . windowArrange
+        . mkToggle (NBFULL ?? NOBORDERS ?? EOT)
+    surround = spacing 6  -- . mySpace 8  -- Ubuntu 18.04 has 0.13, which this method doesn't exist
+
+    -- Tile: Master and stack layout
+    tiled   = renamed [Replace "Tile"] $ reflectHoriz . surround $ Tall nmaster delta ratio
+    nmaster = 1  -- The default number of windows in the master pane
+    ratio   = 0.618  -- Default proportion of screen occupied by master pane
+    delta   = 3/100  -- Percent of screen to increment by when resizing panes
+
+    -- Grid
+    grid = renamed [Replace "Grid"] $ surround Grid
+
+    -- Full
+    full = renamed [Replace "Full"] $ surround Full
 
 -- Window rules:
 myManageHook = manageDocks <+> composeAll
