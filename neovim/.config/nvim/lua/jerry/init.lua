@@ -1,13 +1,13 @@
 
 require('jerry.helpers')
 
-S = function(...) R('jerry.term').send(...) end
-SV = function() R('jerry.term').send_visual() end
-SL = function() R('jerry.term').send(vim.fn.getline('.')) end
+S = function(...) require('jerry.term').send(...) end
+SV = function() require('jerry.term').send_visual() end
+SL = function() require('jerry.term').send(vim.fn.getline('.')) end
 
-RT = function(...) R('jerry.asyncjob').run_to_tab(...) end
-RS = function(...) R('jerry.asyncjob').run_to_split(...) end
-RV = function(...) R('jerry.asyncjob').run_to_vsplit(...) end
+RT = function(...) require('jerry.asyncjob').run_to_tab(...) end
+RS = function(...) require('jerry.asyncjob').run_to_split(...) end
+RV = function(...) require('jerry.asyncjob').run_to_vsplit(...) end
 
 require('lualine').setup {
   options = {

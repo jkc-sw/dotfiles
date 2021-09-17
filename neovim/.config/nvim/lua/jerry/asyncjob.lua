@@ -6,7 +6,7 @@ local njobs = 0
 
 local function job_report()
   if njobs > 0 then
-    return "nAsyncJob: " .. tostring(njobs)
+    return "#jobs: " .. tostring(njobs)
   end
   return ''
 end
