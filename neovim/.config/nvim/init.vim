@@ -82,7 +82,7 @@ nnoremap <leader>v      <cmd>  vertical botright split ~/repos/dotfiles/neovim/.
 nnoremap <leader>V      <cmd>  exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
 nnoremap <leader>r      <cmd>  FS<CR>
 nnoremap <leader>R      <cmd>  FSOffset -3<CR>
-nnoremap <leader>E      <cmd>  exec getline('.')<cr>
+nnoremap <leader>E      <cmd>  .source<cr>
 vnoremap <leader>E      :<c-u> '<,'>source<cr>
 nnoremap <leader>T      <cmd>  lua SL()<cr>
 vnoremap <leader>T      :<c-u> lua SV()<cr>
