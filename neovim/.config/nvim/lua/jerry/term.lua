@@ -46,6 +46,10 @@ local function send(cmd, opt)
   opt = opt or {}
   local id = opt.term_id or get_term_id(opt.term_idx)
 
+  if not cmd:find("\r\n") then
+    cmd = cmd:gsub("\n", "\r\n")
+  end
+
   if cmd:sub(string.len(cmd)-1) ~= "\r\n" then
     cmd = cmd .. "\r\n"
   end
