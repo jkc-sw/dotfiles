@@ -192,7 +192,7 @@ main() {
             # start a termdown in split pane
             termdown --no-bell --title 'Break Time' --no-window-title "${break_time}"
             # timer expired, restore to the last window if we are still in the timer window
-            if ! tmux_active_window_same_as "$last_active_window"; then
+            if tmux_active_window_same_as "$tmux_target_window"; then
                 tmux select-window -t "$last_active_window"
             fi
             # go to next state
