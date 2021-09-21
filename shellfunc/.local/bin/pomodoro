@@ -1,0 +1,293 @@
+#!/bin/sh
+
+#===============================================================================
+# @brief Print help
+#===============================================================================
+displayHelp() {
+    cat <<EOF >&2
+A simple pomodoro timer in tmux
+
+When started from the command line inside tmux, it will start a new terminal window
+detached. This terminal window will create a countdown timer for the time
+specificed like in pomodoro timer. When it is time for break, it will use
+termdown to set the break timer and will switch to the pomodoro window. When
+the termdown completed, it should jump back to the original window it jumps
+from. Should need to stop the pomodoro window, kill the window.
+
+Dependencies:
+  - tmux
+  - termdown
+
+Installation:
+  Copy this file to \$HOME/.local/bin folder
+
+Usages:
+  Create a pomodoro window with default time and config
+  $ pomodoro
+
+  Create a pomodoro window with full customizations
+  $ pomodoro -t ':20' -n 'tmux window name' -w 10m -b 3m -s
+
+Options:
+  -t <tmux target-window> : Tmux target window to use. [default is :20]
+  -n <window name>        : A window name to use for the tmux window. [default is pomodoro]
+  -w <work-time-min>      : How long for work before a break in termdown TIME. [default is 45m]
+  -b <break-time-min>     : How long for break before resume work in termdown TIME. [default is 15m]
+  -s                      : Start from break instead of work.
+EOF
+}
+
+
+#===============================================================================
+# @brief Print help
+#===============================================================================
+main() {
+    # Default options
+    tmux_window_name='pomodoro'
+    tmux_target_window=':20'
+    work_time=45
+    break_time=15
+    break_first=false
+
+    # need to be in tmux
+    if test -z "$TMUX"; then
+        echo 'need to start this program is tmux' >&2
+        exit 1
+    fi
+
+    # check dependencies
+    if ! command -v tmux >/dev/null 2>&1; then
+        echo 'cannot find tmux in the PATH' >&2
+        exit 1
+    fi
+    if ! command -v termdown >/dev/null 2>&1; then
+        echo 'cannot find termdown in the PATH' >&2
+        exit 1
+    fi
+
+    # Parse the options
+    while test "$#" -gt 0; do
+        case "$1" in
+
+        '-h' | '--help')
+            # send user provided help
+            displayHelp
+            exit 0
+            ;;
+
+        '-t')
+            # make sure user has another argument passed in
+            if test "$#" -lt 2; then
+                echo "-t needs an argument" >&2
+                exit 1
+            fi
+            # process target window
+            shift
+            tmux_target_window="$1"
+            ;;
+
+        '-s')
+            # process what to start
+            break_first=true
+            ;;
+
+        '-n')
+            # make sure user has another argument passed in
+            if test "$#" -lt 2; then
+                echo "-n needs an argument" >&2
+                exit 1
+            fi
+            # process window name
+            shift
+            tmux_window_name="$1"
+
+            # make sure it has no spaces
+            if str_contains "$tmux_window_name" " "; then
+                echo "-n window name cannot have space '$tmux_window_name'" >&2
+                exit 1
+            fi
+            ;;
+
+        '-w')
+            # make sure user has another argument passed in
+            if test "$#" -lt 2; then
+                echo "-w needs an argument" >&2
+                exit 1
+            fi
+            # process wrok time
+            shift
+            work_time="$1"
+            ;;
+
+        '-b')
+            # make sure user has another argument passed in
+            if test "$#" -lt 2; then
+                echo "-b needs an argument" >&2
+                exit 1
+            fi
+            # process break time
+            shift
+            break_time="$1"
+            ;;
+
+        *)
+            # Alert invalid command
+            echo "Cannot process option $1, see above for usage" >&2
+            exit 1
+            ;;
+
+        esac
+
+        # next
+        shift
+    done
+
+    # check if the app is already running, if so, jump there
+    if tmux_window_exists "$tmux_target_window" && test -z "$POMODORO_RUN"; then
+        # jump to that window and that is it
+        tmux select-window -t "$tmux_target_window"
+        # done
+        return 0
+    fi
+
+    # If the target window has not been created, create it by calling the pomodoro
+    if ! tmux_window_exists "$tmux_target_window" && test -z "$POMODORO_RUN"; then
+        # compose the cmd
+        cmd="pomodoro -t '$tmux_target_window' -n '$tmux_window_name' -w $work_time -b $break_time"
+        if test "$break_first" = 'true'; then
+            cmd="$cmd -s"
+        fi
+
+        # get termdown path
+        termdown_path="$(dirname "$(command -v termdown 2>/dev/null)")"
+
+        # need to make a new window and start the program again
+        tmux new-window -e 'POMODORO_RUN=1' -e "PATH='$termdown_path:$PATH'" -d -t "$tmux_target_window" -n "$tmux_window_name" "$cmd"
+        # exit here
+        return 0
+    fi
+
+    # If the program started from the target window, which should be implied here
+
+    # state machines
+    S_APP_IN_WORK=0
+    S_APP_IN_BREAK=1
+
+    # start state
+    state="$S_APP_IN_WORK"
+    if test "$break_first" = 'true'; then
+        state="$S_APP_IN_BREAK"
+    fi
+
+    # store user active window
+    last_active_window="$(tmux_get_active_window)"
+
+    # Loop here
+    while true; do
+        case "$state" in
+
+        "$S_APP_IN_BREAK")
+            # Bring the focus to the pomodoro window to distract user
+            tmux select-window -t "$tmux_target_window"
+            # start a termdown in split pane
+            termdown --no-bell --title 'Break Time' --no-window-title "${break_time}"
+            # timer expired, restore to the last window if we are still in the timer window
+            if ! tmux_active_window_same_as "$last_active_window"; then
+                tmux select-window -t "$last_active_window"
+            fi
+            # go to next state
+            state="$S_APP_IN_WORK"
+            ;;
+
+        "$S_APP_IN_WORK")
+            # start a termdown in split pane
+            termdown --no-bell --title 'Work Time' --no-window-title "${work_time}"
+            # timer expired, restore to the last window if we are still in the timer window
+            last_active_window="$(tmux_get_active_window)"
+            # go to next state
+            state="$S_APP_IN_BREAK"
+            ;;
+
+        *)
+            echo "program entered unknown state, exiting" >&2
+            return 1
+            ;;
+
+        esac
+    done
+
+}
+
+#===============================================================================
+# @brief Check if the string left contains the string right
+# @param left - The string to search from
+# @param right - The pattern to search for
+# @return - status code. 0 is found right in left, non-zero is not
+# @test
+#   $ str_contains 'aoeu' 'a' || echo 'should contains' >&2
+#   $ str_contains 'aoeu' 'b' && echo 'should not contains' >&2
+#===============================================================================
+str_contains() {
+    left="$1"
+    right="$2"
+    test "${left#*$right}" != "$left"
+}
+
+#===============================================================================
+# @brief Check if 2 tmux windows are the same
+# @param left - The first window name
+# @param right - The 2nd window name
+# @return - status code. 0 is same window, non-zero is not
+#===============================================================================
+tmux_windows_are_the_same() {
+    left="$1"
+    right="$2"
+
+    if test -z "$left"; then
+        echo "tmux_windows_are_the_same: First argumentn is invalid" >&2
+        exit 1
+    fi
+
+    if test -z "$right"; then
+        echo "tmux_windows_are_the_same: First argumentn is invalid" >&2
+        exit 1
+    fi
+
+    str_contains "$left" "$right"
+}
+
+#===============================================================================
+# @brief Check if the active window is the same as argument
+# @param target - The window to check for
+# @return - status code. 0 is same window, non-zero is not
+# @test
+#   $ tmux_active_window_same_as "$(tmux_get_active_window)" \
+#         || echo 'should be the same' >&2
+#===============================================================================
+tmux_active_window_same_as() {
+    tmux_windows_are_the_same "$(tmux_get_active_window)" "$1"
+}
+
+#===============================================================================
+# @brief Check if a window is present
+# @return - status code. 0 is window presen, non-zero is window not found
+# @test
+#   $ tmux_window_exists "$(tmux_get_active_window)" || echo 'should exist' >&2
+#   $ tmux_window_exists ":77997799" && echo 'should not exist' >&2
+#===============================================================================
+tmux_window_exists() {
+   tmux list-windows -F '#{session_id}:#{window_index}:#{window_active}' | grep -q "$1:"
+}
+
+#===============================================================================
+# @brief Ask tmux for current focused window
+# @return - Session and window id of the active window
+#===============================================================================
+tmux_get_active_window() {
+    tmux list-windows -F '#{session_id}:#{window_index}:#{window_active}' | sed -n 's/\(.*\):1$/\1/p'
+}
+
+# Call main
+main "$@"
+
+# vim:et sw=4 sts=4 ts=4
