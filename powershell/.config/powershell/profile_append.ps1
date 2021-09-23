@@ -7,4 +7,5 @@ Invoke-Expression (& {
     (zoxide init --hook $hook powershell) -join "`n"
 })
 Invoke-Expression (& starship init powershell)
+Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
 
