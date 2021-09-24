@@ -236,7 +236,7 @@ myLayout = avoidStruts
     delta   = 3/100  -- Percent of screen to increment by when resizing panes
 
     -- Grid
-    grid = renamed [Replace "Grid"] $ reflectHoriz . surround Grid
+    grid = renamed [Replace "Grid"] $ reflectHoriz $ surround Grid
 
     -- Full
     full = renamed [Replace "Full"] $ surround Full
