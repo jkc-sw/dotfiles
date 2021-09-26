@@ -45,8 +45,8 @@ main() {
     # Default options
     tmux_window_name='pomodoro'
     tmux_target_window=':20'
-    work_time=45
-    break_time=15
+    work_time='45m'
+    break_time='15m'
     break_first=false
 
     # need to be in tmux
