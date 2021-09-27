@@ -20,18 +20,12 @@ Config { font = "xft:Noto Sans CJK TC:weight=bold:pixelsize=14:antialias=true:hi
                     , Run Memory ["-t", "Mem: <usedratio>%"] 10
                     , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
                     , Run Battery [] 300
-                    -- , Run Alsa "default" "Master"
-                    --     [ "--template", "<volumestatus>"
-                    --     , "--suffix"  , "True"
-                    --     , "--"
-                    --     , "--on", ""
-                    --     ]
                     , Run Com "getVolume.sh" [] "myvol" 3
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%battery% | <fc=#ee9a00>%date%</fc> | vol: %myvol% | %memory% | %cpu% }{ %StdinReader%"
+       , template = "%battery% | <fc=#ee9a00>%date%</fc> | vol: %myvol% | %StdinReader% | %memory% | %cpu% }{ "
        }
 
 -- vim:et sw=4 ts=4 sts=4 filetype=haskell

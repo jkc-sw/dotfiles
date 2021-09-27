@@ -385,7 +385,7 @@ myLogPP = xmobarPP
     , ppSep             = " : "                                   --  Separator character
     , ppUrgent          = xmobarColor "#C45500" "" . wrap "!" "!" --  Urgent workspace
     , ppExtras          = [windowCount]                           --  # of windows current workspace
-    , ppOrder           = \(ws:l:t:ex) -> [t]++[ws,l]++ex         --  order of things in xmobar
+    , ppOrder           = \(ws:l:t:ex) -> [ws,l]++ex++[t]         --  order of things in xmobar
     }
 
 -- -- Add space around the window -- Ubuntu 18.04 has 0.13, which this method doesn't exist
