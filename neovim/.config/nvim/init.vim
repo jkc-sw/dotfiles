@@ -53,7 +53,6 @@ let g:vimsyn_embed = 'l'
 let g:loaded_clipboard_provider = 1 " I don't need nvim to sync clipboard for me, I have my own tool
 set grepprg=rg\ --line-number\ --color=never
 set regexpengine=1
-set redrawtime=15000
 
 colorscheme xcodedarkhc
 
@@ -174,6 +173,6 @@ augroup END
 
 augroup DisableSomeSyntax
     autocmd!
-    autocmd BufEnter,BufWinEnter,TabEnter *.groovy,*.html set syntax=
+    autocmd BufEnter,BufWinEnter,TabEnter *.groovy,*.html syntax sync fromstart
 augroup END
 
