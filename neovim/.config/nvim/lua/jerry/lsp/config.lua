@@ -5,41 +5,45 @@ local vars = require'jerry.lsp.vars'
 local lspconfig = require'lspconfig'
 local vim = vim
 
+local updated_capabilities = vim.lsp.protocol.make_client_capabilities()
+updated_capabilities = require("cmp_nvim_lsp").update_capabilities(updated_capabilities)
+
 local on_attach_vim = function(client)
   -- require'lsp_signature'.on_attach()  -- This plugin has some ghost buffer remain
 end
 
--- local construct_statusline = function()
---   if not vim.tbl_isempty(vim.lsp.buf_get_clients(0)) then
---     local ecnt = vim.lsp.diagnostic.get_count(vim.fn.bufnr('%'), [[Error]]) or 0
---     local wcnt = vim.lsp.diagnostic.get_count(vim.fn.bufnr('%'), [[Warning]]) or 0
---     local err = (ecnt > 0) and string.format(' %d', ecnt) or ''
---     local spacer = (ecnt > 0) and ' ' or ''
---     local wan = (wcnt > 0) and string.format(' %d', wcnt) or ''
---     local line = string.format('%s%s%s', err, spacer, wan)
---     return line
---   end
---   return ''
--- end
+local function setup_each_lsp(target, opt)
+  if not opt then
+    return
+  end
+
+  if type(opt) ~= 'table' then
+    opt = {}
+  end
+
+  opt = vim.tbl_deep_extend("force", {
+    on_attach = on_attach_vim,
+    capabilities = updated_capabilities,
+  }, opt)
+
+  lspconfig[target].setup(opt)
+end
 
 local general_lsp = function()
 
   -- clangd
-  -- nvim_lsp.clangd.setup{on_attach=require'completion'.on_attach}
-  lspconfig.clangd.setup{
+  setup_each_lsp('clangd', {
     filetypes = { "c", "cpp", "cc", "objc", "objcpp" },
-    on_attach=on_attach_vim,
-  }
+  })
 
-  -- rust
+  -- -- rust
   -- if vim.fn.executable('rls') == 1 then
-  --     nvim_lsp.rls.setup{on_attach=on_attach_vim}
+  --     setup_each_lsp('rls', true)
   -- end
-  lspconfig.rust_analyzer.setup{on_attach=on_attach_vim}
+  setup_each_lsp('rust_analyzer', true)
 
   -- lua
-  local luals = lspconfig.sumneko_lua
-  luals.setup{
+  setup_each_lsp('sumneko_lua', {
 		cmd = {vars.luals_repos .. 'bin/Linux/lua-language-server', "-E", vars.luals_repos .. "main.lua"};
 		settings = {
 			Lua = {
@@ -59,71 +63,57 @@ local general_lsp = function()
 				},
 			},
 		},
-		on_attach=on_attach_vim
-	}
+	})
 
   -- json
-  local jsonls = lspconfig.jsonls
-  jsonls.setup{on_attach=on_attach_vim}
+  setup_each_lsp('jsonls', true)
 
   -- bash
-  local bashls = lspconfig.bashls
-  bashls.setup{on_attach=on_attach_vim}
+  setup_each_lsp('bashls', true)
 
   -- docker
-  local dockerls = lspconfig.dockerls
-  dockerls.setup{on_attach=on_attach_vim}
+  setup_each_lsp('dockerls', true)
 
   -- yaml
-  local yamlls = lspconfig.yamlls
-  yamlls.setup{on_attach=on_attach_vim}
+  setup_each_lsp('yamlls', true)
 
   -- tsserver
-  local tsserver = lspconfig.tsserver
-  tsserver.setup{on_attach=on_attach_vim}
+  setup_each_lsp('tsserver', true)
 
   -- -- haskell -- Cannot get it to work, not sure how to handle the import/setup the haskell project for xmonad
-  -- local hls = lspconfig.hls
-  -- hls.setup{on_attach=on_attach_vim}
+  -- setup_each_lsp('hls', true)
 
   -- cmake
-  lspconfig.cmake.setup{
+  setup_each_lsp('cmake', {
     cmd = {vars.lsp_condaenv_bin..'cmake-language-server'},
-    on_attach = on_attach_vim
-  }
+  })
 
   -- python
   if vim.fn.executable('pylsp') == 1 then
-    lspconfig.pylsp.setup{
-      on_attach=on_attach_vim,
+    setup_each_lsp('pylsp', {
       settings={
         pylsp={plugins={pycodestyle={maxLineLength=150}}}
       }
-    }
+    })
   end
 
-  lspconfig.pyright.setup{
-    on_attach=on_attach_vim
-  }
+  setup_each_lsp('pyright', true)
 
 
   -- my custom section
 
   -- hdl
-  lspconfig.hdl_checker.setup{on_attach=on_attach_vim}
-
-  -- pwsh
-  -- nvim_lsp.powershell_editor_service.setup{on_attach=on_attach_vim}
+  setup_each_lsp('hdl_checker', true)
 
 end
 
 local alternative_lsp = function()
-  lspconfig.powershell_editor_service.setup{on_attach=on_attach_vim}
+  setup_each_lsp('powershell_editor_service', true)
 end
 
 return {
   general_lsp = general_lsp,
-  on_attach_vim = on_attach_vim,
+  setup_each_lsp = setup_each_lsp,
   alternative_lsp = alternative_lsp,
   -- construct_statusline = construct_statusline
 }

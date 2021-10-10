@@ -32,7 +32,10 @@ return require('packer').startup(function(use)
   -- LSP
   use 'neovim/nvim-lspconfig'
   use 'onsails/lspkind-nvim'
-  use 'hrsh7th/nvim-compe'
+  use 'hrsh7th/cmp-nvim-lsp'
+  use 'hrsh7th/cmp-buffer'
+  use 'hrsh7th/cmp-path'
+  use 'hrsh7th/nvim-cmp'
   use 'glepnir/lspsaga.nvim'
   use 'tjdevries/nlua.nvim'
   use 'nvim-lua/lsp_extensions.nvim'
