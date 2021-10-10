@@ -80,6 +80,13 @@ endfun
 
 " Trim the whitespaces
 fun! jerry#common#TrimWhitespace()
+    let ft=&filetype
+
+    " skip for the diff type
+    if ft ==? 'diff'
+        return
+    endif
+
     let l:save = winsaveview()
     keeppatterns %s/\s\+$//e
     call winrestview(l:save)
