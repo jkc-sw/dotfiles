@@ -113,7 +113,7 @@ nnoremap <leader>K      <cmd>  lua vim.lsp.buf.hover()<CR>
 inoremap <c-k>          <cmd>  lua require('lspsaga.signaturehelp').signature_help()<CR>
 
 nnoremap <leader>go     <cmd>  lua vim.lsp.diagnostic.set_loclist() <CR>
-nnoremap <leader>gs     <cmd>  lua print(vim.inspect(vim.lsp.get_active_clients())) <CR>
+nnoremap <leader>gs     <cmd>  LspInfo <CR>
 nnoremap <leader>gg     <cmd>  lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>
 nnoremap <leader>gn     <cmd>  lua vim.lsp.diagnostic.goto_next { wrap = false, severity = 'Error' }<CR>
 nnoremap <leader>gp     <cmd>  lua vim.lsp.diagnostic.goto_prev { wrap = false, severity = 'Error' }<CR>

@@ -100,6 +100,10 @@ require('telescope').setup({
 -- require('telescope').load_extension('fzy_native')
 require('telescope').load_extension('fzf')
 
-require('lspsaga').init_lsp_saga()
+require('lspsaga').init_lsp_saga{
+  code_action_prompt = {
+    enable = false
+  }
+}
 
 -- vim:et sw=2 ts=2 sts=2
