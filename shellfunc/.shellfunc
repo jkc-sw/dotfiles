@@ -60,14 +60,17 @@ add_shell_specific() {
     eval "$(zoxide init "$forshell")"
 
     # Handle the fzf
-    if test -d "$HOME/.vim/plugged/fzf"; then
-        addThisPath "$HOME/.vim/plugged/fzf/bin"
+    fzf_dir="$HOME/.local/share/nvim/site/pack/packer/start/fzf"
+    fzf_bindir="$fzf_dir/bin"
+    fzf_shelldir="$fzf_dir/shell"
+    if test -d "$fzf_bindir"; then
+        addThisPath "$fzf_bindir"
         if test -n "$forshell"; then
             # # shellcheck source=/dev/null
             # . "$HOME/.vim/plugged/fzf/shell/completion.$forshell"  # Too slow
 
             # shellcheck source=/dev/null
-            . "$HOME/.vim/plugged/fzf/shell/key-bindings.$forshell"
+            . "$fzf_shelldir/key-bindings.$forshell"
         fi
     fi
 }
