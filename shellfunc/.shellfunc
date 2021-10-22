@@ -67,7 +67,7 @@ add_shell_specific() {
         addThisPath "$fzf_bindir"
         if test -n "$forshell"; then
             # # shellcheck source=/dev/null
-            # . "$HOME/.vim/plugged/fzf/shell/completion.$forshell"  # Too slow
+            # . "$fzf_shelldir/completion.$forshell" # Too slow
 
             # shellcheck source=/dev/null
             . "$fzf_shelldir/key-bindings.$forshell"
