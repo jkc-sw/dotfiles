@@ -153,7 +153,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_q     ), spawn "pkill stalonetray ; xmonad --recompile; xmonad --restart")
 
     -- Startup many things
-    , ((modm              , xK_y     ), myMoreStartup)
+    , ((modm .|. shiftMask, xK_y     ), myMoreStartup)
 
     -- Run xmessage with a summary of the default keybindings (useful for beginners)
     , ((modm .|. shiftMask, xK_slash ), spawn ("echo \"" ++ help ++ "\" | xmessage -file -"))
