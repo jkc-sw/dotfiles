@@ -152,6 +152,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Restart xmonad
     , ((modm              , xK_q     ), spawn "pkill stalonetray ; xmonad --recompile; xmonad --restart")
 
+    -- Startup many things
+    , ((modm              , xK_y     ), myMoreStartup)
+
     -- Run xmessage with a summary of the default keybindings (useful for beginners)
     , ((modm .|. shiftMask, xK_slash ), spawn ("echo \"" ++ help ++ "\" | xmessage -file -"))
     ]
@@ -264,14 +267,22 @@ myStartupHook = do
 myLogHook = do
     multiPP myLogPP myLogPP
 
+-- Some startup action
+myStartup = do
+    spawn "feh --bg-scale ~/.xmonad/pure-black.png"
+    spawn "pgrep compton || compton -b"
+
+-- More startup
+myMoreStartup = do
+    spawn "pkill compton ; compton --backend glx --paint-on-overlay --vsync opengl-swc -b"
+    spawn "pgrep xscreensaver || xscreensaver -no-splash &"
+    -- spawn "pgrep lxsession || lxsession &"
+    spawn "pgrep nm-applet || nm-applet &"
+    spawn "pgrep volumeicon || volumeicon &"
+
 -- Run xmonad with the settings you specify. No need to modify this.
 main = do
-    spawn "feh --bg-scale ~/.xmonad/pure-black.png"
-    spawn "pgrep compton || compton &"
-    -- spawn "pgrep xscreensaver || xscreensaver -no-splash &"
-    -- spawn "pgrep lxsession || lxsession &"
-    -- spawn "pgrep nm-applet || nm-applet &"
-    -- spawn "pgrep volumeicon || volumeicon &"
+    myStartup
 
     xmonad $ docks $ ewmh $ defaultConfig {
         terminal           = myTerminal,
@@ -348,6 +359,7 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "Put system to sleep                                    : mod-Ctrl-Shift-l",
     "Quit xmonad                                            : mod-Shift-q",
     "Restart xmonad                                         : mod-q",
+    "Additional Startup                                     : mod-y",
     "",
     "-- Mouse bindings",
     "Set the window to floating mode and move by dragging   : mod-button1",
