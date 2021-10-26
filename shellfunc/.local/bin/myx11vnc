@@ -113,7 +113,7 @@ main() {
         echo "To create new session, check myx11vnc -h" >&2
     else
         # run it
-        ( unset SSH_TTY ; nohup x11vnc -display "$disp" -auth guess -forever -loop -noxdamage -repeat -rfbauth "$HOME/.vnc/passwd" -autoport 5900 -shared &)
+        ( unset SSH_TTY ; nohup x11vnc -display "$disp" -auth guess -forever -loop -noxdamage -repeat -rfbauth "$HOME/.vnc/passwd" -autoport 5900 -shared | tee "/tmp/x11vnc.$disp.$$") &
     fi
 }
 
