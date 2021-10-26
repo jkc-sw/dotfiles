@@ -1,0 +1,120 @@
+#!/bin/sh
+
+#===============================================================================
+# @brief Print help
+#===============================================================================
+displayHelp() {
+    cat <<EOF >&2
+Start VNC Server for Headless Server
+
+Dependencies:
+  - vncserver
+  - startup file in ~/.vnc/xstartup
+
+Installation:
+  Copy this file to \$HOME/.local/bin folder
+
+Usages:
+  Check the current running session
+  $ myvnc
+
+  Start the server with default param, 1920x1080 with 24 depth
+  $ myvnc -r
+
+  Create server with other size and depth
+  $ myvnc -r -s 1920x1080 -d 24
+
+  See help
+  $ myvnc -h
+
+Options:
+  -s <width>x<height> : The screen resolution. [default is 1920x1080]
+  -d <depth>          : Depth of color. [default is 24]
+EOF
+}
+
+
+#===============================================================================
+# @brief Print help
+#===============================================================================
+main() {
+    # Default options
+    depth=24
+    res=1920x1080
+    new=false
+
+    # check dependencies
+    if ! command -v vncserver >/dev/null 2>&1; then
+        echo 'vncserver needs to be in the path' >&2
+        exit 1
+    fi
+
+    # Parse the options
+    while test "$#" -gt 0; do
+        case "$1" in
+
+        '-h' | '--help')
+            # send user provided help
+            displayHelp
+            exit 0
+            ;;
+
+        '-r')
+            # new server
+            new=true
+            ;;
+
+        '-s')
+            # resolution
+            # make sure user has another argument passed in
+            if test "$#" -lt 2; then
+                echo "-s needs an argument" >&2
+                exit 1
+            fi
+            # process
+            shift
+            res="$1"
+            ;;
+
+        '-d')
+            # Color depth
+            # make sure user has another argument passed in
+            if test "$#" -lt 2; then
+                echo "-n needs an argument" >&2
+                exit 1
+            fi
+            # process
+            shift
+            depth="$1"
+            ;;
+
+        *)
+            # Alert invalid command
+            echo "Cannot process option $1, see above for usage" >&2
+            exit 1
+            ;;
+
+        esac
+
+        # next
+        shift
+    done
+
+    # check it or run it
+    if test "$new" = 'false'; then
+        # check it
+        vncserver -list
+
+        # print
+        echo ''
+        echo "To create new session, check myvnc -h" >&2
+    else
+        # run it
+        ( unset SSH_TTY ; vncserver -depth "$depth" -geometry "$res" -xstartup "$HOME/.vnc/xstartup" )
+    fi
+}
+
+# Call main
+main "$@"
+
+# vim:et sw=4 sts=4 ts=4

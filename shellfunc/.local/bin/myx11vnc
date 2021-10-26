@@ -1,0 +1,123 @@
+#!/bin/sh
+
+#===============================================================================
+# @brief Print help
+#===============================================================================
+displayHelp() {
+    cat <<EOF >&2
+Start VNC Server for Headless Server
+
+Dependencies:
+  - vncserver
+  - startup file in ~/.vnc/xstartup
+
+Installation:
+  Copy this file to \$HOME/.local/bin folder
+
+Usages:
+  Find available DISPLAY
+  $ myx11vnc
+
+  Start the server with default param
+  $ myx11vnc -r
+
+  start the server to different DISPLAY
+  $ myx11vnc -r -d :1
+
+  See help
+  $ myx11vnc -h
+
+Options:
+  -d <display> : Depth of color. [default is :0]
+EOF
+}
+
+
+#===============================================================================
+# @brief Print help
+#===============================================================================
+main() {
+    # Default options
+    disp=:0
+    new=false
+    # res=1920x1080
+
+    # check dependencies
+    if ! command -v vncserver >/dev/null 2>&1; then
+        echo 'vncserver needs to be in the path' >&2
+        exit 1
+    fi
+
+    # Parse the options
+    while test "$#" -gt 0; do
+        case "$1" in
+
+        '-h' | '--help')
+            # send user provided help
+            displayHelp
+            exit 0
+            ;;
+
+        '-r')
+            # new server
+            new=true
+            ;;
+
+        # '-s')
+        #     # resolution
+        #     # make sure user has another argument passed in
+        #     if test "$#" -lt 2; then
+        #         echo "-s needs an argument" >&2
+        #         exit 1
+        #     fi
+        #     # process
+        #     shift
+        #     res="$1"
+        #     ;;
+
+        '-d')
+            # DISPLAY
+            # make sure user has another argument passed in
+            if test "$#" -lt 2; then
+                echo "-n needs an argument" >&2
+                exit 1
+            fi
+            # process
+            shift
+            disp="$1"
+            ;;
+
+        *)
+            # Alert invalid command
+            echo "Cannot process option $1, see above for usage" >&2
+            exit 1
+            ;;
+
+        esac
+
+        # next
+        shift
+    done
+
+    # check it or run it
+    if test "$new" = 'false'; then
+        # List available ports
+        x11vnc -finddpy
+
+        # Find the running session
+        echo '' >&2
+        ps -aux | grep x11vnc
+
+        # print
+        echo '' >&2
+        echo "To create new session, check myx11vnc -h" >&2
+    else
+        # run it
+        ( unset SSH_TTY ; x11vnc -display "$disp" -auth guess -forever -loop -noxdamage -repeat -rfbauth "$HOME/.vnc/passwd" -autoport 5900 -shared)
+    fi
+}
+
+# Call main
+main "$@"
+
+# vim:et sw=4 sts=4 ts=4
