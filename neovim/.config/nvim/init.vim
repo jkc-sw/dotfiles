@@ -79,8 +79,9 @@ nnoremap <leader>pv     <cmd>  vertical topleft wincmd v<bar> Ex <bar> vertical 
 nnoremap <leader>pp     <cmd>  call jerry#common#TogglePasteMode()<CR>
 nnoremap <leader>v      <cmd>  vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <CR>
 nnoremap <leader>V      <cmd>  exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
-nnoremap <leader>r      <cmd>  FS<CR>
-nnoremap <leader>R      <cmd>  FSOffset -3<CR>
+" nnoremap <leader>r      <cmd>  FS<CR>
+" nnoremap <leader>R      <cmd>  FSOffset -3<CR>
+nnoremap <leader>r      <cmd>  silent exec '!tswitch'<CR>
 nnoremap <leader>E      <cmd>  .source<cr>
 vnoremap <leader>E      :<c-u> '<,'>source<cr>
 nnoremap <leader>T      <cmd>  lua SL()<cr>

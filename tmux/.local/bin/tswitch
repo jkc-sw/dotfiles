@@ -1,0 +1,66 @@
+#!/usr/bin/env sh
+
+# Check if we are in tmux
+if test -z "$TMUX"; then
+    echo "Need to be run in tmux" >&2
+    exit 0
+fi
+
+# help
+displayHelp() {
+    echo "$0: Switch/Split tmux pane the way I wanted"
+    echo "$0 [-r|-l] [-s <percent>]"
+    echo ""
+    echo "Args"
+    echo "  -l           : Make a new split to the left, default behavior"
+    echo "  -r           : Make a new split to the right"
+    echo "  -s <percent> : The size of the pane in percent 0-100, default 39"
+    echo "  -a           : Attach right away, default is not attach"
+}
+
+# var
+where='-b'
+size=39
+attach='-d'
+
+# parse args
+while getopts ':hlars:' opt; do
+    case "$opt" in
+    a)
+        attach=''
+        ;;
+    r)
+        where=''
+        ;;
+    l)
+        where='-b'
+        ;;
+    s)
+        size="$OPTARG"
+        ;;
+    h)
+        displayHelp
+        exit 0
+        ;;
+    *)
+        echo "Unrecognized option $opt" >&2
+        displayHelp
+        exit 1
+        ;;
+    esac
+done
+
+
+# Check how many pane the current window has
+nws="$(tmux list-panes | wc -l)"
+
+# If there are two, we do nothing but switch over
+if test "$nws" -gt '1'; then
+    tmux select-pane -t :.+
+
+else
+    # otherwise, make a new pane to the left and size it properly
+    tmux split-window -f -h "$where" "$attach" -l "$size%" -c '#{pane_current_path}'
+fi
+
+# vim:et ts=4 sts=4 sw=4

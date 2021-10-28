@@ -81,6 +81,8 @@ nv() {
         conda activate "$HOME/miniconda3/envs/dev_env_ansible"
     fi
 
+    tswitch
+
     if command -v nvim >/dev/null 2>&1; then
         nvim -c "lua require'jerry.lsp.config'.alternative_lsp{}" "$@"
     fi

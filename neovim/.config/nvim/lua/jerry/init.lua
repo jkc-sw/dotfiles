@@ -74,12 +74,12 @@ require('telescope').setup({
       },
     },
     mappings = {
-      i = {
-        ["<C-h>"] = function(prompt_nr)
-          actions.select_vertical(prompt_nr)
-          vim.cmd [[ FSNoToggle ]]
-        end,
-      },
+      -- i = {
+      --   ["<C-h>"] = function(prompt_nr)
+      --     actions.select_vertical(prompt_nr)
+      --     vim.cmd [[ FSNoToggle ]]
+      --   end,
+      -- },
     }
   },
   extensions = {
