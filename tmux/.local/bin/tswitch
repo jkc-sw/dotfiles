@@ -6,22 +6,22 @@ if test -z "$TMUX"; then
     exit 0
 fi
 
+# var
+where='-b'
+size=33
+attach='-d'
+
 # help
 displayHelp() {
-    echo "$0: Switch/Split tmux pane the way I wanted"
-    echo "$0 [-r|-l] [-s <percent>]"
+    echo "$(basename "$0"): Switch/Split tmux pane the way I wanted"
+    echo "$(basename "$0") [-r|-l] [-s <percent>]"
     echo ""
     echo "Args"
     echo "  -l           : Make a new split to the left, default behavior"
     echo "  -r           : Make a new split to the right"
-    echo "  -s <percent> : The size of the pane in percent 0-100, default 39"
+    echo "  -s <percent> : The size of the pane in percent 0-100, default $size"
     echo "  -a           : Attach right away, default is not attach"
 }
-
-# var
-where='-b'
-size=39
-attach='-d'
 
 # parse args
 while getopts ':hlars:' opt; do
