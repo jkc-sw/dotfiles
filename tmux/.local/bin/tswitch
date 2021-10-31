@@ -54,13 +54,18 @@ done
 # Check how many pane the current window has
 nws="$(tmux list-panes | wc -l)"
 
-# If there are two, we do nothing but switch over
-if test "$nws" -gt '1'; then
-    # tmux select-pane -t :.+
-
-else
-    # otherwise, make a new pane to the left and size it properly
+# If is only 1 pane, make a new one
+if test "$nws" -eq '1'; then
     tmux split-window -f -h "$where" "$attach" -l "$size%" -c '#{pane_current_path}'
 fi
+
+# # If there are two, we do nothing but switch over
+# if test "$nws" -gt '1'; then
+#     tmux select-pane -t :.+
+#
+# else
+#     # otherwise, make a new pane to the left and size it properly
+#     tmux split-window -f -h "$where" "$attach" -l "$size%" -c '#{pane_current_path}'
+# fi
 
 # vim:et ts=4 sts=4 sw=4
