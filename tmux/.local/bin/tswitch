@@ -56,7 +56,7 @@ nws="$(tmux list-panes | wc -l)"
 
 # If there are two, we do nothing but switch over
 if test "$nws" -gt '1'; then
-    tmux select-pane -t :.+
+    # tmux select-pane -t :.+
 
 else
     # otherwise, make a new pane to the left and size it properly
