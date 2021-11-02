@@ -168,6 +168,7 @@ extension_defaults = widget_defaults.copy()
 
 
 myGroupBoxProps = dict(
+    borderwidth=2,
     this_current_screen_border='#31e710',
     this_screen_border='#bababa',
     other_screen_border='#bababa'
