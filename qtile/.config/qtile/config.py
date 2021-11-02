@@ -148,8 +148,8 @@ keys.extend(
 myDefault_themes = dict(
     border_width=2,
     margin=6,
-    border_focus="46d9ff",
-    border_normal="282c34",
+    border_focus="#46d9ff",
+    border_normal="#282c34",
     margin_on_single=6
 )
 
@@ -166,13 +166,20 @@ widget_defaults = dict(
 )
 extension_defaults = widget_defaults.copy()
 
+
+myGroupBoxProps = dict(
+    this_current_screen_border='#31e710',
+    this_screen_border='#bababa',
+    other_screen_border='#bababa'
+)
+
 # Bar setup
 myBarsPrimary = [
     widget.Volume(device='pulse'),
     widget.Sep(),
     widget.CurrentLayout(),
     widget.Sep(),
-    widget.GroupBox(),
+    widget.GroupBox(**myGroupBoxProps),
     widget.Sep(),
     widget.WindowCount(fmt='# {}'),
     widget.Sep(),
@@ -194,7 +201,7 @@ myBarsPrimary = [
 myBarsSecondary = [
     widget.CurrentLayout(),
     widget.Sep(),
-    widget.GroupBox(),
+    widget.GroupBox(**myGroupBoxProps),
     widget.Sep(),
     widget.WindowCount(fmt='# {}'),
     widget.Sep(),
