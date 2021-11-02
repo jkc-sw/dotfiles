@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+displayHelp() {
+    echo "$(basename "$0") [-s]"
+    echo "Grab a screenshot and dump to the ~/Downloads folder with timestamp"
+    echo " -s: Allow user to select the range. Otherwise, full screen"
+}
+
+# Default behavior
+swi='-m'  # full screen
+
+# parse args
+while getopts ':hs' opt; do
+    case "$opt" in
+    s)
+        swi='-s'
+        ;;
+    h)
+        displayHelp
+        exit 0
+        ;;
+    *)
+        echo "Unrecognized option $opt, see -h" >&2
+        exit 1
+        ;;
+    esac
+done
+
+export SCREENSHOT_DIR="$HOME/Downloads"
+mkdir -p $SCREENSHOT_DIR
+sleep 0.2
+scrot "$swi" "$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\$wx\$h.png"
