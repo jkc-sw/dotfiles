@@ -32,6 +32,7 @@ import subprocess
 
 from libqtile import bar, layout, widget, hook
 from libqtile.config import Drag, Group, Key, Match, Screen
+from libqtile.core.manager import Qtile
 from libqtile.lazy import lazy
 
 mod = "mod1"
@@ -75,7 +76,7 @@ keys.extend([
     add_key([mod, "shift"],   "y",      "Second level startup",               lazy.spawn(os.path.expanduser("~/.local/bin/wm_start_adv.sh"))),
     add_key([mod, ""],        "q",      "Restart Qtile",                      lazy.restart()),
     add_key([mod, ""],        "l",      "Lock the screen",                    lazy.spawn("xscreensaver-command -lock")),
-    add_key([mod, ""],        "l",      "Sleep the computer",                 lazy.spawn("xscreensaver-command -lock ; sleep 5 ; systemctl suspend")),
+    add_key([mod, "shift"],   "l",      "Sleep the computer",                 lazy.spawn("xscreensaver-command -lock ; sleep 5 ; systemctl suspend")),
 
     add_key([mod, "shift"],   "Return", "Launch terminal",                    lazy.spawn(terminal)),
     add_key([mod, ""],        "x",      "Launch arandr",                      lazy.spawn("arandr")),
@@ -85,7 +86,7 @@ keys.extend([
     add_key([mod, "shift"],   "z",      "Mute",                               lazy.spawn("amixer -D pulse -q set Master toggle")),
     add_key([mod, ""],        "b",      "Dimmer",                             lazy.spawn("xbacklight -dec 10")),
     add_key([mod, "shift"],   "b",      "Brighter",                           lazy.spawn("xbacklight -inc 10")),
-    add_key([mod, "shift"],   "p",      "Open dmenu to start a program",      lazy.spawn("dmenu_run -p 'Run: '")),
+    add_key([mod, "shift"],   "p",      "Open dmenu to start a program",      lazy.spawn("dmenu_run -p 'Run > '")),
     add_key([mod, "shift"],   "s",      "Take a screenshot with select tool", lazy.spawn(os.path.expanduser("~/.local/bin/shot -s"))),
     add_key([mod, ""],        "s",      "Take a full screenshot",             lazy.spawn(os.path.expanduser("~/.local/bin/shot"))),
 ])
@@ -100,12 +101,42 @@ groups = [Group(i) for i in "123456789"]
 
 # Manual way to bind the key
 keys.extend(
-    Key([mod], i.name, lazy.group[i.name].toscreen(toggle=False), desc="Switch to group {}".format(i.name))
+    add_key([mod, ''], i.name, "Switch to group {}".format(i.name), lazy.group[i.name].toscreen(toggle=False))
     for i in groups
 )
 keys.extend(
-    Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=False), desc="Switch to & move focused window to group {}".format(i.name))
+    add_key([mod, "shift"], i.name, "Switch to & move focused window to group {}".format(i.name), lazy.window.togroup(i.name, switch_group=False))
     for i in groups
+)
+
+
+def send_to_screen(n: int):
+    """Send the current window to screen n
+
+    Args:
+        n (int): Screen index
+    """
+    def cb(qtile: Qtile):
+        screens = qtile.screens
+
+        if n < len(screens):
+            # find what group it is on
+            gp = screens[n].group.name
+
+            if qtile.current_window:
+                qtile.current_window.togroup(gp, switch_group=False)
+
+    return lazy.function(cb)
+
+
+keys.extend(
+    add_key([mod, ""], k, "Go to screen {}".format(ii), lazy.to_screen(ii))
+    for ii, k in enumerate(('w', 'e', 'r'))
+)
+
+keys.extend(
+    add_key([mod, "shift"], k, "Go to screen {}".format(ii), send_to_screen(ii))
+    for ii, k in enumerate(('w', 'e', 'r'))
 )
 
 # # Auto bind the key to switch to group
