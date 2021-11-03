@@ -211,7 +211,7 @@ myBarsSecondary = [
 
 # If the battery is there, use it
 try:
-    myBarsPrimary.index(0, widget.Battery())
+    myBarsPrimary.insert(0, widget.Battery())
 except Exception:
     pass
 
