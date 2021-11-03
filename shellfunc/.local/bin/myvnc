@@ -110,7 +110,7 @@ main() {
         echo "To create new session, check myvnc -h" >&2
     else
         # run it
-        ( unset SSH_TTY ; vncserver -depth "$depth" -geometry "$res" -xstartup "$HOME/.vnc/xstartup" )
+        ( unset SSH_TTY ; vncserver -depth "$depth" -geometry "$res" -xstartup "$HOME/.vnc/xstartup-qtile" )
     fi
 }
 

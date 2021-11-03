@@ -53,7 +53,8 @@ return require('packer').startup(function(use)
   use 'kergoth/vim-bitbake'
   use 'pprovost/vim-ps1'
 
-  -- Color scheme
+  -- Color
+  use 'norcalli/nvim-colorizer.lua'
   use 'arzg/vim-colors-xcode'
   -- use 'tjdevries/gruvbuddy.nvim'
   -- use 'tjdevries/colorbuddy.vim'

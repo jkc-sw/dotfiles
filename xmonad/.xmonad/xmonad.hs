@@ -130,10 +130,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
 
     -- Screenshot
-    -- , ((modm              , xK_s     ), unGrab *> spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -m \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
-    -- , ((modm .|. shiftMask, xK_s     ), unGrab *> spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -s \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
-    , ((modm              , xK_s     ), spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -m \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
-    , ((modm .|. shiftMask, xK_s     ), spawn "export SCREENSHOT_DIR=$HOME/Downloads ; mkdir -p $SCREENSHOT_DIR ; sleep 0.2; scrot -s \"$SCREENSHOT_DIR/%Y-%m-%d-%H%M%S_\\$wx\\$h.png\"")
+    -- , ((modm              , xK_s     ), unGrab *> spawn "~/.local/bin/shot")
+    -- , ((modm .|. shiftMask, xK_s     ), unGrab *> spawn "~/.local/bin/shot -s")
+    , ((modm              , xK_s     ), spawn "~/.local/bin/shot")
+    , ((modm .|. shiftMask, xK_s     ), spawn "~/.local/bin/shot -s")
 
     -- Lock the screen
     , ((modm .|. shiftMask                , xK_l     ), spawn "xscreensaver-command -lock")
@@ -269,16 +269,11 @@ myLogHook = do
 
 -- Some startup action
 myStartup = do
-    spawn "feh --bg-scale ~/.xmonad/pure-black.png"
-    spawn "pgrep compton || compton -b"
+    spawn "~/.local/bin/wm_start.sh"
 
 -- More startup
 myMoreStartup = do
-    spawn "pkill compton ; compton --backend glx --paint-on-overlay --vsync opengl-swc -b"
-    spawn "pgrep xscreensaver || xscreensaver -no-splash &"
-    -- spawn "pgrep lxsession || lxsession &"
-    spawn "pgrep nm-applet || nm-applet &"
-    spawn "pgrep volumeicon || volumeicon &"
+    spawn "~/.local/bin/wm_start_adv.sh"
 
 -- Run xmonad with the settings you specify. No need to modify this.
 main = do
