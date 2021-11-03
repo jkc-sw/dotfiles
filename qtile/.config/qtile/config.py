@@ -64,7 +64,7 @@ keys.extend([
     add_key([mod, "",        ""],        "o",      "Move window focus to other window",  lazy.layout.next()),
 
     add_key([mod, "shift",   ""],        "n",      "Reset all window sizes",             lazy.layout.normalize()),
-    add_key([mod, "",        ""],        "t",      "Toggle the window to Full screen",   lazy.window.toggle_floating()),
+    add_key([mod, "",        ""],        "t",      "Toggle the window to floating",      lazy.window.toggle_floating()),
     add_key([mod, "",        ""],        "a",      "Go back to the last group",          lazy.screen.toggle_group()),
     add_key([mod, "",        ""],        "f",      "Toggle full screen",                 lazy.window.toggle_fullscreen()),
     add_key([mod, "",        ""],        "n",      "To the next group",                  lazy.screen.next_group()),
