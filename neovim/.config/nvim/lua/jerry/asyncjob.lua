@@ -42,11 +42,11 @@ local function run(ocmd, cmd, args)
         vim.cmd(locmd)
 
         if #louts > 0 then
-          vim.api.nvim_buf_set_lines(0, 0, -1, false, louts)
+          vim.api.nvim_buf_set_lines(0, -1, -1, false, louts)
         end
 
         if #lerrs > 0 then
-          vim.api.nvim_buf_set_lines(0, 0, -1, false, lerrs)
+          vim.api.nvim_buf_set_lines(0, -1, -1, false, lerrs)
         end
 
         vim.bo.readonly = false
