@@ -14,3 +14,6 @@ pgrep nm-applet || nm-applet &
 
 # Show the volume
 pgrep volumeicon || volumeicon &
+
+# Show the bluetooth icon
+pgrep blueman-applet || blueman-applet &
