@@ -148,6 +148,7 @@ keys.extend(
 myDefault_themes = dict(
     border_width=2,
     margin=6,
+    fair=True,
     border_focus="#46d9ff",
     border_normal="#282c34",
     margin_on_single=6
