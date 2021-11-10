@@ -29,6 +29,7 @@ from typing import List  # noqa: F401
 import os
 from itertools import repeat
 import subprocess
+import glob
 
 from libqtile import bar, layout, widget, hook
 from libqtile.config import Drag, Group, Key, Match, Screen
@@ -211,12 +212,11 @@ myBarsSecondary = [
 ]
 
 # If the battery is there, use it
-try:
+bats = glob.glob("/sys/class/power_supply/BAT*")
+if len(bats) > 0:
     myBarsPrimary.insert(0, widget.BatteryIcon())
     myBarsPrimary.insert(0, widget.Battery())
     myBarsPrimary.insert(2, widget.Sep())
-except Exception:
-    pass
 
 # Add primary screen
 screens = [
