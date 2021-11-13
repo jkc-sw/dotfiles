@@ -186,7 +186,7 @@ myBarsPrimary = [
     widget.Sep(),
     widget.WindowCount(fmt='# {}'),
     widget.Sep(),
-    widget.TaskList(title_width_method='uniform'),
+    widget.TaskList(title_width_method='uniform', padding=1),
     widget.Systray(),
     widget.StatusNotifier(),
     widget.Chord(
@@ -208,7 +208,7 @@ myBarsSecondary = [
     widget.Sep(),
     widget.WindowCount(fmt='# {}'),
     widget.Sep(),
-    widget.TaskList(title_width_method='uniform'),
+    widget.TaskList(title_width_method='uniform', padding=1),
 ]
 
 # If the battery is there, use it
