@@ -92,3 +92,13 @@ fun! jerry#common#TrimWhitespace()
     call winrestview(l:save)
 endfun
 
+" Close tabs
+func! jerry#common#CloseTab()
+    " Check how many tabs there is
+    if tabpagenr('$') > 1
+        tabclose!
+    else
+        qa!
+    endif
+endfunc
+
