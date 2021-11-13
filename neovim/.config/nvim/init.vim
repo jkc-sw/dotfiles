@@ -94,7 +94,7 @@ nnoremap <leader>o      <cmd>  call jerry#common#ListSymbols()<CR>
 nnoremap Q              <cmd>  call jerry#common#WordFuzzySearch()<CR>
 nnoremap <leader>ps     <cmd>  call jerry#common#GlobalFuzzySearch()<CR>
 nnoremap <leader>qf     <cmd>  lua require('telescope.builtin').quickfix()<CR>
-nnoremap <leader>pa     <cmd>  windo q!<CR>
+nnoremap <leader>pa     <cmd>  call jerry#common#CloseTab()<CR>
 
 nnoremap <leader><c-]>  <cmd>  lua vim.lsp.buf.definition()<CR>
 nnoremap <leader>g<c-]> <cmd>  lua require'lspsaga.provider'.preview_definition()<CR>
