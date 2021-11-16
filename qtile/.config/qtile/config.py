@@ -83,11 +83,11 @@ keys.extend([
     add_key([mod, "",        ""],        "n",      "To the next group",                  lazy.screen.next_group()),
     add_key([mod, "",        ""],        "p",      "To the prev group",                  lazy.screen.prev_group()),
     add_key([mod, "",        ""],        "space",  "Toggle between layouts",             lazy.next_layout()),
-    add_key([mod, "shift",   ""],        "c",      "Kill focused window",                lazy.window.kill()),
+    add_key([mod, "",        ""],        "q",      "Kill focused window",                lazy.window.kill()),
 
     add_key([mod, "shift",   ""],        "q",      "Shutdown Qtile",                     lazy.shutdown()),
     add_key([mod, "shift",   ""],        "y",      "Second level startup",               lazy.spawn(os.path.expanduser("~/.local/bin/wm_start_adv.sh"))),
-    add_key([mod, "",        ""],        "q",      "Restart Qtile",                      lazy.restart()),
+    add_key([mod, "shift",   ""],        "r",      "Restart Qtile",                      lazy.restart()),
     add_key([mod, "shift",   ""],        "l",      "Lock the screen",                    lazy.spawn("xscreensaver-command -lock")),
     add_key([mod, "shift",   "control"], "l",      "Sleep the computer",                 lazy.spawn("xscreensaver-command -lock ; sleep 5 ; systemctl suspend")),
 

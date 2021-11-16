@@ -72,7 +72,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_a     ), toggleWS)
 
     -- close focused window
-    , ((modm .|. shiftMask, xK_c     ), unGrab *> kill)
+    , ((modm,               xK_q     ), unGrab *> kill)
 
      -- Rotate through the available layout algorithms
     , ((modm,               xK_space ), sendMessage NextLayout)
@@ -150,7 +150,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
 
     -- Restart xmonad
-    , ((modm              , xK_q     ), spawn "pkill stalonetray ; xmonad --recompile; xmonad --restart")
+    , ((modm .|. shiftMask, xK_r     ), spawn "pkill stalonetray ; xmonad --recompile; xmonad --restart")
 
     -- Startup many things
     , ((modm .|. shiftMask, xK_y     ), myMoreStartup)
