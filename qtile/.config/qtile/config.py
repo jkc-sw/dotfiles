@@ -44,6 +44,17 @@ def add_key(modifiers: List[str], key: str, desc: str, *commands):
     return Key([e for e in modifiers if e], key, *commands, desc=desc)
 
 
+def put_all_to_tile():
+    """Send all the windows back to tile"""
+    def cb(qtile: Qtile):
+        g = qtile.current_group
+        for w in g.windows:
+            if w.floating:
+                w.toggle_floating()
+
+    return lazy.function(cb)
+
+
 # Store the key map
 # '<,'>Tab /,\zs/l0l1
 keys = []
@@ -66,6 +77,7 @@ keys.extend([
 
     add_key([mod, "shift",   ""],        "n",      "Reset all window sizes",             lazy.layout.normalize()),
     add_key([mod, "",        ""],        "t",      "Toggle the window to floating",      lazy.window.toggle_floating()),
+    add_key([mod, "shift",   ""],        "t",      "Toggle the window to floating",      put_all_to_tile()),
     add_key([mod, "",        ""],        "a",      "Go back to the last group",          lazy.screen.toggle_group()),
     add_key([mod, "",        ""],        "f",      "Toggle full screen",                 lazy.window.toggle_fullscreen()),
     add_key([mod, "",        ""],        "n",      "To the next group",                  lazy.screen.next_group()),
