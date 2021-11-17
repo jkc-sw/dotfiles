@@ -85,9 +85,9 @@ keys.extend([
     add_key([mod, "",        ""],        "space",  "Toggle between layouts",             lazy.next_layout()),
     add_key([mod, "",        ""],        "q",      "Kill focused window",                lazy.window.kill()),
 
-    add_key([mod, "shift",   ""],        "q",      "Shutdown Qtile",                     lazy.shutdown()),
+    add_key([mod, "shift",   "control"], "q",      "Shutdown Qtile",                     lazy.shutdown()),
     add_key([mod, "shift",   ""],        "y",      "Second level startup",               lazy.spawn(os.path.expanduser("~/.local/bin/wm_start_adv.sh"))),
-    add_key([mod, "shift",   ""],        "r",      "Restart Qtile",                      lazy.restart()),
+    add_key([mod, "shift",   ""],        "q",      "Restart Qtile",                      lazy.restart()),
     add_key([mod, "shift",   ""],        "l",      "Lock the screen",                    lazy.spawn("xscreensaver-command -lock")),
     add_key([mod, "shift",   "control"], "l",      "Sleep the computer",                 lazy.spawn("xscreensaver-command -lock ; sleep 5 ; systemctl suspend")),
 
@@ -167,10 +167,22 @@ myDefault_themes = dict(
     margin_on_single=6
 )
 
+# Run the utility of `xprop` to see the wm class and name of an X client.
+floating_layout = layout.Floating(float_rules=[
+    *layout.Floating.default_float_rules,
+    Match(wm_class='confirmreset'),  # gitk
+    Match(wm_class='makebranch'),  # gitk
+    Match(wm_class='maketag'),  # gitk
+    Match(wm_class='ssh-askpass'),  # ssh-askpass
+    Match(title='branchdialog'),  # gitk
+    Match(title='pinentry'),  # GPG key password entry
+], **myDefault_themes)
+
 # Layout
 layouts = [
     layout.Columns(**myDefault_themes),
     layout.Bsp(**myDefault_themes),
+    floating_layout,
 ]
 
 widget_defaults = dict(
@@ -253,17 +265,6 @@ screens.extend(repeat(Screen(
 def start_once():
     subprocess.call(os.path.expanduser('~/.local/bin/wm_start.sh'))
 
-
-# Run the utility of `xprop` to see the wm class and name of an X client.
-floating_layout = layout.Floating(float_rules=[
-    *layout.Floating.default_float_rules,
-    Match(wm_class='confirmreset'),  # gitk
-    Match(wm_class='makebranch'),  # gitk
-    Match(wm_class='maketag'),  # gitk
-    Match(wm_class='ssh-askpass'),  # ssh-askpass
-    Match(title='branchdialog'),  # gitk
-    Match(title='pinentry'),  # GPG key password entry
-])
 
 dgroups_app_rules = []  # type: List
 follow_mouse_focus = False
