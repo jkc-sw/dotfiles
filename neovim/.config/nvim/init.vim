@@ -37,6 +37,7 @@ set cmdheight=1
 set updatetime=50
 set shortmess+=c
 set noshowmode
+set shiftround
 set background=dark
 set splitbelow splitright
 set termguicolors
