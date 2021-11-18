@@ -182,7 +182,6 @@ floating_layout = layout.Floating(float_rules=[
 layouts = [
     layout.Columns(**myDefault_themes),
     layout.Bsp(**myDefault_themes),
-    floating_layout,
 ]
 
 widget_defaults = dict(
