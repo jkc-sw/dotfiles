@@ -97,8 +97,11 @@ local general_lsp = function()
     })
   end
 
+  -- python
   setup_each_lsp('pyright', true)
 
+  -- verilog & systemverilog
+  setup_each_lsp('svls', true)
 
   -- my custom section
 
