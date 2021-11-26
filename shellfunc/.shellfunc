@@ -75,13 +75,22 @@ add_shell_specific() {
     fi
 }
 
-# shortcut to start nvim
+# @brief Source the environment
 nv() {
+    if test -d "$HOME/miniconda3/envs/dev_env_ansible2"; then
+        conda activate "$HOME/miniconda3/envs/dev_env_ansible2"
+    fi
+
     if test -d "$HOME/miniconda3/envs/dev_env_ansible"; then
-        conda activate "$HOME/miniconda3/envs/dev_env_ansible"
+        conda activate --stack "$HOME/miniconda3/envs/dev_env_ansible"
     fi
 
     tswitch
+}
+
+# shortcut to start nvim
+n() {
+    nv
 
     if command -v nvim >/dev/null 2>&1; then
         nvim -c "lua require'jerry.lsp.config'.alternative_lsp{}" "$@"
@@ -90,7 +99,7 @@ nv() {
 
 # shortcut to start nvim with host being a tmux
 nvt() {
-    TOCLIP_HOST_TMUX=2 nv "$@"
+    TOCLIP_HOST_TMUX=2 n "$@"
 }
 
 # add a command to start docker instance
