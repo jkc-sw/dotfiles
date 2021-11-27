@@ -30,7 +30,10 @@ return require('packer').startup(function(use)
   use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
   -- LSP
-  use 'neovim/nvim-lspconfig'
+  use {
+    'neovim/nvim-lspconfig',
+    commit = '10ad0cca1b83713ed98ed4cb7ea60f2ea8e55c49'
+  }
   use 'onsails/lspkind-nvim'
   use 'hrsh7th/cmp-nvim-lsp'
   use 'hrsh7th/cmp-buffer'
