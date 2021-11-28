@@ -85,18 +85,20 @@ nv() {
         conda activate --stack "$HOME/miniconda3/envs/dev_env_ansible"
     fi
 
-    # Get current panes
-    beforepanenum="$(tmux list-panes | wc -l)"
+    if test -n "$TMUX"; then
+        # Get current panes
+        beforepanenum="$(tmux list-panes | wc -l)"
 
-    # run the tswitch
-    tswitch
+        # run the tswitch
+        tswitch
 
-    # Get after panes
-    afterpanenum="$(tmux list-panes | wc -l)"
+        # Get after panes
+        afterpanenum="$(tmux list-panes | wc -l)"
 
-    # Send the source command only when creating new pane
-    if test "$afterpanenum" -eq 2 -a "$beforepanenum" -eq 1; then
-        tmux send-keys -t :.+ 'nv' Enter
+        # Send the source command only when creating new pane
+        if test "$afterpanenum" -eq 2 -a "$beforepanenum" -eq 1; then
+            tmux send-keys -t :.+ 'nv' Enter
+        fi
     fi
 }
 
