@@ -32,7 +32,7 @@ return require('packer').startup(function(use)
   -- LSP
   use {
     'neovim/nvim-lspconfig',
-    commit = '10ad0cca1b83713ed98ed4cb7ea60f2ea8e55c49'
+    -- commit = '10ad0cca1b83713ed98ed4cb7ea60f2ea8e55c49'
   }
   use 'onsails/lspkind-nvim'
   use 'hrsh7th/cmp-nvim-lsp'

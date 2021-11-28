@@ -1,10 +1,10 @@
-local lspconfig = require'lspconfig/configs'
+local configs = require'lspconfig.configs'
 local vars = require'jerry.lsp.vars'
 local vim = vim
 
 -- pwsh
 -- Setup the lsp with custom command setup
-lspconfig.powershell_editor_service = {
+configs.powershell_editor_service = {
   default_config = {
     cmd = {
       "pwsh",
@@ -49,7 +49,7 @@ https://github.com/PowerShell/PowerShellEditorServices
 }
 
 -- hdl
-lspconfig.hdl_checker = {
+configs.hdl_checker = {
   default_config = {
     cmd = {
       "hdl_checker", "--lsp"
@@ -65,6 +65,5 @@ https://github.com/suoto/hdl_checker
     }
   }
 }
-
 
 -- vim:et ts=2 sw=2
