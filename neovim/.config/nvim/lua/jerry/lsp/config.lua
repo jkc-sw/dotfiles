@@ -105,8 +105,8 @@ local general_lsp = function()
 
   -- my custom section
 
-  -- hdl
-  setup_each_lsp('hdl_checker', true)
+  -- -- hdl
+  -- setup_each_lsp('hdl_checker', true)
 
 end
 
