@@ -100,10 +100,8 @@ local general_lsp = function()
   -- python
   setup_each_lsp('pyright', true)
 
-  -- verilog & systemverilog
-  setup_each_lsp('svls', true)
-
-  -- my custom section
+  -- -- verilog & systemverilog
+  -- setup_each_lsp('svls', true)
 
   -- -- hdl
   -- setup_each_lsp('hdl_checker', true)

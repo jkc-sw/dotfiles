@@ -14,7 +14,7 @@ sst_dbl_action_type insert
 use_gestures maybe
 
 use_standard_trace_select no
-highlight_wavewindow no
+highlight_wavewindow yes
 fill_waveform no
 alt_wheel_mode yes
 vcd_preserve_glitches no
