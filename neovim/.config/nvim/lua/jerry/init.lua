@@ -19,7 +19,7 @@ require('lualine').setup {
     lualine_c = {'jerry#common#PasteModeReport'},
     lualine_x = {'fileformat', 'encoding', 'filetype'},
     lualine_y = {'progress'},
-    lualine_z = {'location', {'diagnostics', sources = {'nvim_lsp'}, sections = {'error', 'warn'}}},
+    lualine_z = {'location', {'diagnostics', sources = {'nvim_diagnostic'}, sections = {'error', 'warn'}}},
   },
   inactive_sections = {
     lualine_a = {},
