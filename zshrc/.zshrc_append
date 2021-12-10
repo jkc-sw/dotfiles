@@ -44,26 +44,6 @@ function zsh_add_plugin() {
 zsh_add_plugin "zsh-users/zsh-autosuggestions"
 zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
 
-# #===============================================================================
-# # plugin manager section
-# #===============================================================================
-# source "$HOME/.local/share/antigen/antigen.zsh"
-# antigen bundle zsh-users/zsh-autosuggestions
-# antigen bundle zsh-users/zsh-syntax-highlighting
-#
-# # # Too slow to load
-# # antigen bundle marlonrichert/zsh-autocomplete
-# # antigen bundle zsh-users/zsh-completions
-# # antigen bundle agkozak/zsh-z
-#
-# # # Even slower to load
-# # antigen use oh-my-zsh
-# # antigen theme robbyrussell
-# # antigen bundle git
-# # antigen bundle colored-man-pages
-#
-# antigen apply
-
 #===============================================================================
 # Borrowed from other, check to make sure I understand
 # Thank you, https://github.com/ChristianChiarulli/Machfiles/blob/1e52b9190d5e54d35f305b53d6b5dfe7306c395e/zsh/.config/zsh/zshrc
@@ -100,6 +80,7 @@ bindkey "^k" up-line-or-beginning-search # Up
 bindkey "^j" down-line-or-beginning-search # Down
 
 autoload edit-command-line; zle -N edit-command-line
+bindkey -M vicmd v edit-command-line
 
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=100000
