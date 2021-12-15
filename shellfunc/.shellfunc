@@ -55,7 +55,7 @@ alias cmonitor='sudo modprobe msr && sudo turbostat --show Core,CPU,Avg_MHz,Busy
 cperf() {
     if test "$#" -lt 1; then
         echo "Current governor:"
-        cinfo | sort -u
+        cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor | sort -u
         echo ''
 
         echo "Available governor:"
