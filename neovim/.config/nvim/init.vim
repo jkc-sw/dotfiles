@@ -75,7 +75,7 @@ nnoremap <leader>h      <cmd>  wincmd h<CR>
 nnoremap <leader>j      <cmd>  wincmd j<CR>
 nnoremap <leader>k      <cmd>  wincmd k<CR>
 nnoremap <leader>l      <cmd>  wincmd l<CR>
-nnoremap <leader>u      <cmd>  UndotreeShow<CR>
+nnoremap <leader>U      <cmd>  UndotreeShow<CR>
 nnoremap <leader>pv     <cmd>  vertical topleft wincmd v<bar> Ex <bar> vertical resize 50<CR>
 nnoremap <leader>pp     <cmd>  call jerry#common#TogglePasteMode()<CR>
 nnoremap <leader>v      <cmd>  vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <CR>
@@ -87,6 +87,16 @@ nnoremap <leader>E      <cmd>  .source<cr>
 vnoremap <leader>E      :<c-u> '<,'>source<cr>
 nnoremap <leader>T      <cmd>  lua SL()<cr>
 vnoremap <leader>T      :<c-u> lua SV()<cr>
+
+nnoremap <leader>te     <cmd>  silent execute ".w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :.+" <cr>
+nnoremap <leader>to     <cmd>  silent execute ".w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
+nnoremap <leader>ta     <cmd>  silent execute ".w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :-" <bar> silent execute "!tmux select-window -t :-.1" <cr>
+nnoremap <leader>tu     <cmd>  silent execute ".w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :+" <bar> silent execute "!tmux select-window -t :+.1" <cr>
+
+vnoremap <leader>te     :<c-u> silent execute "'<,'>w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :.+" <cr>
+vnoremap <leader>to     :<c-u> silent execute "'<,'>w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
+vnoremap <leader>ta     :<c-u> silent execute "'<,'>w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :-" <bar> silent execute "!tmux select-window -t :-.1" <cr>
+vnoremap <leader>tu     :<c-u> silent execute "'<,'>w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :+" <bar> silent execute "!tmux select-window -t :+.1" <cr>
 
 nnoremap <c-p>          <cmd>  call jerry#common#FileFuzzySearch()<CR>
 nnoremap <leader>/      <cmd>  call jerry#common#LinesFuzzySearch()<CR>
