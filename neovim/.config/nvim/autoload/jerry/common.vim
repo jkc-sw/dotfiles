@@ -4,6 +4,17 @@ function! jerry#common#CorrentFileShortener()
     return pathshorten(expand('%'))
 endfunction
 
+" Function to get the visual selection
+" references: https://vi.stackexchange.com/questions/9888/how-to-pipe-characters-to-cmd
+function! jerry#common#GetVisualSelection()
+    let [lnum1, col1] = getpos("'<")[1:2]
+    let [lnum2, col2] = getpos("'>")[1:2]
+    let lines = getline(lnum1, lnum2)
+    let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
+    let lines[0] = lines[0][col1 - 1:]
+    return join(lines, "\n")
+endfunction
+
 " function to search through files
 func! jerry#common#FileFuzzySearch()
     if g:use_fzf
