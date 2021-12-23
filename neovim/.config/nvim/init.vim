@@ -54,6 +54,7 @@ let g:vimsyn_embed = 'l'
 let g:loaded_clipboard_provider = 1 " I don't need nvim to sync clipboard for me, I have my own tool
 set grepprg=rg\ --line-number\ --color=never
 set regexpengine=1
+set diffopt+=iwhiteeol
 
 colorscheme xcodedarkhc
 
@@ -129,13 +130,22 @@ nnoremap <leader>K      <cmd>  lua vim.lsp.buf.hover()<CR>
 " nnoremap <leader>K      <cmd>  lua require('lspsaga.hover').render_hover_doc()<CR>
 inoremap <c-k>          <cmd>  lua require('lspsaga.signaturehelp').signature_help()<CR>
 
-nnoremap <leader>go     <cmd>  lua vim.lsp.diagnostic.set_loclist() <CR>
+nnoremap <leader>go     <cmd>  lua vim.diagnostic.set_loclist() <CR>
 nnoremap <leader>gs     <cmd>  LspInfo <CR>
 nnoremap <leader>gg     <cmd>  lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>
-nnoremap <leader>gn     <cmd>  lua vim.lsp.diagnostic.goto_next { wrap = false, severity = 'Error' }<CR>
-nnoremap <leader>gp     <cmd>  lua vim.lsp.diagnostic.goto_prev { wrap = false, severity = 'Error' }<CR>
-nnoremap <leader>gN     <cmd>  lua vim.lsp.diagnostic.goto_next { wrap = false, severity_limit = 'Warning' }<CR>
-nnoremap <leader>gP     <cmd>  lua vim.lsp.diagnostic.goto_prev { wrap = false, severity_limit = 'Warning' }<CR>
+nnoremap <leader>gn     <cmd>  lua vim.diagnostic.goto_next { wrap = false, severity = 'Error' }<CR>
+nnoremap <leader>gp     <cmd>  lua vim.diagnostic.goto_prev { wrap = false, severity = 'Error' }<CR>
+nnoremap <leader>gN     <cmd>  lua vim.diagnostic.goto_next { wrap = false, severity_limit = 'Warning' }<CR>
+nnoremap <leader>gP     <cmd>  lua vim.diagnostic.goto_prev { wrap = false, severity_limit = 'Warning' }<CR>
+
+" Find all the syntax highlights
+nnoremap <leader>nl <cmd>so $VIMRUNTIME/syntax/hitest.vim<cr>
+
+" Find syntax match
+nnoremap <silent> <leader>nh :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name")
+    \ . '> trans<' . synIDattr(synID(line("."),col("."),0),"name")
+    \ . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name")
+    \ . ">"<CR>
 
 vnoremap <leader>p "_dP
 nnoremap <leader>fm vip:g/\|/Tab/\|/<cr>
