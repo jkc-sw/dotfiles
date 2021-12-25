@@ -89,20 +89,25 @@ vnoremap <leader>E      :<c-u> '<,'>source<cr>
 nnoremap <leader>T      <cmd>  lua SL()<cr>
 vnoremap <leader>T      :<c-u> lua SV()<cr>
 
-nnoremap <leader>te     <cmd>  silent execute ".w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :.+" <cr>
+nnoremap <leader>ue     <cmd> silent execute "!tmux send-keys -t :.+1 Up Enter"<cr>
+nnoremap <leader>uo     <cmd> silent execute "!tmux send-keys -t :.+2 Up Enter"<cr>
+nnoremap <leader>ua     <cmd> silent execute "!tmux send-keys -t :-.1 Up Enter"<cr>
+nnoremap <leader>uu     <cmd> silent execute "!tmux send-keys -t :+.1 Up Enter"<cr>
+
+vnoremap <leader>ue     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
+vnoremap <leader>uo     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
+vnoremap <leader>ua     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :-.1" <bar> silent execute "!tmux select-window -t :-.1" <cr>
+vnoremap <leader>uu     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :+.1" <bar> silent execute "!tmux select-window -t :+.1" <cr>
+
+nnoremap <leader>te     <cmd>  silent execute ".w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
 nnoremap <leader>to     <cmd>  silent execute ".w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
-nnoremap <leader>ta     <cmd>  silent execute ".w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :-" <bar> silent execute "!tmux select-window -t :-.1" <cr>
-nnoremap <leader>tu     <cmd>  silent execute ".w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :+" <bar> silent execute "!tmux select-window -t :+.1" <cr>
+nnoremap <leader>ta     <cmd>  silent execute ".w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :-.1" <bar> silent execute "!tmux select-window -t :-.1" <cr>
+nnoremap <leader>tu     <cmd>  silent execute ".w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :+.1" <bar> silent execute "!tmux select-window -t :+.1" <cr>
 
-" vnoremap <leader>te     :<c-u> silent execute "'<,'>w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :.+" <cr>
-" vnoremap <leader>to     :<c-u> silent execute "'<,'>w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
-" vnoremap <leader>ta     :<c-u> silent execute "'<,'>w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :-" <bar> silent execute "!tmux select-window -t :-.1" <cr>
-" vnoremap <leader>tu     :<c-u> silent execute "'<,'>w !tmux load-buffer -"  <bar> silent execute "!tmux paste-buffer -t :+" <bar> silent execute "!tmux select-window -t :+.1" <cr>
-
-vnoremap <leader>te     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+" <cr>
+vnoremap <leader>te     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
 vnoremap <leader>to     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
-vnoremap <leader>ta     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :-" <bar> silent execute "!tmux select-window -t :-.1" <cr>
-vnoremap <leader>tu     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :+" <bar> silent execute "!tmux select-window -t :+.1" <cr>
+vnoremap <leader>ta     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :-.1" <bar> silent execute "!tmux select-window -t :-.1" <cr>
+vnoremap <leader>tu     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :+.1" <bar> silent execute "!tmux select-window -t :+.1" <cr>
 
 nnoremap <c-p>          <cmd>  call jerry#common#FileFuzzySearch()<CR>
 nnoremap <leader>/      <cmd>  call jerry#common#LinesFuzzySearch()<CR>
