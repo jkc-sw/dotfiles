@@ -4,4 +4,6 @@
 feh --bg-scale ~/.local/share/mydesktop/pure-black.png
 
 # Enable compositor
-pgrep compton || compton -b
+if lspci | grep -q -i 'vga.*controller.*intel'; then
+    pgrep compton || compton -b
+fi

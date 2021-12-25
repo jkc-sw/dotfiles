@@ -136,9 +136,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_s     ), spawn "~/.local/bin/shot -s")
 
     -- Lock the screen
-    , ((modm .|. shiftMask                , xK_l     ), spawn "xscreensaver-command -lock")
-    , ((modm .|. shiftMask .|. controlMask, xK_l     ), spawn "xscreensaver-command -lock ; sleep 10 ; systemctl suspend")
-    -- , ((modm .|. shiftMask             , xK_l     ), spawn "xautolock -locknow")
+    , ((modm .|. shiftMask                , xK_c     ), spawn "xscreensaver-command -lock")
+    , ((modm .|. shiftMask .|. controlMask, xK_c     ), spawn "xscreensaver-command -lock ; sleep 10 ; systemctl suspend")
+    -- , ((modm .|. shiftMask             , xK_c     ), spawn "xautolock -locknow")
 
     -- Start the arandr
     , ((modm              , xK_x     ), spawn "arandr")
@@ -147,10 +147,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_v     ), spawn "pavucontrol")
 
     -- Quit xmonad
-    , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
+    , ((modm .|. shiftMask .|. controlMask, xK_q     ), io (exitWith ExitSuccess))
 
     -- Restart xmonad
-    , ((modm .|. shiftMask, xK_r     ), spawn "pkill stalonetray ; xmonad --recompile; xmonad --restart")
+    , ((modm .|. shiftMask, xK_q     ), spawn "pkill stalonetray ; xmonad --recompile; xmonad --restart")
 
     -- Startup many things
     , ((modm .|. shiftMask, xK_y     ), myMoreStartup)
@@ -306,7 +306,7 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "Launch dmenu                                           : mod-Shift-p",
     "Launch arandr                                          : mod-x",
     "Launch pavucontrol                                     : mod-Shift-v",
-    "Close/kill the focused window                          : mod-Shift-c",
+    "Close/kill the focused window                          : mod-q",
     "",
     "-- layout or workspaces",
     "Change to last workspace                               : mod-a",
@@ -350,10 +350,10 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "Mute Audio                                             : mod-Shift-z",
     "Louder Audio                                           : mod-v",
     "Quieter Audio                                          : mod-z",
-    "Lock screen                                            : mod-Shift-l",
-    "Put system to sleep                                    : mod-Ctrl-Shift-l",
-    "Quit xmonad                                            : mod-Shift-q",
-    "Restart xmonad                                         : mod-q",
+    "Lock screen                                            : mod-Shift-c",
+    "Put system to sleep                                    : mod-Ctrl-Shift-c",
+    "Quit xmonad                                            : mod-Ctrl-Shift-q",
+    "Restart xmonad                                         : mod-Shift-q",
     "Additional Startup                                     : mod-Shift-y",
     "",
     "-- Mouse bindings",

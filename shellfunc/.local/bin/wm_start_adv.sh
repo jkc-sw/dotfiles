@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 # Use compositor with proper tear free option
-pkill compton ; compton --backend glx --paint-on-overlay --vsync opengl-swc -b
+if lspci | grep -q -i 'vga.*controller.*intel'; then
+    pkill compton ; compton --backend glx --paint-on-overlay --vsync opengl-swc -b
+fi
 
 # Start the xscreensaver if not started
 pgrep xscreensaver || xscreensaver -no-splash &
