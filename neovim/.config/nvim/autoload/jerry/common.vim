@@ -12,7 +12,16 @@ function! jerry#common#GetVisualSelection()
     let lines = getline(lnum1, lnum2)
     let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
     let lines[0] = lines[0][col1 - 1:]
-    return join(lines, "\n")
+	if !exists('g:getvisualselection_notrim')
+		" Find the first char index not a space, substract that from every line
+        let ident = match(lines[0], '[^ ]')
+		if ident > 0
+			for ii in range(len(lines))
+				let lines[ii] = lines[ii][ident:]
+			endfor
+		endif
+	endif
+    return join(lines, "\r")
 endfunction
 
 " function to search through files
