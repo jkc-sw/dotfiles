@@ -10,17 +10,34 @@ function! jerry#common#GetVisualSelection()
     let [lnum1, col1] = getpos("'<")[1:2]
     let [lnum2, col2] = getpos("'>")[1:2]
     let lines = getline(lnum1, lnum2)
+
     let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
     let lines[0] = lines[0][col1 - 1:]
+
 	if !exists('g:getvisualselection_notrim')
+        " If the beginning are empty lines, do not use it for indent check
+        let startlidx = 0
+        for ii in range(len(lines))
+            if !empty(lines[ii])
+                break
+            endif
+
+            let startlidx = startlidx + 1
+        endfor
+
 		" Find the first char index not a space, substract that from every line
-        let ident = match(lines[0], '[^ ]')
+        let ident = match(lines[startlidx], '[^ ]')
 		if ident > 0
 			for ii in range(len(lines))
+                if ii < startlidx
+                    continue
+                endif
+
 				let lines[ii] = lines[ii][ident:]
 			endfor
 		endif
 	endif
+
     return join(lines, "\r")
 endfunction
 
