@@ -95,11 +95,10 @@ local general_lsp = function()
         pylsp={plugins={pycodestyle={maxLineLength=150}}}
       }
     })
-  end
-
-  -- python
-  if vim.fn.executable('pyright') == 1 then
-    setup_each_lsp('pyright', true)
+  else
+    if vim.fn.executable('pyright') == 1 then
+      setup_each_lsp('pyright', true)
+    end
   end
 
   -- -- verilog & systemverilog
