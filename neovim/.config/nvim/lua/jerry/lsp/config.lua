@@ -97,8 +97,10 @@ local general_lsp = function()
     })
   end
 
-  -- -- python
-  -- setup_each_lsp('pyright', true)
+  -- python
+  if vim.fn.executable('pyright') == 1 then
+    setup_each_lsp('pyright', true)
+  end
 
   -- -- verilog & systemverilog
   -- setup_each_lsp('svls', true)
