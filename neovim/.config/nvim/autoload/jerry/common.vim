@@ -14,24 +14,50 @@ function! jerry#common#GetVisualSelection()
     let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
     let lines[0] = lines[0][col1 - 1:]
 
-	if !exists('g:getvisualselection_notrim')
-        " If the beginning are empty lines, do not use it for indent check
-        let startlidx = 0
-        for ii in range(len(lines))
-            if !empty(lines[ii])
-                break
+	if !exists('g:jc_getvisualselection_dedent')
+        let g:jc_getvisualselection_dedent = 1
+    endif
+	if !exists('g:jc_getvisualselection_skipempty')
+        let g:jc_getvisualselection_skipempty = 1
+    endif
+
+    " Find the line index that is not empty
+    let nonempty_startlidx = 0
+    for ii in range(len(lines))
+        if !empty(lines[ii])
+            break
+        endif
+
+        let nonempty_startlidx = nonempty_startlidx + 1
+    endfor
+
+    " Skip all the empty lines except the begining or the end
+    if g:jc_getvisualselection_skipempty == 1
+        let lth = len(lines)
+        let ii = nonempty_startlidx
+
+        while ii < lth
+            if empty(lines[ii]) && (ii != lth - 1)
+                " keep the last empty line, remove rest
+                call remove(lines, ii)
+                let lth = lth - 1
             endif
 
-            let startlidx = startlidx + 1
-        endfor
+            let ii = ii + 1
+        endwhile
+    endif
 
+	if g:jc_getvisualselection_dedent == 1
 		" Find the first char index not a space, substract that from every line
-        let ident = match(lines[startlidx], '[^ ]')
-		if ident > 0
+        let trim_amount = match(lines[nonempty_startlidx], '[^ ]')
+		if trim_amount > 0
 			for ii in range(len(lines))
-                if ii < startlidx
+                if ii < nonempty_startlidx
                     continue
                 endif
+
+                let ident = match(lines[ii], '[^ ]')
+                let ident = min([ident, trim_amount])
 
 				let lines[ii] = lines[ii][ident:]
 			endfor
