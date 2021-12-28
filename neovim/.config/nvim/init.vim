@@ -89,15 +89,15 @@ vnoremap <leader>E      :<c-u> '<,'>source<cr>
 nnoremap <leader>T      <cmd>  lua SL()<cr>
 vnoremap <leader>T      :<c-u> lua SV()<cr>
 
-nnoremap <leader>ue     <cmd> silent execute "!tmux send-keys -t :.+1 Up Enter"<cr>
-nnoremap <leader>uo     <cmd> silent execute "!tmux send-keys -t :.+2 Up Enter"<cr>
-nnoremap <leader>ua     <cmd> silent execute "!tmux send-keys -t :-.1 Up Enter"<cr>
-nnoremap <leader>uu     <cmd> silent execute "!tmux send-keys -t :+.1 Up Enter"<cr>
+nnoremap <leader>oe     <cmd> silent execute "!tmux send-keys -t :.+1 Up Enter"<cr>
+nnoremap <leader>oo     <cmd> silent execute "!tmux send-keys -t :.+2 Up Enter"<cr>
+nnoremap <leader>oa     <cmd> silent execute "!tmux send-keys -t :-.1 Up Enter"<cr>
+nnoremap <leader>ou     <cmd> silent execute "!tmux send-keys -t :+.1 Up Enter"<cr>
 
-vnoremap <leader>ue     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
-vnoremap <leader>uo     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
-vnoremap <leader>ua     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :-.1" <bar> silent execute "!tmux select-window -t :-.1" <cr>
-vnoremap <leader>uu     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :+.1" <bar> silent execute "!tmux select-window -t :+.1" <cr>
+vnoremap <leader>oe     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
+vnoremap <leader>oo     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
+vnoremap <leader>oa     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :-.1" <bar> silent execute "!tmux select-window -t :-.1" <cr>
+vnoremap <leader>ou     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :+.1" <bar> silent execute "!tmux select-window -t :+.1" <cr>
 
 nnoremap <leader>te     <cmd>  call system("tmux load-buffer -", substitute(getline(line('.')), '^ *', '', 'g')."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
 nnoremap <leader>to     <cmd>  call system("tmux load-buffer -", substitute(getline(line('.')), '^ *', '', 'g')."\r") <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
@@ -112,7 +112,6 @@ vnoremap <leader>tu     :<c-u> call system("tmux load-buffer -", jerry#common#Ge
 nnoremap <c-p>          <cmd>  call jerry#common#FileFuzzySearch()<CR>
 nnoremap <leader>/      <cmd>  call jerry#common#LinesFuzzySearch()<CR>
 nnoremap <leader>b      <cmd>  call jerry#common#BufferFuzzySearch()<CR>
-nnoremap <leader>o      <cmd>  call jerry#common#ListSymbols()<CR>
 nnoremap Q              <cmd>  call jerry#common#WordFuzzySearch()<CR>
 nnoremap <leader>ps     <cmd>  call jerry#common#GlobalFuzzySearch()<CR>
 nnoremap <leader>qf     <cmd>  lua require('telescope.builtin').quickfix()<CR>
@@ -130,12 +129,13 @@ nnoremap <leader>1gD    <cmd>  lua vim.lsp.buf.type_definition()<CR>
 nnoremap <leader>ga     <cmd>  lua require('lspsaga.codeaction').code_action()<CR>
 vnoremap <leader>ga     <cmd>  '<,'>lua require('lspsaga.codeaction').range_code_action()<CR>
 nnoremap <leader>K      <cmd>  lua vim.lsp.buf.hover()<CR>
+nnoremap <leader>go     <cmd>  call jerry#common#ListSymbols()<CR>
 " " TODO once the bus is closed, bring this back in
 " " Case: https://github.com/glepnir/lspsaga.nvim/issues/241
 " nnoremap <leader>K      <cmd>  lua require('lspsaga.hover').render_hover_doc()<CR>
 inoremap <c-k>          <cmd>  lua require('lspsaga.signaturehelp').signature_help()<CR>
 
-nnoremap <leader>go     <cmd>  lua vim.diagnostic.set_loclist() <CR>
+nnoremap <leader>gO     <cmd>  lua vim.diagnostic.set_loclist() <CR>
 nnoremap <leader>gs     <cmd>  LspInfo <CR>
 nnoremap <leader>gg     <cmd>  lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>
 nnoremap <leader>gn     <cmd>  lua vim.diagnostic.goto_next { wrap = false, severity = 'Error' }<CR>
