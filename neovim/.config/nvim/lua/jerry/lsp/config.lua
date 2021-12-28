@@ -74,6 +74,9 @@ local general_lsp = function()
   -- docker
   setup_each_lsp('dockerls', true)
 
+  -- texlab
+  setup_each_lsp('texlab', true)
+
   -- yaml
   setup_each_lsp('yamlls', true)
 
