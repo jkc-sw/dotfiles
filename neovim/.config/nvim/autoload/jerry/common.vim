@@ -21,6 +21,15 @@ function! jerry#common#GetVisualSelection()
         let g:jc_getvisualselection_skipempty = 1
     endif
 
+    " If a line has tab, replace it and warn user
+    let ts = &tabstop
+    let tpad = repeat(' ', ts)
+    for ii in range(len(lines))
+        if match(lines[ii], '\t') > -1
+            let lines[ii] = substitute(lines[ii], '\t', tpad, 'g')
+        endif
+    endfor
+
     " Find the line index that is not empty
     let nonempty_startlidx = 0
     for ii in range(len(lines))
@@ -31,35 +40,83 @@ function! jerry#common#GetVisualSelection()
         let nonempty_startlidx = nonempty_startlidx + 1
     endfor
 
+    " Calculate the ident for each line
+    let idents = []
+    let minident = -1
+    for ii in range(len(lines))
+        " If empty, put 0
+        let thisident = 0
+        if empty(lines[ii])
+            let idents = add(idents, 0)
+        else
+            let thisident = match(lines[ii], '[^ ]')
+            let idents = add(idents, thisident)
+
+            " If this is the first iteration, assign it
+            if minident < 0
+                let minident = thisident
+            endif
+
+            " Find max
+            if thisident < minident
+                let minident = thisident
+            endif
+        endif
+    endfor
+
     " Skip all the empty lines except the begining or the end
     if g:jc_getvisualselection_skipempty == 1
         let lth = len(lines)
         let ii = nonempty_startlidx
+        let last_ident = idents[0]
 
         while ii < lth
-            if empty(lines[ii]) && (ii != lth - 1)
+            " Need to compare line before and after for indent
+            let removeEmptyLine = v:true
+            " If not out of the range
+            if (ii + 1) < (lth)
+                " if the ident is not the same as the last line, keep the
+                " empty line
+                if last_ident != idents[ii + 1]
+                    let removeEmptyLine = v:false
+                endif
+            endif
+
+            if empty(lines[ii]) && (ii != lth - 1) && removeEmptyLine
                 " keep the last empty line, remove rest
                 call remove(lines, ii)
+                " Remove the idents as well
+                call remove(idents, ii)
                 let lth = lth - 1
+            else
+                " If line not empty, remember this as the last ident
+                let last_ident = idents[ii]
             endif
 
             let ii = ii + 1
         endwhile
     endif
 
+    " Run assert
+    if len(lines) != len(idents)
+        echoerr 'Need to ensure lines and idents are same length, lines has '.len(lines).' and idents has '.len(idents)
+    endif
+
 	if g:jc_getvisualselection_dedent == 1
 		" Find the first char index not a space, substract that from every line
-        let trim_amount = match(lines[nonempty_startlidx], '[^ ]')
+        " let trim_amount = idents[nonempty_startlidx]
+        let trim_amount = minident
 		if trim_amount > 0
 			for ii in range(len(lines))
                 if ii < nonempty_startlidx
                     continue
                 endif
 
-                let ident = match(lines[ii], '[^ ]')
+                let ident = idents[ii]
                 let ident = min([ident, trim_amount])
 
 				let lines[ii] = lines[ii][ident:]
+                let idents[ii] = ident
 			endfor
 		endif
 	endif
