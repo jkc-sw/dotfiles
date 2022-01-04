@@ -43,7 +43,14 @@ function! jerry#common#GetVisualSelection()
     " Calculate the ident for each line
     let idents = []
     let minident = -1
+    " let startindent = 0  " IMPL 01: Check if next line has the same indent as the start of the text
     for ii in range(len(lines))
+        " " IMPL 01: Check if next line has the same indent as the start of the text
+        " " Record the startindent
+        " if ii == nonempty_startlidx
+        "     let startindent = ii
+        " endif
+
         " If empty, put 0
         let thisident = 0
         if empty(lines[ii])
@@ -65,6 +72,7 @@ function! jerry#common#GetVisualSelection()
     endfor
 
     " Skip all the empty lines except the begining or the end
+    " If the line is not the same as the beginning of the line, skip it
     if g:jc_getvisualselection_skipempty == 1
         let lth = len(lines)
         let ii = nonempty_startlidx
@@ -75,11 +83,27 @@ function! jerry#common#GetVisualSelection()
             let removeEmptyLine = v:true
             " If not out of the range
             if (ii + 1) < (lth)
-                " if the ident is not the same as the last line, keep the
-                " empty line
-                if last_ident != idents[ii + 1]
+
+                " " IMPL 01: Check if next line has the same indent as the start of the text
+                " " Keep the line if the next indent is the same as the
+                " " startindent
+                " if idents[ii + 1] == startindent
+                "     let removeEmptyLine = v:false
+                " endif
+
+                " " IMPL 00: If the next line is not the same as the line before
+                " " if the ident is not the same as the last line, keep the
+                " " empty line
+                " if last_ident != idents[ii + 1]
+                "     let removeEmptyLine = v:false
+                " endif
+
+                " IMPL 02: If the next line has less ident, keep the line
+                " If the indent is more on the next line, remove this line
+                if last_ident > idents[ii + 1]
                     let removeEmptyLine = v:false
                 endif
+
             endif
 
             if empty(lines[ii]) && (ii != lth - 1) && removeEmptyLine
