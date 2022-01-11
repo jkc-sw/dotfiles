@@ -11,6 +11,17 @@ addThisPath() {
     esac
 }
 
+# # Awesome stuff from https://unix.stackexchange.com/a/351658
+# if [ -n "$BASH" ]; then
+#     LINUX_ALIAS_PATH=${BASH_SOURCE}
+# elif [ -n "$ZSH_NAME" ]; then
+#     LINUX_ALIAS_PATH=${(%):-%x}
+# fi
+# if [ -z "$LINUX_ALIAS_PATH" ]; then
+#     echo "Cannod find LINUX_ALIAS_PATH in the env var"
+# fi
+# export LINUX_ALIAS_DIR="${LINUX_ALIAS_PATH%/*}"
+
 addThisPath "$HOME/.cargo/bin"
 addThisPath "$HOME/.local/bin"
 addThisPath "/usr/local/sbin"
