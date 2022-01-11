@@ -184,6 +184,11 @@ sdev() {
     fi
 }
 
+# work around the sudo
+if ! type -p doas &>/dev/null; then
+    alias doas=sudo
+fi
+
 # Add the fcitx support
 if command -v fcitx >/dev/null 2>&1; then
     export GTK_IM_MODULE=fcitx
