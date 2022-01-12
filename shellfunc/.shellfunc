@@ -206,3 +206,68 @@ if command -v fcitx >/dev/null 2>&1; then
     export QT_IM_MODULE=fcitx
     export XMODIFIERS=@im=fcitx
 fi
+
+# never run these
+_init_gpg_pass() {
+    # Need these
+    if [ -z "$MY_GPG_DIR" ]; then
+        echo 'MY_GPG_DIR not found'
+    fi
+    if [ -z "$MY_PASS_ID" ]; then
+        echo 'MY_PASS_ID not found'
+    fi
+
+    echoerror "Code should never get here"
+    return 1
+
+    # Check if the key is there
+    if gpg --list-keys | grep -q "$MY_PASS_ID"; then
+        return 0
+    fi
+
+    # Check if the files are there
+    if [ ! -r "$MY_GPG_DIR/p.txt" ] || [ ! -r "$MY_GPG_DIR/s.txt" ]; then
+        echoerror "Cannot find the key to import from '$MY_GPG_DIR'"
+        return 1
+    fi
+
+    # Improt the key
+    gpg --import "$MY_GPG_DIR/p.txt"
+    gpg --import "$MY_GPG_DIR/s.txt"
+
+    # Validate the keys
+    gpg --list-keys
+    gpg --list-secret-keys
+
+    # trust the key before it can be used an another computer
+    gpg --edit-key "$MY_PASS_ID"  # Then enter "trust"
+
+    # Generate a key
+    gpg --quick-generate-key "$MY_PASS_ID"
+    # gpg --generate-key
+
+    # Backup key
+    if [ -d "$MY_GPG_DIR" ]; then
+        echoerror "Please map the folder '$MY_GPG_DIR'"
+        return 1
+    fi
+
+    # Export the keys
+    gpg --export --output "$MY_GPG_DIR/p.txt" --armor "$MY_PASS_ID"
+    # Check the file exist
+    if [[ ! -r "$MY_GPG_DIR/p.txt" ]]; then
+        echoerror 'Fail to export the p key'
+        return 1
+    fi
+    gpg --export-secret-keys --output "$MY_GPG_DIR/s.txt" --armor "$MY_PASS_ID"
+    if [[ ! -r "$MY_GPG_DIR/s.txt" ]]; then
+        echoerror 'Fail to export the s key'
+        return 1
+    fi
+
+    # Init the store
+    pass init "$MY_PASS_ID"
+
+    # Add a key
+    pass insert --echo somepassword
+}
