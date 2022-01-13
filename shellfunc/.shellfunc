@@ -195,6 +195,31 @@ sdev() {
     fi
 }
 
+# Need an easier way to handle the pass
+mpass() {
+    # check if the pass exist
+    if ! type -p pass &>/dev/null; then
+        echo 'Cannot find pass in the PATH' >&2
+        return 0
+    fi
+
+    # check nargs
+    case "$#" in
+    0)
+        pass
+        return 0
+        ;;
+    1)
+        pass "$1" | tr -d '\r\n' | toclip
+        return 0
+        ;;
+    *)
+        pass "$@"
+        return 0
+        ;;
+    esac
+}
+
 # work around the sudo
 if ! type -p doas &>/dev/null; then
     alias doas=sudo
