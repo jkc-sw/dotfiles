@@ -85,7 +85,7 @@ nnoremap <leader>V      <cmd>  exec("lua require('jerry.telescope.pickers').find
 " nnoremap <leader>R      <cmd>  FSOffset -3<CR>
 nnoremap <leader>r      <cmd>  silent exec '!tswitch'<CR>
 nnoremap <leader>E      <cmd>  .source<cr>
-vnoremap <leader>E      :<c-u> '<,'>source<cr>
+vnoremap <leader>E      :<C-u> for line in jerry#common#GetVisualSelectionAsList() <bar> execute line <bar> endfor<CR>
 nnoremap <leader>T      <cmd>  lua SL()<cr>
 vnoremap <leader>T      :<c-u> lua SV()<cr>
 

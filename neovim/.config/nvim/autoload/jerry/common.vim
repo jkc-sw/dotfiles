@@ -6,7 +6,7 @@ endfunction
 
 " Function to get the visual selection
 " references: https://vi.stackexchange.com/questions/9888/how-to-pipe-characters-to-cmd
-function! jerry#common#GetVisualSelection()
+function! jerry#common#GetVisualSelectionAsList()
     let [lnum1, col1] = getpos("'<")[1:2]
     let [lnum2, col2] = getpos("'>")[1:2]
     let lines = getline(lnum1, lnum2)
@@ -145,8 +145,14 @@ function! jerry#common#GetVisualSelection()
 		endif
 	endif
 
-    return join(lines, "\r")
+    return lines
 endfunction
+
+" Function to get the visual selection as a text with \r at the end, joined by \r
+" references: https://vi.stackexchange.com/questions/9888/how-to-pipe-characters-to-cmd
+function! jerry#common#GetVisualSelection()
+    return join(jerry#common#GetVisualSelectionAsList(), "\r")
+endfunc
 
 " function to search through files
 func! jerry#common#FileFuzzySearch()
