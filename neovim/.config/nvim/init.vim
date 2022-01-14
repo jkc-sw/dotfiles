@@ -83,7 +83,7 @@ nnoremap <leader>v      <cmd>  vertical botright split ~/repos/dotfiles/neovim/.
 nnoremap <leader>V      <cmd>  exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
 " nnoremap <leader>r      <cmd>  FS<CR>
 " nnoremap <leader>R      <cmd>  FSOffset -3<CR>
-nnoremap <leader>r      <cmd>  silent exec '!tswitch'<CR>
+nnoremap <leader>r      <cmd>  silent exec '!tswitch -c nv'<CR>
 nnoremap <leader>E      <cmd>  .source<cr>
 vnoremap <leader>E      :<C-u> for line in jerry#common#GetVisualSelectionAsList() <bar> execute line <bar> endfor<CR>
 nnoremap <leader>T      <cmd>  lua SL()<cr>

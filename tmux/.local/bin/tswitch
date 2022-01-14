@@ -10,6 +10,7 @@ fi
 where='-b'
 size=33
 attach='-d'
+cmd=''
 
 # help
 displayHelp() {
@@ -21,16 +22,20 @@ displayHelp() {
     echo "  -r           : Make a new split to the right"
     echo "  -s <percent> : The size of the pane in percent 0-100, default $size"
     echo "  -a           : Attach right away, default is not attach"
+    echo "  -c <cmd>     : Send additional command to the new window created"
 }
 
 # parse args
-while getopts ':hlars:' opt; do
+while getopts ':hlars:c:' opt; do
     case "$opt" in
     a)
         attach=''
         ;;
     r)
         where=''
+        ;;
+    c)
+        cmd="$OPTARG"
         ;;
     l)
         where='-b'
@@ -57,6 +62,11 @@ nws="$(tmux list-panes | wc -l)"
 # If is only 1 pane, make a new one
 if test "$nws" -eq '1'; then
     tmux split-window -f -h "$where" "$attach" -l "$size%" -c '#{pane_current_path}'
+
+    # if the command is not empty, send the command
+    if [[ -n "$cmd" ]]; then
+        tmux send-keys -t :.+ "$cmd" Enter
+    fi
 fi
 
 # # If there are two, we do nothing but switch over
