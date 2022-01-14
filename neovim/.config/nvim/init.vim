@@ -144,10 +144,10 @@ nnoremap <leader>gN     <cmd>  lua vim.diagnostic.goto_next { wrap = false, seve
 nnoremap <leader>gP     <cmd>  lua vim.diagnostic.goto_prev { wrap = false, severity_limit = 'Warning' }<CR>
 
 " Find all the syntax highlights
-nnoremap <leader>nl <cmd>so $VIMRUNTIME/syntax/hitest.vim<cr>
+nnoremap <leader>Hl <cmd>so $VIMRUNTIME/syntax/hitest.vim<cr>
 
 " Find syntax match
-nnoremap <silent> <leader>nh :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name")
+nnoremap <silent> <leader>Hh :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name")
     \ . '> trans<' . synIDattr(synID(line("."),col("."),0),"name")
     \ . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name")
     \ . ">"<CR>
