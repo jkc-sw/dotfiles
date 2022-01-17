@@ -152,7 +152,7 @@ nnoremap <silent> <leader>Hh :echo "hi<" . synIDattr(synID(line("."),col("."),1)
     \ . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name")
     \ . ">"<CR>
 
-vnoremap <leader>p "_dP
+vnoremap <leader>p "0p
 nnoremap <leader>fm vip:g/\|/Tab/\|/<cr>
 nnoremap ]c ]czz
 nnoremap [c [czz
