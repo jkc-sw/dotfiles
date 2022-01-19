@@ -46,6 +46,12 @@ pomo() {
     pomodoro "$@"
 }
 
+# Add the tmux command to start the tmux session
+rt() (
+    cd "$HOME/repo/dev_env_ansible"
+    ./rr.sh tmux
+)
+
 # configuration to rg and fd
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 if command -v fd >/dev/null 2>&1; then
