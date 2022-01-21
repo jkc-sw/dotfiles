@@ -48,7 +48,7 @@ pomo() {
 
 # Add the tmux command to start the tmux session
 rt() (
-    cd "$HOME/repo/dev_env_ansible"
+    cd "$HOME/repos/dev-env-ansible"
     ./rr.sh tmux
 )
 
