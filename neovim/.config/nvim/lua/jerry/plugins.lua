@@ -5,7 +5,9 @@ return require('packer').startup(function(use)
 
   -- Editing
   use 'mbbill/undotree'
-  use 'tomtom/tcomment_vim'
+  use 'JoosepAlviste/nvim-ts-context-commentstring'
+  use 'numToStr/Comment.nvim'
+  -- use 'tomtom/tcomment_vim'
   use 'tpope/vim-surround'
   use 'tpope/vim-repeat'
   use 'michaeljsmith/vim-indent-object'
