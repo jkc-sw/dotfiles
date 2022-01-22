@@ -203,6 +203,11 @@ augroup LuaHighlight
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup END
 
+augroup markdownFenceHighlight
+    autocmd!
+    autocmd BufEnter,BufWinEnter,TabEnter *.md let g:markdown_fenced_languages = ['python', 'ps1', 'cpp', 'bash']
+augroup END
+
 augroup DisableSomeSyntax
     autocmd!
     autocmd BufEnter,BufWinEnter,TabEnter *.groovy,*.html syntax sync fromstart
