@@ -171,15 +171,41 @@ vnoremap : ;
 " nnoremap <silent> <Leader>+ :vertical resize +5<CR>
 " nnoremap <silent> <Leader>- :vertical resize -5<CR>
 
-" Use toclip to send content to clipboard
+" " Use toclip to send content to clipboard
+" augroup toClipBoard
+"     autocmd!
+"     autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
+"         \|   let ret = system('toclip', getreg('"'))
+"         \|   if exists('g:toclip_verbose')
+"         \|     echom 'toclip: ' . ret
+"         \|   endif
+"         \| endif
+" augroup END
+
+let s:clip_supplier = []
+if executable('toclip') == 1
+    let s:clip_supplier = ['toclip']
+elseif executable('win32yank.exe')
+    let s:clip_supplier = ['win32yank.exe', '-i', '--crlf']
+elseif executable('clip.exe')
+    let s:clip_supplier = ['clip.exe']
+endif
+
+" Use clip.exe to send content to clipboard
 augroup toClipBoard
     autocmd!
-    autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
-        \|   let ret = system('toclip', getreg('"'))
-        \|   if exists('g:toclip_verbose')
-        \|     echom 'toclip: ' . ret
-        \|   endif
-        \| endif
+    if len(s:clip_supplier) > 0
+        autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
+            \|   let ret = system(s:clip_supplier, getreg('"'))
+            \|   if exists('g:toclip_verbose')
+            \|     echom join(s:clip_supplier, ' ') . ' (' . v:shell_error .'): ' . ret
+            \|   endif
+            \| endif
+    else
+        echohl WarningMsg
+        echom "No clipboard tool found. Need to be toclip, win32yank.exe or clip.exe"
+        echohl None
+    endif
 augroup END
 
 augroup Lsp
