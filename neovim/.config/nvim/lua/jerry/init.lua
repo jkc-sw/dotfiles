@@ -22,12 +22,12 @@ require('lualine').setup {
     lualine_z = {'location', {'diagnostics', sources = {'nvim_diagnostic'}, sections = {'error', 'warn'}}},
   },
   inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
+    lualine_a = {'jerry#common#CorrentFileShortener'},
+    lualine_b = {'location'},
     lualine_c = {'jerry#common#PasteModeReport'},
     lualine_x = {'progress'},
-    lualine_y = {'location'},
-    lualine_z = {'jerry#common#CorrentFileShortener'},
+    lualine_y = {},
+    lualine_z = {},
   }
 }
 
