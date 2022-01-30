@@ -231,7 +231,8 @@ augroup END
 
 augroup markdownFenceHighlight
     autocmd!
-    autocmd BufEnter,BufWinEnter,TabEnter *.md let g:markdown_fenced_languages = ['python', 'ps1', 'cpp', 'bash']
+    autocmd BufEnter,BufWinEnter,TabEnter *.md let g:markdown_fenced_languages += ['python', 'ps1', 'cpp', 'bash', 'vim']
+    autocmd BufEnter,BufWinEnter,TabEnter *.md exec 'edit'
 augroup END
 
 augroup DisableSomeSyntax
