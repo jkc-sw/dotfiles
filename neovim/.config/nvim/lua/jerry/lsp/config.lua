@@ -95,7 +95,7 @@ local general_lsp = function()
   if vim.fn.executable('pylsp') == 1 then
     setup_each_lsp('pylsp', {
       settings={
-        pylsp={plugins={pycodestyle={maxLineLength=150}}}
+        pylsp={plugins={pycodestyle={maxLineLength=300}}}
       }
     })
   else

@@ -42,7 +42,8 @@ return require('packer').startup(function(use)
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-nvim-lua'
   use 'hrsh7th/nvim-cmp'
-  use 'glepnir/lspsaga.nvim'
+  -- -- [UNMAINTAINED] Lspsaga hasn't been maintained for a long time.
+  -- use 'glepnir/lspsaga.nvim'
   use 'tjdevries/nlua.nvim'
   use 'nvim-lua/lsp_extensions.nvim'
   -- use 'ray-x/lsp_signature.nvim'  -- some ghost buffers remain

@@ -118,22 +118,31 @@ nnoremap <leader>qf     <cmd>  lua require('telescope.builtin').quickfix()<CR>
 nnoremap <leader>pa     <cmd>  call jerry#common#CloseTab()<CR>
 
 nnoremap <leader><c-]>  <cmd>  lua vim.lsp.buf.definition()<CR>
-nnoremap <leader>g<c-]> <cmd>  lua require'lspsaga.provider'.preview_definition()<CR>
+" [UNMAINTAINED] Lspsaga hasn't been maintained for a long time.
+" nnoremap <leader>g<c-]> <cmd>  lua require'lspsaga.provider'.preview_definition()<CR>
 nnoremap <leader>gd     <cmd>  lua vim.lsp.buf.declaration()<CR>
 nnoremap <leader>gf     <cmd>  lua vim.lsp.buf.formatting()<CR>
 vnoremap <leader>gF     <cmd>  '<,'>lua vim.lsp.buf.range_formatting()<CR>
 nnoremap <leader>gD     <cmd>  lua vim.lsp.buf.implementation()<CR>
 nnoremap <leader>gr     <cmd>  lua require('telescope.builtin').lsp_references()<CR>
-nnoremap <leader>gR     <cmd>  lua require('lspsaga.rename').rename()<CR>
+" [UNMAINTAINED] Lspsaga hasn't been maintained for a long time.
+" nnoremap <leader>gR     <cmd>  lua require('lspsaga.rename').rename()<CR>
+nnoremap <leader>gR     <cmd>  lua vim.lsp.buf.rename()<CR>
 nnoremap <leader>1gD    <cmd>  lua vim.lsp.buf.type_definition()<CR>
-nnoremap <leader>ga     <cmd>  lua require('lspsaga.codeaction').code_action()<CR>
-vnoremap <leader>ga     <cmd>  '<,'>lua require('lspsaga.codeaction').range_code_action()<CR>
+" [UNMAINTAINED] Lspsaga hasn't been maintained for a long time.
+" nnoremap <leader>ga     <cmd>  lua require('lspsaga.codeaction').code_action()<CR>
+nnoremap <leader>ga     <cmd>  lua vim.lsp.buf.code_action()<CR>
+" [UNMAINTAINED] Lspsaga hasn't been maintained for a long time.
+" vnoremap <leader>ga     <cmd>  '<,'>lua require('lspsaga.codeaction').range_code_action()<CR>
+vnoremap <leader>ga     <cmd>  '<,'>lua vim.lsp.buf.range_code_action()<CR>
 nnoremap <leader>K      <cmd>  lua vim.lsp.buf.hover()<CR>
 nnoremap <leader>go     <cmd>  call jerry#common#ListSymbols()<CR>
 " " TODO once the bus is closed, bring this back in
 " " Case: https://github.com/glepnir/lspsaga.nvim/issues/241
 " nnoremap <leader>K      <cmd>  lua require('lspsaga.hover').render_hover_doc()<CR>
-inoremap <c-k>          <cmd>  lua require('lspsaga.signaturehelp').signature_help()<CR>
+" [UNMAINTAINED] Lspsaga hasn't been maintained for a long time.
+" inoremap <c-k>          <cmd>  lua require('lspsaga.signaturehelp').signature_help()<CR>
+inoremap <c-k>          <cmd>  lua vim.lsp.buf.signature_help()<CR>
 
 nnoremap <leader>gO     <cmd>  lua vim.diagnostic.set_loclist() <CR>
 nnoremap <leader>gs     <cmd>  LspInfo <CR>

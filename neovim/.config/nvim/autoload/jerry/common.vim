@@ -43,13 +43,13 @@ function! jerry#common#GetVisualSelectionAsList()
     " Calculate the ident for each line
     let idents = []
     let minident = -1
-    " let startindent = 0  " IMPL 01: Check if next line has the same indent as the start of the text
+    let startindent = 0  " IMPL 01: Check if next line has the same indent as the start of the text
     for ii in range(len(lines))
-        " " IMPL 01: Check if next line has the same indent as the start of the text
-        " " Record the startindent
-        " if ii == nonempty_startlidx
-        "     let startindent = ii
-        " endif
+        " IMPL 01: Check if next line has the same indent as the start of the text
+        " Record the startindent
+        if ii == nonempty_startlidx
+            let startindent = ii
+        endif
 
         " If empty, put 0
         let thisident = 0
@@ -84,12 +84,12 @@ function! jerry#common#GetVisualSelectionAsList()
             " If not out of the range
             if (ii + 1) < (lth)
 
-                " " IMPL 01: Check if next line has the same indent as the start of the text
-                " " Keep the line if the next indent is the same as the
-                " " startindent
-                " if idents[ii + 1] == startindent
-                "     let removeEmptyLine = v:false
-                " endif
+                " IMPL 01: Check if next line has the same indent as the start of the text
+                " Keep the line if the next indent is the same as the
+                " startindent
+                if idents[ii + 1] == startindent
+                    let removeEmptyLine = v:false
+                endif
 
                 " " IMPL 00: If the next line is not the same as the line before
                 " " if the ident is not the same as the last line, keep the
@@ -98,11 +98,11 @@ function! jerry#common#GetVisualSelectionAsList()
                 "     let removeEmptyLine = v:false
                 " endif
 
-                " IMPL 02: If the next line has less ident, keep the line
-                " If the indent is more on the next line, remove this line
-                if last_ident > idents[ii + 1]
-                    let removeEmptyLine = v:false
-                endif
+                " " IMPL 02: If the next line has less ident, keep the line
+                " " If the indent is more on the next line, remove this line
+                " if last_ident > idents[ii + 1]
+                "     let removeEmptyLine = v:false
+                " endif
 
             endif
 
