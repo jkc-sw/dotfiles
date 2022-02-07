@@ -200,5 +200,7 @@ require('Comment').setup({
   --   end
   -- end,
 })
+local ft = require('Comment.ft')
+ft.set('matlab', {'%%s', '%{%s%}'})
 
 -- vim:et sw=2 ts=2 sts=2
