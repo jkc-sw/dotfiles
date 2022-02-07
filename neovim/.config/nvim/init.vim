@@ -231,9 +231,16 @@ augroup END
 
 augroup markdownFenceHighlight
     autocmd!
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev #T ## <c-r>=strftime('%Y-%m-%d %A')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev #t ## <c-r>=strftime('%Y-%m-%d %A')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md let g:markdown_fenced_languages += ['python', 'ps1', 'cpp', 'bash', 'vim']
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ats <c-r>=strftime('%Y-%m-%d %A')<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev #T # <c-r>=strftime('%Y-%m-%d %A')<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev #t # <c-r>=strftime('%Y-%m-%d %A')<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ##T ## <c-r>=strftime('%Y-%m-%d %A')<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ##t ## <c-r>=strftime('%Y-%m-%d %A')<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ###T ### <c-r>=strftime('%Y-%m-%d %A')<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ###t ### <c-r>=strftime('%Y-%m-%d %A')<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ####T #### <c-r>=strftime('%Y-%m-%d %A')<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ####t #### <c-r>=strftime('%Y-%m-%d %A')<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md let g:markdown_fenced_languages += ['python', 'ps1', 'cpp', 'bash', 'vim', 'matlab']
     autocmd BufEnter,BufWinEnter,TabEnter *.md exec 'edit'
 augroup END
 
