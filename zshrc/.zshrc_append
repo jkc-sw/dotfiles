@@ -82,6 +82,9 @@ bindkey "^j" down-line-or-beginning-search # Down
 autoload edit-command-line; zle -N edit-command-line
 bindkey -M vicmd v edit-command-line
 
+# in 10ms, 1 is 10ms
+KEYTIMEOUT=1
+
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=100000
 SAVEHIST=100000
