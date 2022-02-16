@@ -45,12 +45,6 @@ function! jerry#common#GetVisualSelectionAsList()
     let minident = -1
     let startindent = 0  " IMPL 01: Check if next line has the same indent as the start of the text
     for ii in range(len(lines))
-        " IMPL 01: Check if next line has the same indent as the start of the text
-        " Record the startindent
-        if ii == nonempty_startlidx
-            let startindent = ii
-        endif
-
         " If empty, put 0
         let thisident = 0
         if empty(lines[ii])
@@ -68,6 +62,12 @@ function! jerry#common#GetVisualSelectionAsList()
             if thisident < minident
                 let minident = thisident
             endif
+        endif
+
+        " IMPL 01: Check if next line has the same indent as the start of the text
+        " Record the startindent
+        if ii == nonempty_startlidx
+            let startindent = idents[ii]
         endif
     endfor
 
