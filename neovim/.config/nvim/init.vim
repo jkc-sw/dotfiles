@@ -94,11 +94,6 @@ nnoremap <leader>oo     <cmd> silent execute "!tmux send-keys -t :.+2 Up Enter"<
 nnoremap <leader>oa     <cmd> silent execute "!tmux send-keys -t :-.1 Up Enter"<cr>
 nnoremap <leader>ou     <cmd> silent execute "!tmux send-keys -t :+.1 Up Enter"<cr>
 
-vnoremap <leader>oe     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
-vnoremap <leader>oo     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
-vnoremap <leader>oa     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :-.1" <bar> silent execute "!tmux select-window -t :-.1" <cr>
-vnoremap <leader>ou     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :+.1" <bar> silent execute "!tmux select-window -t :+.1" <cr>
-
 nnoremap <leader>te     <cmd>  call system("tmux load-buffer -", substitute(getline(line('.')), '^[ \t]*', '', 'g')."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
 nnoremap <leader>to     <cmd>  call system("tmux load-buffer -", substitute(getline(line('.')), '^[ \t]*', '', 'g')."\r") <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
 nnoremap <leader>ta     <cmd>  call system("tmux load-buffer -", substitute(getline(line('.')), '^[ \t]*', '', 'g')."\r") <bar> silent execute "!tmux paste-buffer -t :-.1" <bar> silent execute "!tmux select-window -t :-.1" <cr>
