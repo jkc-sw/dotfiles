@@ -94,7 +94,11 @@ cperf() {
             cmd='performance'
         fi
 
-        find /sys/devices/system/cpu/ -type f -name scaling_governor | sudo xargs -I% bash -c "echo $cmd > %"
+        runsudo=doas
+        if ! type -p doas &>/dev/null; then
+            runsudo=sudo
+        fi
+        find /sys/devices/system/cpu/ -type f -name scaling_governor | "$runsudo" xargs -I% bash -c "echo $cmd > %"
     else
     	echo "Error, there should only be 1 argument"
 	return 1
