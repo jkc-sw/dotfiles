@@ -66,8 +66,22 @@ export FZF_DEFAULT_OPTS="--color=dark --height=50%"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # cpu managements
-alias cinfo='sudo modprobe msr && sudo cpupower frequency-info'
-alias cmonitor='sudo modprobe msr && sudo turbostat --show Core,CPU,Avg_MHz,Busy%,Bzy_MHz,TSC_MHz,CoreTmp,PkgTmp,PkgWatt,RAMWatt'
+# alias cinfo='sudo modprobe msr && sudo cpupower frequency-info'
+cinfo() {
+    runsudo=doas
+    if ! type -p doas &>/dev/null; then
+        runsudo=sudo
+    fi
+    "$runsudo" modprobe msr && "$runsudo" cpupower frequency-info
+}
+# alias cmonitor='sudo modprobe msr && sudo turbostat --show Core,CPU,Avg_MHz,Busy%,Bzy_MHz,TSC_MHz,CoreTmp,PkgTmp,PkgWatt,RAMWatt'
+cmonitor() {
+    runsudo=doas
+    if ! type -p doas &>/dev/null; then
+        runsudo=sudo
+    fi
+    "$runsudo" modprobe msr && "$runsudo" turbostat --show Core,CPU,Avg_MHz,Busy%,Bzy_MHz,TSC_MHz,CoreTmp,PkgTmp,PkgWatt,RAMWatt
+}
 # alias cperf='sudo modprobe msr && sudo cpupower frequency-set -g performance'
 cperf() {
     if test "$#" -lt 1; then
