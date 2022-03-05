@@ -52,6 +52,35 @@ rt() (
     ./rr.sh tmux
 )
 
+# Quickly start the session
+function aoeu() {
+    name=aoeu
+    if [[ "$#" -eq 0 ]]; then
+        if ! (tmux ls | grep -q "$name"); then
+            tmux new-session -s "$name" -d
+        fi
+        tmux attach-session -t "$name"
+        return
+    fi
+
+    # need 1 arg
+    if [[ $# -ne 1 ]]; then
+        echo "Need to provide a suffix for attaching to the session" >&2
+        exit 1
+    fi
+
+    # store the name
+    newname="$name-$1"
+
+    # check if the session exists
+    if ! (tmux ls | grep -q "$newname"); then
+        tmux new-session -t "$name" -s "$newname" -d
+    fi
+
+    # attach to the session
+    tmux attach-session -t "$newname"
+}
+
 # configuration to rg and fd
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 if command -v fd >/dev/null 2>&1; then
