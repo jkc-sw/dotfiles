@@ -4,11 +4,13 @@ function! jerry#common#CorrentFileShortener()
     return pathshorten(expand('%'))
 endfunction
 
-" Function to get the visual selection
+" Function to get the range selection
 " references: https://vi.stackexchange.com/questions/9888/how-to-pipe-characters-to-cmd
-function! jerry#common#GetVisualSelectionAsList()
-    let [lnum1, col1] = getpos("'<")[1:2]
-    let [lnum2, col2] = getpos("'>")[1:2]
+function! jerry#common#GetSelectionAsList(lnum1, col1, lnum2, col2)
+    let lnum1 = a:lnum1
+    let lnum2 = a:lnum2
+    let col1 = a:col1
+    let col2 = a:col2
     let lines = getline(lnum1, lnum2)
 
     let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
@@ -147,6 +149,18 @@ function! jerry#common#GetVisualSelectionAsList()
 
     return lines
 endfunction
+
+function! jerry#common#GetSelection(lnum1, col1, lnum2, col2)
+    return join(jerry#common#GetSelectionAsList(a:lnum1, a:col1, a:lnum2, a:col2), "\r")
+endfunc
+
+" Function to get the visual selection
+" references: https://vi.stackexchange.com/questions/9888/how-to-pipe-characters-to-cmd
+function! jerry#common#GetVisualSelectionAsList()
+    let [lnum1, col1] = getpos("'<")[1:2]
+    let [lnum2, col2] = getpos("'>")[1:2]
+    return jerry#common#GetSelectionAsList(lnum1, col1, lnum2, col2)
+endfunc
 
 " Function to get the visual selection as a text with \r at the end, joined by \r
 " references: https://vi.stackexchange.com/questions/9888/how-to-pipe-characters-to-cmd
