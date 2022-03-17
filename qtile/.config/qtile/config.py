@@ -82,10 +82,6 @@ keys.extend([
     add_key([mod, "",        ""],        "k",      "Move focus up",                      lazy.layout.up()),
     add_key([mod, "",        ""],        "l",      "Move focus to right",                lazy.layout.right()),
     add_key([mod, "",        ""],        "o",      "Move window focus to next window",   lazy.layout.next()),
-    add_key([mod, "",        ""],        "Left",   "Move focus to left",                 lazy.layout.left()),
-    add_key([mod, "",        ""],        "Down",   "Move focus down",                    lazy.layout.down()),
-    add_key([mod, "",        ""],        "Up",     "Move focus up",                      lazy.layout.up()),
-    add_key([mod, "",        ""],        "Right",  "Move focus to right",                lazy.layout.right()),
 
     add_key([mod, "shift",   ""],        "n",      "Reset all window sizes",             lazy.layout.normalize()),
     add_key([mod, "",        ""],        "t",      "Toggle the window to floating",      lazy.window.toggle_floating()),
