@@ -131,7 +131,10 @@ function! jerry#common#GetSelectionAsList(lnum1, col1, lnum2, col2)
 	if g:jc_getvisualselection_dedent == 1
 		" Find the first char index not a space, substract that from every line
         " let trim_amount = idents[nonempty_startlidx]
-        let trim_amount = minident
+        " " IMPL 2,0
+        " let trim_amount = minident
+        " IMPL 1
+        let trim_amount = startindent
 		if trim_amount > 0
 			for ii in range(len(lines))
                 if ii < nonempty_startlidx
