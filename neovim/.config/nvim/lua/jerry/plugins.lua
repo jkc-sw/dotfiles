@@ -8,7 +8,7 @@ return require('packer').startup(function(use)
   use 'JoosepAlviste/nvim-ts-context-commentstring'
   use 'numToStr/Comment.nvim'
   -- use 'tomtom/tcomment_vim'
-  use 'tpope/vim-surround'
+  use 'machakann/vim-sandwich'
   use 'tpope/vim-repeat'
   use 'michaeljsmith/vim-indent-object'
   use 'godlygeek/tabular'
@@ -42,11 +42,8 @@ return require('packer').startup(function(use)
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-nvim-lua'
   use 'hrsh7th/nvim-cmp'
-  -- -- [UNMAINTAINED] Lspsaga hasn't been maintained for a long time.
-  -- use 'glepnir/lspsaga.nvim'
   use 'tjdevries/nlua.nvim'
   use 'nvim-lua/lsp_extensions.nvim'
-  -- use 'ray-x/lsp_signature.nvim'  -- some ghost buffers remain
 
   -- Tree sitter
   use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate maintained'}
@@ -81,6 +78,10 @@ return require('packer').startup(function(use)
   -- use 'itchyny/lightline.vim'
   -- use 'ryanoasis/vim-devicons'
   -- use 'kyazdani42/nvim-web-devicons'
+  -- use 'tpope/vim-surround'  -- No longer being maintained
+  -- -- [UNMAINTAINED] Lspsaga hasn't been maintained for a long time.
+  -- use 'glepnir/lspsaga.nvim'
+  -- use 'ray-x/lsp_signature.nvim'  -- some ghost buffers remain
 
   -- Maybe future
   -- use 'kyazdani42/nvim-tree.lua'
