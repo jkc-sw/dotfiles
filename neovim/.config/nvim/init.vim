@@ -233,6 +233,11 @@ augroup LuaHighlight
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
 augroup END
 
+augroup manyMapView
+    autocmd!
+    autocmd BufEnter,BufWinEnter,TabEnter many_maps.vim iabbrev newb lua <<EOF<cr>S[[<cr><cr>]]<cr>EOF<up><up>
+augroup END
+
 augroup markdownFenceHighlight
     autocmd!
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ats <c-r>=strftime('%Y-%m-%d %A')<cr>

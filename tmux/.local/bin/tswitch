@@ -2,7 +2,7 @@
 
 # Check if we are in tmux
 if test -z "$TMUX"; then
-    echo "Need to be run in tmux" >&2
+    # echo "Need to be run in tmux" >&2
     exit 0
 fi
 
