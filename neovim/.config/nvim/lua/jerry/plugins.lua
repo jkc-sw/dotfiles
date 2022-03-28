@@ -9,7 +9,6 @@ return require('packer').startup(function(use)
   use 'numToStr/Comment.nvim'
   -- use 'tomtom/tcomment_vim'
   use 'machakann/vim-sandwich'
-  use 'tpope/vim-repeat'
   use 'michaeljsmith/vim-indent-object'
   use 'godlygeek/tabular'
   use 'dhruvasagar/vim-testify'
@@ -82,6 +81,7 @@ return require('packer').startup(function(use)
   -- -- [UNMAINTAINED] Lspsaga hasn't been maintained for a long time.
   -- use 'glepnir/lspsaga.nvim'
   -- use 'ray-x/lsp_signature.nvim'  -- some ghost buffers remain
+  -- use 'tpope/vim-repeat'
 
   -- Maybe future
   -- use 'kyazdani42/nvim-tree.lua'
