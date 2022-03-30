@@ -4,6 +4,26 @@ function! jerry#common#CorrentFileShortener()
     return pathshorten(expand('%'))
 endfunction
 
+" Function to do simple code completion for {noformat}
+function! jerry#common#JiraNoFormat()
+    let txt = '{noformat}' . "\n"
+    let txt = txt . "\n"
+    let txt = txt . '{noformat}'
+    return txt
+endfunction
+
+" Function to do simple code completion for {code}
+function! jerry#common#JiraCodeFormat()
+    call inputsave()
+    let alang = input('Lang:')
+    call inputrestore()
+    let alang = trim(alang)
+    let txt = '{code:' . alang . '}' . "\n"
+    let txt = txt . "\n"
+    let txt = txt . '{code}'
+    return txt
+endfunction
+
 " Function to get the range selection
 " references: https://vi.stackexchange.com/questions/9888/how-to-pipe-characters-to-cmd
 function! jerry#common#GetSelectionAsList(lnum1, col1, lnum2, col2)
