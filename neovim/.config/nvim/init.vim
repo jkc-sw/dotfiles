@@ -95,7 +95,7 @@ nnoremap <leader>oa     <cmd> silent execute "!tmux send-keys -t :-.1 Up Enter"<
 nnoremap <leader>ou     <cmd> silent execute "!tmux send-keys -t :+.1 Up Enter"<cr>
 
 nnoremap <leader>tp     <cmd> lua require('jerry.sourcer').lua_sourcer('SOURCE_THESE_LUAS_START', 'SOURCE_THESE_LUAS_END') <cr>
-nnoremap <leader>t.     <cmd> lua require('jerry.sourcer').vim_sourcer('SOURCE_THESE_VIMS_START', 'SOURCE_THESE_VIMS_END') <cr>
+nnoremap <leader>ti     <cmd> lua require('jerry.sourcer').vim_sourcer('SOURCE_THESE_VIMS_START', 'SOURCE_THESE_VIMS_END') <cr>
 
 nnoremap <leader>te     <cmd>  call system("tmux load-buffer -", substitute(getline(line('.')), '^[ \t]*', '', 'g')."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
 nnoremap <leader>to     <cmd>  call system("tmux load-buffer -", substitute(getline(line('.')), '^[ \t]*', '', 'g')."\r") <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
@@ -261,8 +261,8 @@ augroup END
 
 augroup sourcerTheseCode
     autocmd!
-    autocmd BufEnter,BufWinEnter,TabEnter * iabbrev t. SOURCE_THESE_VIMS_START<cr><cr>SOURCE_THESE_VIMS_END<Up>
-    autocmd BufEnter,BufWinEnter,TabEnter * iabbrev tp SOURCE_THESE_VIMS_START<cr><cr>SOURCE_THESE_VIMS_END<Up>
+    autocmd BufEnter,BufWinEnter,TabEnter * iabbrev tit SOURCE_THESE_VIMS_START<cr><cr>SOURCE_THESE_VIMS_END<Up>
+    autocmd BufEnter,BufWinEnter,TabEnter * iabbrev tpt SOURCE_THESE_LUAS_START<cr><cr>SOURCE_THESE_LUAS_END<Up>
 augroup END
 
 augroup DisableSomeSyntax

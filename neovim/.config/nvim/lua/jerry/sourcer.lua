@@ -5,12 +5,26 @@ local vim = vim
 local M = {}
 
 -- @brief Get a function te search the current screensection for a matching pattern and source using sourcer
--- @param sourcer (function(x) -> nil) - A function to source the block of text. x is text to source
-local function new_sourcer(sourcer)
+-- @param sourcer (function(x) -> nil) - A function to source the block of text
+--        function(x) -> nil
+--        Arguments:
+--          x (str) - Block of text to source
+-- @param excluders ({(function() -> bool)...}) - A table of functions to skip under some conditions
+--        function() -> bool
+--        Returns:
+--          bool - True to skip this source, False to continue the rest of the function
+local function new_sourcer(sourcer, excluders)
   -- @brief Search the current screensection for a matching pattern and source that as vimscript
   -- @param startpat (str) - The pattern used for searching the start of the block
   -- @param endpat (str) - The pattern used for searching the end of the block
   return function(startpat, endpat)
+    -- Run the excluders
+    for _, excluder in ipairs(excluders) do
+      if excluder() then
+        return
+      end
+    end
+
     -- Get the lines currently visible
     local startrow = vim.fn.line('w0')
     local endrow = vim.fn.line('w$')
@@ -65,16 +79,26 @@ M.eval_lua = function (x)
   f()
 end
 
+-- @brief An excluder to skip init.vim and init.lua
+-- @return bool - True if the file is init.vim or init.lua
+M.initfile_excluder = function()
+  local fn = vim.fn.expand('%:t')
+  if fn == 'init.vim' or fn == 'init.lua' then
+    print('init.vim and init.lua are excluded from sourcer')
+    return true
+  end
+  return false
+end
+
 -- @brief Search the current screensection for a matching pattern and source that as vimscript
 -- @param startpat (str) - The pattern used for searching the start of the block
 -- @param endpat (str) - The pattern used for searching the end of the block
-M.vim_sourcer = new_sourcer(M.eval_vimscript)
+M.vim_sourcer = new_sourcer(M.eval_vimscript, {M.initfile_excluder})
 
 -- @brief Search the current screensection for a matching pattern and source that as lua code
 -- @param startpat (str) - The pattern used for searching the start of the block
 -- @param endpat (str) - The pattern used for searching the end of the block
-M.lua_sourcer = new_sourcer(M.eval_lua)
-
+M.lua_sourcer = new_sourcer(M.eval_lua, {M.initfile_excluder})
 
 return M
 
