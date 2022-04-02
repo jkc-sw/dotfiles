@@ -84,8 +84,8 @@ nnoremap <leader>V      <cmd>  exec("lua require('jerry.telescope.pickers').find
 " nnoremap <leader>r      <cmd>  FS<CR>
 " nnoremap <leader>R      <cmd>  FSOffset -3<CR>
 nnoremap <leader>r      <cmd>  silent exec '!tswitch -c nv'<CR>
-nnoremap <leader>E      <cmd>  .source<cr>
-vnoremap <leader>E      :<C-u> for line in jerry#common#GetVisualSelectionAsList() <bar> execute line <bar> endfor<CR>
+nnoremap <leader>E      <cmd>  call execute(getline('.'), '')<cr>
+vnoremap <leader>E      :<C-u> lua require('jerry.sourcer').eval_vimscript(table.concat(vim.fn['jerry#common#GetVisualSelectionAsList'](), "\n"))<cr>
 nnoremap <leader>T      <cmd>  lua SL()<cr>
 vnoremap <leader>T      :<c-u> lua SV()<cr>
 
@@ -93,6 +93,9 @@ nnoremap <leader>oe     <cmd> silent execute "!tmux send-keys -t :.+1 Up Enter"<
 nnoremap <leader>oo     <cmd> silent execute "!tmux send-keys -t :.+2 Up Enter"<cr>
 nnoremap <leader>oa     <cmd> silent execute "!tmux send-keys -t :-.1 Up Enter"<cr>
 nnoremap <leader>ou     <cmd> silent execute "!tmux send-keys -t :+.1 Up Enter"<cr>
+
+nnoremap <leader>tp     <cmd> lua require('jerry.sourcer').lua_sourcer('SOURCE_THESE_LUAS_START', 'SOURCE_THESE_LUAS_END') <cr>
+nnoremap <leader>t.     <cmd> lua require('jerry.sourcer').vim_sourcer('SOURCE_THESE_VIMS_START', 'SOURCE_THESE_VIMS_END') <cr>
 
 nnoremap <leader>te     <cmd>  call system("tmux load-buffer -", substitute(getline(line('.')), '^[ \t]*', '', 'g')."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
 nnoremap <leader>to     <cmd>  call system("tmux load-buffer -", substitute(getline(line('.')), '^[ \t]*', '', 'g')."\r") <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
@@ -254,6 +257,12 @@ augroup markdownFenceHighlight
 
     autocmd BufEnter,BufWinEnter,TabEnter *.ps1 iabbrev nfor <c-r>=jerry#common#JiraNoFormat()<cr><up>
     autocmd BufEnter,BufWinEnter,TabEnter *.ps1 iabbrev code; <c-r>=jerry#common#JiraCodeFormat()<cr><up>
+augroup END
+
+augroup sourcerTheseCode
+    autocmd!
+    autocmd BufEnter,BufWinEnter,TabEnter * iabbrev t. SOURCE_THESE_VIMS_START<cr><cr>SOURCE_THESE_VIMS_END<Up>
+    autocmd BufEnter,BufWinEnter,TabEnter * iabbrev tp SOURCE_THESE_VIMS_START<cr><cr>SOURCE_THESE_VIMS_END<Up>
 augroup END
 
 augroup DisableSomeSyntax
