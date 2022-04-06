@@ -28,7 +28,7 @@ M.mark_these = function(pat)
   for k, v in pairs(marklocs) do
     if #v ~= 1 then
       -- Create the warning message
-      table.insert(errmsgs, 'For mark "' .. k .. '", there are multiple locations: ' .. vim.inspect(v) .. '. Ln ' .. v[1] .. ' is marked')
+      table.insert(errmsgs, 'jerry.marker: For mark "' .. k .. '", there are multiple locations: ' .. vim.inspect(v) .. '. Ln ' .. v[1] .. ' is marked')
     end
 
     -- if only 1 location

@@ -4,6 +4,14 @@ local vim = vim
 -- Store all the module functions
 local M = {}
 
+--[[
+SOURCE_THESE_VIMS_START
+nnoremap <leader>ti <cmd>lua R('jerry.sourcer').vim_sourcer('SOURCE_THESE_VIMS_START', 'SOURCE_THESE_VIMS_END')<cr>
+let @h="yoP('\<c-r>\" = ' .. vim.inspect(\<c-r>\"))\<esc>+"
+echom 'Sourced'
+SOURCE_THESE_VIMS_END
+--]]
+
 -- @brief Get a function te search the current screensection for a matching pattern and source using sourcer
 -- @param sourcer (function(x) -> nil) - A function to source the block of text
 --        function(x) -> nil
@@ -30,39 +38,68 @@ local function new_sourcer(sourcer, excluders)
     local endrow = vim.fn.line('w$')
     local vlines = vim.api.nvim_buf_get_lines(0, startrow, endrow, true)
 
+    -- Get the current cursor location
+    local curln, _ = unpack(vim.api.nvim_win_get_cursor(0))
+    -- P('curln = ' .. vim.inspect(curln))
+
     -- Iterate all the lines
-    local foundstartpat, foundendpat = false, false
+    local foundstartpat = false
     local blk = {}
-    for _, li in ipairs(vlines) do
+    local lastblk = {}
+    local dist = -1
+    local lastdist = -1
+    local startln = 0
+    local endln = 0
+    for ln, li in ipairs(vlines) do
       -- if we have found the startpat
       if foundstartpat then
         if li:find(endpat) then
-          foundendpat = true
-          -- exit the loop
-          break
+          -- Calculate the distance and store the result
+          endln = ln + startrow
+          dist = math.min(math.abs(startln - curln), math.abs(endln - curln))
+          -- P('endln = ' .. vim.inspect(endln))
+          -- P('startln = ' .. vim.inspect(startln))
+          -- P('dist = ' .. vim.inspect(dist))
+          -- P('lastdist = ' .. vim.inspect(lastdist))
+          -- P('lastblk = ' .. vim.inspect(lastblk))
+          -- P('blk = ' .. vim.inspect(blk))
+          -- If first time or distance is shorter, we will store the result
+          if lastdist == -1 or dist < lastdist then
+            lastdist = dist
+            lastblk = blk
+            blk = {}
+          end
+          foundstartpat = false
+          -- -- exit the loop
+          -- break
         end
       end
+
       -- if we are inside the block
-      if foundstartpat and not foundendpat then
+      if foundstartpat then
         table.insert(blk, li)
       end
+
       -- if we have found the startpat
       if li:find(startpat) then
+        -- store the start line
+        startln = ln + startrow
         foundstartpat = true
       end
     end
 
     -- if not found, return
-    if not foundendpat then
+    if #lastblk < 1 then
+      vim.api.nvim_echo({{
+        'jerry.sourcer: No block found to be sourced', 'WarningMsg'
+      }}, true, {})
       return
     end
 
     -- Join the line with newline
-    if foundstartpat and foundendpat then
-      local joined = table.concat(blk, "\n")
-      -- P(joined)
-      sourcer(joined)
-    end
+    local joined = table.concat(lastblk, "\n")
+    -- P(joined)
+    sourcer(joined)
   end
 end
 
