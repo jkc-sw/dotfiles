@@ -262,8 +262,8 @@ augroup END
 
 augroup sourcerTheseCode
     autocmd!
-    autocmd BufEnter,BufWinEnter,TabEnter * iabbrev tit SOURCE_THESE_VIMS_START<cr><cr>SOURCE_THESE_VIMS_END<Up>
-    autocmd BufEnter,BufWinEnter,TabEnter * iabbrev tyt SOURCE_THESE_LUAS_START<cr><cr>SOURCE_THESE_LUAS_END<Up>
+    autocmd BufEnter,BufWinEnter,TabEnter * iabbrev tit SOURCE_THESE_VIMS_START<cr><cr>echom 'Sourced'<cr>SOURCE_THESE_VIMS_END<Up><Up>
+    autocmd BufEnter,BufWinEnter,TabEnter * iabbrev tyt SOURCE_THESE_LUAS_START<cr><cr>print('Sourced')<cr>SOURCE_THESE_LUAS_END<Up><Up>
 augroup END
 
 augroup markerTheseCode
