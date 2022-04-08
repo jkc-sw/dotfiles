@@ -94,9 +94,9 @@ nnoremap <leader>oo     <cmd> silent execute "!tmux send-keys -t :.+2 Up Enter"<
 nnoremap <leader>oa     <cmd> silent execute "!tmux send-keys -t :-.1 Up Enter"<cr>
 nnoremap <leader>ou     <cmd> silent execute "!tmux send-keys -t :+.1 Up Enter"<cr>
 
-nnoremap <leader>tp     <cmd> lua require('jerry.sourcer').lua_sourcer('SOURCE_THESE_LUAS_START', 'SOURCE_THESE_LUAS_END') <cr>
+nnoremap <leader>ty     <cmd> lua require('jerry.sourcer').lua_sourcer('SOURCE_THESE_LUAS_START', 'SOURCE_THESE_LUAS_END') <cr>
 nnoremap <leader>ti     <cmd> lua require('jerry.sourcer').vim_sourcer('SOURCE_THESE_VIMS_START', 'SOURCE_THESE_VIMS_END') <cr>
-nnoremap <leader>ty     <cmd> lua require('jerry.marker').mark_these('MARK_THIS_PLACE') <cr>
+nnoremap <leader>tp     <cmd> lua require('jerry.marker').mark_these('MARK_THIS_PLACE') <cr>
 
 nnoremap <leader>te     <cmd>  call system("tmux load-buffer -", substitute(getline(line('.')), '^[ \t]*', '', 'g')."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
 nnoremap <leader>to     <cmd>  call system("tmux load-buffer -", substitute(getline(line('.')), '^[ \t]*', '', 'g')."\r") <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
