@@ -263,12 +263,12 @@ augroup END
 augroup sourcerTheseCode
     autocmd!
     autocmd BufEnter,BufWinEnter,TabEnter * iabbrev tit SOURCE_THESE_VIMS_START<cr><cr>SOURCE_THESE_VIMS_END<Up>
-    autocmd BufEnter,BufWinEnter,TabEnter * iabbrev tpt SOURCE_THESE_LUAS_START<cr><cr>SOURCE_THESE_LUAS_END<Up>
+    autocmd BufEnter,BufWinEnter,TabEnter * iabbrev tyt SOURCE_THESE_LUAS_START<cr><cr>SOURCE_THESE_LUAS_END<Up>
 augroup END
 
 augroup markerTheseCode
     autocmd!
-    autocmd BufEnter,BufWinEnter,TabEnter * iabbrev tyt MARK_THIS_PLACE
+    autocmd BufEnter,BufWinEnter,TabEnter * iabbrev tpt MARK_THIS_PLACE
 augroup END
 
 augroup DisableSomeSyntax
