@@ -63,12 +63,13 @@ local function new_sourcer(sourcer, excluders)
           if (endln - startln) > 1 then
             -- Calculate the distance and store the result
             dist = math.min(math.abs(startln - curln), math.abs(endln - curln))
-            P('endln = ' .. vim.inspect(endln))
-            P('startln = ' .. vim.inspect(startln))
-            P('dist = ' .. vim.inspect(dist))
-            P('lastdist = ' .. vim.inspect(lastdist))
-            P('lastblk = ' .. vim.inspect(lastblk))
-            P('blk = ' .. vim.inspect(blk))
+            -- P('endln = ' .. vim.inspect(endln))
+            -- P('startln = ' .. vim.inspect(startln))
+            -- P('dist = ' .. vim.inspect(dist))
+            -- P('lastdist = ' .. vim.inspect(lastdist))
+            -- P('lastblk = ' .. vim.inspect(lastblk))
+            -- P('blk = ' .. vim.inspect(blk))
+
             -- If first time or distance is shorter, we will store the result
             if lastdist == -1 or dist < lastdist then
               lastdist = dist
