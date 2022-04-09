@@ -35,14 +35,21 @@ M.mark_these = function(pat)
     vim.api.nvim_buf_set_mark(0, k, v[1], 0, {})
   end
 
+  local msgs = {}
+
+  -- Let people knows what marks were available
+  table.insert(msgs, {'jerry.marker: markers set to ' .. vim.inspect(vim.tbl_keys(marklocs))})
+
   -- If warning messages, echo it
   if not vim.tbl_isempty(errmsgs) then
-    local msgs = {}
     -- Add highlight group
     for _, msg in ipairs(errmsgs) do
       table.insert(msgs, {msg, 'WarningMsg'})
     end
-    -- Print it
+  end
+
+  -- Print it
+  if #msgs > 0 then
     vim.api.nvim_echo(msgs, true, {})
   end
 end
