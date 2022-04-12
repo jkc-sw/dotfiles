@@ -59,13 +59,28 @@ done
 # Check how many pane the current window has
 nws="$(tmux list-panes | wc -l)"
 
-# If is only 1 pane, make a new one
+# If is only 1 pane, make a new one if the ratio alowed
 if test "$nws" -eq '1'; then
-    tmux split-window -f -h "$where" "$attach" -l "$size%" -c '#{pane_current_path}'
+    # Check the size using tmux
+    dim=($(tmux display -p '#{pane_width} #{pane_height}'))
+    width=${dim[0]}
+    height=${dim[1]}
 
-    # if the command is not empty, send the command
-    if [[ -n "$cmd" ]]; then
-        tmux send-keys -t :.+ "$cmd" Enter
+    # If it is squarer than 3:2 screen, the surface laptop, then don't do it
+    threshold='2496 / 1664'
+    eqn="( ( $width / 2 ) / $height ) > ( $threshold )"
+    # echo "Left > Right"
+    # echo "$eqn"
+    # echo "Left : $(bc -l <<< " ( $width / 2 ) / $height ")"
+    # echo "Right: $(bc -l <<< " $threshold ")"
+
+    if (( $(bc -l <<< "$eqn") )); then
+        tmux split-window -f -h "$where" "$attach" -l "$size%" -c '#{pane_current_path}'
+
+        # if the command is not empty, send the command
+        if [[ -n "$cmd" ]]; then
+            tmux send-keys -t :.+ "$cmd" Enter
+        fi
     fi
 fi
 
