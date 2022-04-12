@@ -68,6 +68,7 @@ if test "$nws" -eq '1'; then
 
     # If it is squarer than 3:2 screen, the surface laptop, then don't do it
     threshold='2496 / 1664'
+    # /2 is used, since a terminal font is about 2x in length to width
     eqn="( ( $width / 2 ) / $height ) > ( $threshold )"
     # echo "Left > Right"
     # echo "$eqn"
