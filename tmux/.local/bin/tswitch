@@ -6,9 +6,17 @@ if test -z "$TMUX"; then
     exit 0
 fi
 
+echodebug() {
+    if [[ -n "$TSWITCH_DEBUG" ]]; then
+        echo "$@"
+    fi
+}
+
 # var
 where='-b'
+orientation='-h'
 size=33
+vsize=25
 attach='-d'
 cmd=''
 
@@ -59,29 +67,77 @@ done
 # Check how many pane the current window has
 nws="$(tmux list-panes | wc -l)"
 
+# check many conditions before making a pane
+makesplit=true
+
+if [[ "$nws" -gt 1 ]]; then
+    # When there are 2 panes, do nothing
+    makesplit=false
+fi
+
+# Check the size using tmux
+dim=($(tmux display -p '#{pane_width} #{pane_height}'))
+# dim=($(tmux display -p '#{window_width} #{window_height}'))
+width=${dim[0]}
+height=${dim[1]}
+echodebug "width = $width"
+echodebug "height = $height"
+
+# # Not sure if I want this, keep it out for now
+# eqn="( ( $width * ( $size / 100 ) ) < 70 )"
+# echodebug "Left : $(bc -l <<< "( $width * ( $size / 100 ) )")"
+#
+# if (( $(bc -l <<< "$eqn") )); then
+#     # If it is too narrow, do not make a new pane
+#     makesplit=false
+# fi
+
+# If it is squarer than 3:2 screen, the surface laptop, then don't do it
+threshold='2496 / 1664'
+# /2 is used, since a terminal font is about 2x in length to width
+eqn="( ( $width / 2 ) / $height ) < ( $threshold )"
+echodebug "Left > Right"
+echodebug "$eqn"
+echodebug "Left : $(bc -l <<< " ( $width / 2 ) / $height ")"
+echodebug "Right: $(bc -l <<< " $threshold ")"
+
+if (( $(bc -l <<< "$eqn") )); then
+    # If this is too narrow to do horizontal split, make it a vertical split
+    orientation='-v'
+    size="$vsize"
+    where=''
+
+    if [[ "$height" -lt 50 ]]; then
+        # If it is too short, do not make a new pane
+        makesplit=false
+    fi
+fi
+
 # If is only 1 pane, make a new one if the ratio alowed
-if test "$nws" -eq '1'; then
-    # Check the size using tmux
-    dim=($(tmux display -p '#{pane_width} #{pane_height}'))
-    width=${dim[0]}
-    height=${dim[1]}
+if [[ "$makesplit" == 'true' ]]; then
+    echodebug "attach = $attach"
+    echodebug "where = $where"
+    echodebug "orientation = $orientation"
+    echodebug "size = $size"
 
-    # If it is squarer than 3:2 screen, the surface laptop, then don't do it
-    threshold='2496 / 1664'
-    # /2 is used, since a terminal font is about 2x in length to width
-    eqn="( ( $width / 2 ) / $height ) > ( $threshold )"
-    # echo "Left > Right"
-    # echo "$eqn"
-    # echo "Left : $(bc -l <<< " ( $width / 2 ) / $height ")"
-    # echo "Right: $(bc -l <<< " $threshold ")"
+    commands=('split-window' '-f')
+    if [[ -n "$attach" ]]; then
+        commands+=("$attach")
+    fi
+    if [[ -n "$where" ]]; then
+        commands+=("$where")
+    fi
+    if [[ -n "$orientation" ]]; then
+        commands+=("$orientation")
+    fi
 
-    if (( $(bc -l <<< "$eqn") )); then
-        tmux split-window -f -h "$where" "$attach" -l "$size%" -c '#{pane_current_path}'
+    commands+=('-l' "$size%" '-c' '#{pane_current_path}')
+    echodebug "commands = ${commands[@]}"
+    tmux "${commands[@]}"
 
-        # if the command is not empty, send the command
-        if [[ -n "$cmd" ]]; then
-            tmux send-keys -t :.+ "$cmd" Enter
-        fi
+    # if the command is not empty, send the command
+    if [[ -n "$cmd" ]]; then
+        tmux send-keys -t :.+ "$cmd" Enter
     fi
 fi
 
@@ -93,5 +149,15 @@ fi
 #     # otherwise, make a new pane to the left and size it properly
 #     tmux split-window -f -h "$where" "$attach" -l "$size%" -c '#{pane_current_path}'
 # fi
+
+: <<EOF
+SOURCE_THESE_VIMS_START
+nnoremap <leader>ne <cmd>!TSWITCH_DEBUG=1 tswitch<cr>
+let @h="yoechodebug \"\<c-r>\" = \$\<c-r>\"\"\<esc>j"
+let @t="yoecho \"\<c-r>\" = \$\<c-r>\"\"\<esc>j"
+
+echom "Sourced"
+SOURCE_THESE_VIMS_END
+EOF
 
 # vim:et ts=4 sts=4 sw=4
