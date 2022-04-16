@@ -25,6 +25,14 @@ displayHelp() {
     echo "$(basename "$0"): Switch/Split tmux pane the way I wanted"
     echo "$(basename "$0") [-r|-l] [-s <percent>]"
     echo ""
+    echo "Description:"
+    echo "  - When there is only 1 pane in the tmux window"
+    echo "    - Start a horizontal split if we are wide enough"
+    echo "    - Start a vertical split, if we are tall enough"
+    echo "  - When there are 2 panes in the tmux window"
+    echo "    - If we are wide or tall enough"
+    echo "      - Resize either vertical or horizontal split to the default size"
+    echo ""
     echo "Args"
     echo "  -l           : Make a new split to the left, default behavior"
     echo "  -r           : Make a new split to the right"
@@ -67,30 +75,22 @@ done
 # Check how many pane the current window has
 nws="$(tmux list-panes | wc -l)"
 
-# check many conditions before making a pane
-makesplit=true
-
-if [[ "$nws" -gt 1 ]]; then
-    # When there are 2 panes, do nothing
-    makesplit=false
+# if too many panes, do nothing
+if [[ "$nws" -gt 2 ]]; then
+    # do nothing
+    exit 0
 fi
 
+
 # Check the size using tmux
-dim=($(tmux display -p '#{pane_width} #{pane_height}'))
-# dim=($(tmux display -p '#{window_width} #{window_height}'))
+dim=($(tmux display -p '#{window_width} #{window_height}'))
 width=${dim[0]}
 height=${dim[1]}
 echodebug "width = $width"
 echodebug "height = $height"
 
-# # Not sure if I want this, keep it out for now
-# eqn="( ( $width * ( $size / 100 ) ) < 70 )"
-# echodebug "Left : $(bc -l <<< "( $width * ( $size / 100 ) )")"
-#
-# if (( $(bc -l <<< "$eqn") )); then
-#     # If it is too narrow, do not make a new pane
-#     makesplit=false
-# fi
+tooNarrow=false
+tooShort=false
 
 # If it is squarer than 3:2 screen, the surface laptop, then don't do it
 threshold='2496 / 1664'
@@ -100,26 +100,36 @@ echodebug "Left > Right"
 echodebug "$eqn"
 echodebug "Left : $(bc -l <<< " ( $width / 2 ) / $height ")"
 echodebug "Right: $(bc -l <<< " $threshold ")"
+# MARK_THIS_PLACE m
 
+# Check the size of the window to see if we can do anything
 if (( $(bc -l <<< "$eqn") )); then
     # If this is too narrow to do horizontal split, make it a vertical split
+    tooNarrow=true
     orientation='-v'
     size="$vsize"
     where=''
 
     if [[ "$height" -lt 50 ]]; then
-        # If it is too short, do not make a new pane
-        makesplit=false
+        # Too narrow and too short, do nothing
+        tooShort=true
     fi
 fi
 
-# If is only 1 pane, make a new one if the ratio alowed
-if [[ "$makesplit" == 'true' ]]; then
-    echodebug "attach = $attach"
-    echodebug "where = $where"
-    echodebug "orientation = $orientation"
-    echodebug "size = $size"
+# if too narrow and too short
+if [[ "$tooNarrow" == 'true' && "$tooShort" == 'true' ]]; then
+    # do nothing
+    exit 0
+fi
 
+# Debug print
+echodebug "attach = $attach"
+echodebug "where = $where"
+echodebug "orientation = $orientation"
+echodebug "size = $size"
+
+if [[ "$nws" -eq 1 ]]; then
+    # only 1 window, can split panes
     commands=('split-window' '-f')
     if [[ -n "$attach" ]]; then
         commands+=("$attach")
@@ -139,6 +149,65 @@ if [[ "$makesplit" == 'true' ]]; then
     if [[ -n "$cmd" ]]; then
         tmux send-keys -t :.+ "$cmd" Enter
     fi
+
+elif [[ "$nws" -eq 2 ]]; then
+    # Check check where we are
+    # Check the size using tmux
+    paneDim=($(tmux display -p '#{pane_width} #{pane_height} #{pane_index}'))
+    paneWidth=${paneDim[0]}
+    paneHeight=${paneDim[1]}
+    paneIndex=${paneDim[2]}
+    echodebug "paneWidth = $paneWidth"
+    echodebug "paneHeight = $paneHeight"
+    echodebug "paneIndex = $paneIndex"
+
+    resizeDir=''
+    if [[ "$height" -eq "$paneHeight" ]]; then
+        # dir
+        resizeDir=-x
+
+        # check which pane are we at
+        if [[ "$paneIndex" -eq 2 ]]; then
+            # we are at the right pane
+            size="$( bc -l <<< "100 - $size" )"
+            echodebug 'right pane'
+        fi
+        echodebug "size = $size"
+
+        # if we are in horizontal mode, but it got too narrow
+        if [[ "$tooNarrow" == 'true' ]]; then
+            # need to rotate the window, since the index has changed
+            tmux swap-pane -U
+            # change layout and resize
+            tmux select-layout 'even-vertical'
+            resizeDir=-y
+            echodebug 'change layout and resize'
+        fi
+    elif [[ "$width" -eq "$paneWidth" ]]; then
+        # dir
+        resizeDir=-y
+
+        # check which pane are we at
+        if [[ "$paneIndex" -eq 1 ]]; then
+            # we are at the top pane
+            size="$( bc -l <<< "100 - $size" )"
+            echodebug 'top pane'
+        fi
+
+        # if we are in vertical mode, but it is no longer narrow
+        if [[ "$tooNarrow" == 'false' ]]; then
+            # need to rotate the window, since the index has changed
+            tmux swap-pane -U
+            # change layout and resize
+            tmux select-layout 'even-horizontal'
+            resizeDir=-x
+            echodebug 'change layout and resize'
+        fi
+    fi
+
+    echodebug "always resize"
+    args=('resize-pane' "$resizeDir" "$size%")
+    tmux "${args[@]}"
 fi
 
 # # If there are two, we do nothing but switch over
@@ -150,12 +219,25 @@ fi
 #     tmux split-window -f -h "$where" "$attach" -l "$size%" -c '#{pane_current_path}'
 # fi
 
+# # Not sure if I want this, keep it out for now
+# # This is for resizing the existing pane
+# eqn="( ( $width * ( $size / 100 ) ) < 70 )"
+# echodebug "Left : $(bc -l <<< "( $width * ( $size / 100 ) )")"
+#
+# if (( $(bc -l <<< "$eqn") )); then
+#     # If it is too narrow, do not make a new pane
+#     makesplit=false
+# fi
+
+# dim=($(tmux display -p '#{pane_width} #{pane_height}'))
+# echodebug "pane dim $(tmux display -p '#{pane_width} #{pane_height}')"
+
 : <<EOF
 SOURCE_THESE_VIMS_START
 nnoremap <leader>ne <cmd>!TSWITCH_DEBUG=1 tswitch<cr>
+nnoremap <leader>no <cmd>!tswitch<cr>
 let @h="yoechodebug \"\<c-r>\" = \$\<c-r>\"\"\<esc>j"
 let @t="yoecho \"\<c-r>\" = \$\<c-r>\"\"\<esc>j"
-
 echom "Sourced"
 SOURCE_THESE_VIMS_END
 EOF
