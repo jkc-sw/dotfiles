@@ -76,18 +76,29 @@ done
 nws="$(tmux list-panes | wc -l)"
 
 # if too many panes, do nothing
-if [[ "$nws" -gt 2 ]]; then
+if [[ "$nws" -gt 3 ]]; then
     # do nothing
     exit 0
 fi
 
+declare -A layouts
+layouts['v2']='429b,184x69,0,0[184x51,0,0,5,184x17,0,52,29]'
+layouts['v3']='2a04,184x69,0,0[184x51,0,0,5,184x17,0,52{92x17,0,52,22,91x17,93,52,24}]'
+layouts['h2']='de13,280x70,0,0{92x70,0,0,30,187x70,93,0,5}'
+layouts['h3']='478f,280x70,0,0{92x70,0,0[92x35,0,0,24,92x34,0,36,25],187x70,93,0,5}'
 
 # Check the size using tmux
-dim=($(tmux display -p '#{window_width} #{window_height}'))
+dim=($(tmux display -p '#{window_width} #{window_height} #{pane_width} #{pane_height} #{pane_index}'))
 width=${dim[0]}
 height=${dim[1]}
+paneWidth=${dim[2]}
+paneHeight=${dim[3]}
+paneIndex=${dim[4]}
 echodebug "width = $width"
 echodebug "height = $height"
+echodebug "paneWidth = $paneWidth"
+echodebug "paneHeight = $paneHeight"
+echodebug "paneIndex = $paneIndex"
 
 tooNarrow=false
 tooShort=false
@@ -100,7 +111,6 @@ echodebug "Left > Right"
 echodebug "$eqn"
 echodebug "Left : $(bc -l <<< " ( $width / 2 ) / $height ")"
 echodebug "Right: $(bc -l <<< " $threshold ")"
-# MARK_THIS_PLACE m
 
 # Check the size of the window to see if we can do anything
 if (( $(bc -l <<< "$eqn") )); then
@@ -150,43 +160,40 @@ if [[ "$nws" -eq 1 ]]; then
         tmux send-keys -t :.+ "$cmd" Enter
     fi
 
-elif [[ "$nws" -eq 2 ]]; then
-    # Check check where we are
-    # Check the size using tmux
-    paneDim=($(tmux display -p '#{pane_width} #{pane_height} #{pane_index}'))
-    paneWidth=${paneDim[0]}
-    paneHeight=${paneDim[1]}
-    paneIndex=${paneDim[2]}
-    echodebug "paneWidth = $paneWidth"
-    echodebug "paneHeight = $paneHeight"
-    echodebug "paneIndex = $paneIndex"
-
+elif [[ "$nws" -gt 1 ]]; then
     resizeDir=''
     if [[ "$height" -eq "$paneHeight" ]]; then
-        # dir
-        resizeDir=-x
-
         # check which pane are we at
-        if [[ "$paneIndex" -eq 2 ]]; then
+        if [[ "$paneIndex" -eq "$nws" ]]; then
             # we are at the right pane
             size="$( bc -l <<< "100 - $size" )"
             echodebug 'right pane'
         fi
         echodebug "size = $size"
 
+        # dir
+        resizeDir=-x
+
         # if we are in horizontal mode, but it got too narrow
         if [[ "$tooNarrow" == 'true' ]]; then
-            # need to rotate the window, since the index has changed
-            tmux swap-pane -U
-            # change layout and resize
-            tmux select-layout 'even-vertical'
+            # Switch to vertical layout
+            tmux rotate-window -D
+            tmux select-pane -t '1'
+            tmux select-layout "${layouts["v$nws"]}"
+
             resizeDir=-y
             echodebug 'change layout and resize'
         fi
-    elif [[ "$width" -eq "$paneWidth" ]]; then
-        # dir
-        resizeDir=-y
 
+        # Check the size is roughly right
+        eqn="( (($width * ($size / 100)) - $paneWidth)^2 < 2^2 )"
+        if (( $(bc -l <<< "$eqn") )); then
+            # close enough
+            echodebug 'Size is roughly right, do nothing'
+            exit 0
+        fi
+
+    elif [[ "$width" -eq "$paneWidth" ]]; then
         # check which pane are we at
         if [[ "$paneIndex" -eq 1 ]]; then
             # we are at the top pane
@@ -194,20 +201,34 @@ elif [[ "$nws" -eq 2 ]]; then
             echodebug 'top pane'
         fi
 
+        # dir
+        resizeDir=-y
+
         # if we are in vertical mode, but it is no longer narrow
         if [[ "$tooNarrow" == 'false' ]]; then
-            # need to rotate the window, since the index has changed
-            tmux swap-pane -U
-            # change layout and resize
-            tmux select-layout 'even-horizontal'
+            # Switch to horizontal layout
+            tmux rotate-window -U
+            tmux select-pane -t "$nws"
+            tmux select-layout "${layouts["h$nws"]}"
             resizeDir=-x
             echodebug 'change layout and resize'
         fi
+
+        # Check the size is roughly right
+        eqn="( (($height * ($size / 100)) - $paneHeight)^2 < 2^2 )"
+        if (( $(bc -l <<< "$eqn") )); then
+            # close enough
+            echodebug 'Size is roughly right, do nothing'
+            exit 0
+        fi
+
     fi
 
-    echodebug "always resize"
-    args=('resize-pane' "$resizeDir" "$size%")
-    tmux "${args[@]}"
+    if [[ -n "$resizeDir" ]]; then
+        echodebug "resize if needed"
+        args=('resize-pane' "$resizeDir" "$size%")
+        tmux "${args[@]}"
+    fi
 fi
 
 # # If there are two, we do nothing but switch over
