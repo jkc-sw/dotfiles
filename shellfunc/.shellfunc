@@ -152,7 +152,7 @@ cperf() {
 add_shell_specific() {
     forshell="$1"
     eval "$(starship init "$forshell")"
-    eval "$(zoxide init "$forshell")"
+    eval "$(zoxide init --cmd 'c' "$forshell")"
 
     # Handle the fzf
     fzf_dir="$HOME/.local/share/nvim/site/pack/packer/start/fzf"
