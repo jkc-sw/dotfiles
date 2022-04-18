@@ -11,6 +11,31 @@ addThisPath() {
     esac
 }
 
+BOLD_TEXT='\e[1m'
+YELLO_BOLD_TEXT='\e[1;93m'
+GREEN_BOLD_TEXT='\e[1;92m'
+BLUE_BOLD_TEXT='\e[1;96m'
+RED_BOLD_TEXT='\e[1;91m'
+PLAIN='\e[0m'
+function echobold() {
+    echo -e "${BOLD_TEXT}$1${PLAIN}"
+}
+function echosubcommand() {
+    echo -e "${BLUE_BOLD_TEXT}$1${PLAIN}"
+}
+function echoinfo() {
+    echo -e "${BOLD_TEXT}INFO${PLAIN}: $1"
+}
+function echoerror() {
+    echo -e "${RED_BOLD_TEXT}ERROR${PLAIN}: $1" >&2
+}
+function echosuccess() {
+    echo -e "${GREEN_BOLD_TEXT}SUCCESS${PLAIN}: $1"
+}
+function echowarning() {
+    echo -e "${YELLO_BOLD_TEXT}WARNING${PLAIN}: $1"
+}
+
 # # Awesome stuff from https://unix.stackexchange.com/a/351658
 # if [ -n "$BASH" ]; then
 #     LINUX_ALIAS_PATH=${BASH_SOURCE}
@@ -52,25 +77,57 @@ rt() (
     ./rr.sh tmux
 )
 
-# Quickly start the session
-function aoeu() {
-    name=aoeu
-    if [[ "$#" -eq 0 ]]; then
-        if ! (tmux ls | grep -q "$name"); then
-            tmux new-session -s "$name" -d
-        fi
-        tmux attach-session -t "$name"
-        return
+# @brief Start tmux session in style
+# @param funcname - Name of the command to generate
+# @param callback - callback to run
+tmux_shortcut_gen() {
+    fname="$1"
+    cb="$2"
+
+    # check all valid
+    if [[ -z "$fname" ]]; then
+        echoerror "fname cannot be empty"
+        return 1
     fi
 
-    # need 1 arg
-    if [[ $# -ne 1 ]]; then
-        echo "Need to provide a suffix for attaching to the session" >&2
-        exit 1
+    eval "$fname() { tmux_attach '$fname' '$cb' \"\$1\" }"
+}
+
+# @brief Run the tmux routine
+# @param name - tmux name
+# @param cb - callback to configure the tmux session at creation time
+# @param label - The label to start alternative client
+function tmux_attach() {
+    name="$1"
+    cb="$2"
+    label="$3"
+
+    if [[ -z "$name" ]]; then
+        echowarning "Nothing to be done"
+        return 1
+    fi
+
+    if [[ -n "$name" && -z "$label" ]]; then
+        if ! (tmux ls | grep -q "$name"); then
+            tmux new-session -s "$name" -d
+
+            # if there is callback, run it
+            if command -v "$cb" &>/dev/null; then
+                "$cb"
+            fi
+        fi
+
+        tmux attach-session -t "$name"
+        return 0
+    fi
+
+    # no label, nothing to be done further
+    if [[ -z "$label" ]]; then
+        return 0
     fi
 
     # store the name
-    newname="$name-$1"
+    newname="$name-$label"
 
     # check if the session exists
     if ! (tmux ls | grep -q "$newname"); then
@@ -80,6 +137,9 @@ function aoeu() {
     # attach to the session
     tmux attach-session -t "$newname"
 }
+
+# Quickly start the session
+tmux_shortcut_gen aoeu
 
 # configuration to rg and fd
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
