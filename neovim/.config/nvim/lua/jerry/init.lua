@@ -50,7 +50,7 @@ require('nvim-treesitter.configs').setup{
   },
   highlight = {
     enable = true,
-    -- disable = { 'cpp' }
+    disable = { 'cpp' }
   },
   indent = {
     enable = true,
