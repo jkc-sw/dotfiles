@@ -4,6 +4,9 @@ local vim = vim
 -- Store all the module functions
 local M = {}
 
+-- Local namespace
+local ns = vim.api.nvim_create_namespace('jerry.sourcer')
+
 --[[
 SOURCE_THESE_VIMS_START
 nnoremap <leader>ne <cmd>lua R('jerry.sourcer').vim_sourcer('TSOURCE_THESE_VIMS_START', 'TSOURCE_THESE_VIMS_END')<cr>
@@ -50,6 +53,7 @@ local function new_sourcer(sourcer, excluders)
     local foundstartpat = false
     local blk = {}
     local lastblk = {}
+    local lastrange = {0, -1}
     local dist = -1
     local lastdist = -1
     local startln = 0
@@ -75,6 +79,7 @@ local function new_sourcer(sourcer, excluders)
               lastdist = dist
               lastblk = blk
               blk = {}
+              lastrange = {startln, endln - 1}
             end
             foundstartpat = false
             -- -- exit the loop
@@ -111,6 +116,19 @@ local function new_sourcer(sourcer, excluders)
     local joined = table.concat(lastblk, "\n")
     -- P(joined)
     sourcer(joined)
+
+    -- highlight it
+    -- Reference from 'runtime/lua/vim/highlight.lua'
+    vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
+    vim.highlight.range(0, ns, 'IncSearch', {lastrange[1], 0}, {lastrange[2], 0}, 'V', false, 200)  -- -1 to adjust 0/1 index difference
+    vim.defer_fn(
+      function()
+        if vim.api.nvim_buf_is_valid(0) then
+          vim.api.nvim_buf_clear_namespace(0, 0, 0, -1)
+        end
+      end,
+      150
+    )
   end
 end
 
