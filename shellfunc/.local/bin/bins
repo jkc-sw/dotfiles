@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Find all the dir in the PATH and filter only existed folder
+dirs=()
+while IFS=':' read -ra pdirs; do
+    for edir in ${pdirs[@]}; do
+        if [[ -d "$edir" ]]; then
+            dirs+=($edir)
+        fi
+    done
+done <<<"$PATH"
+
+# out=$(find ${pdirs[@]} -executable -type f)
+bins=()
+while read -r ebin; do
+    bins+=("$ebin")
+done < <(find ${dirs[@]} -executable -type f)
+
+# IFS=$'\n' sorted=($(sort <<<"${bins[*]}"))
+IFS=$'\n'
+sort <<<"${bins[*]}"
+unset IFS
+
+# echo ${sorted[@]}
