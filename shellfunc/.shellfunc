@@ -154,60 +154,6 @@ fi
 export FZF_DEFAULT_OPTS="--color=dark --height=50%"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-# cpu managements
-# alias cinfo='sudo modprobe msr && sudo cpupower frequency-info'
-cinfo() {
-    runsudo=doas
-    if ! type -p doas &>/dev/null; then
-        runsudo=sudo
-    fi
-    "$runsudo" modprobe msr && "$runsudo" cpupower frequency-info
-}
-# alias cmonitor='sudo modprobe msr && sudo turbostat --show Core,CPU,Avg_MHz,Busy%,Bzy_MHz,TSC_MHz,CoreTmp,PkgTmp,PkgWatt,RAMWatt'
-cmonitor() {
-    runsudo=doas
-    if ! type -p doas &>/dev/null; then
-        runsudo=sudo
-    fi
-    "$runsudo" modprobe msr && "$runsudo" turbostat --show Core,CPU,Avg_MHz,Busy%,Bzy_MHz,TSC_MHz,CoreTmp,PkgTmp,PkgWatt,RAMWatt
-}
-# alias cperf='sudo modprobe msr && sudo cpupower frequency-set -g performance'
-cperf() {
-    if test "$#" -lt 1; then
-        echo "Current governor:"
-        cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor | sort -u
-        echo ''
-
-        echo "Available governor:"
-        cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors
-        echo ''
-
-        echo 'Current Frequencies'
-        cat /proc/cpuinfo | sed -n 's/cpu mhz.*: \(.*\)/\1/Ip' | sort -n | column
-        echo ''
-
-        echo "cperf: Set the cpu mode"
-        echo "  [mode]: 0 means powersave, 1 means performance, or other scaling_governor"
-
-    elif test "$#" -eq 1; then
-        cmd="$1"
-        if test "$cmd" = '0'; then
-            cmd='powersave'
-        elif test "$cmd" = '1'; then
-            cmd='performance'
-        fi
-
-        runsudo=doas
-        if ! type -p doas &>/dev/null; then
-            runsudo=sudo
-        fi
-        find /sys/devices/system/cpu/ -type f -name scaling_governor | "$runsudo" xargs -I% bash -c "echo $cmd > %"
-    else
-    	echo "Error, there should only be 1 argument"
-	return 1
-    fi
-}
-
 # handle shell specific
 add_shell_specific() {
     forshell="$1"

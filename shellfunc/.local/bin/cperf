@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+if test "$#" -lt 1; then
+    echo "Current governor:"
+    cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor | sort -u
+    echo ''
+
+    echo "Available governor:"
+    cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors
+    echo ''
+
+    echo 'Current Frequencies'
+    cat /proc/cpuinfo | sed -n 's/cpu mhz.*: \(.*\)/\1/Ip' | sort -n | column
+    echo ''
+
+    echo "cperf: Set the cpu mode"
+    echo "  [mode]: 0 means powersave, 1 means performance, or other scaling_governor"
+
+elif test "$#" -eq 1; then
+    cmd="$1"
+    if test "$cmd" = '0'; then
+        cmd='powersave'
+    elif test "$cmd" = '1'; then
+        cmd='performance'
+    fi
+
+    runsudo=doas
+    if ! type -p doas &>/dev/null; then
+        runsudo=sudo
+    fi
+    find /sys/devices/system/cpu/ -type f -name scaling_governor | "$runsudo" xargs -I% bash -c "echo $cmd > %"
+else
+    echo "Error, there should only be 1 argument"
+return 1
+fi

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+runsudo=doas
+if ! type -p doas &>/dev/null; then
+    runsudo=sudo
+fi
+"$runsudo" modprobe msr && "$runsudo" cpupower frequency-info
