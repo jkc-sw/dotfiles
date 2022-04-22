@@ -109,6 +109,7 @@ vnoremap <leader>ta     :<c-u> call system("tmux load-buffer -", jerry#common#Ge
 vnoremap <leader>tu     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :+.1" <bar> silent execute "!tmux select-window -t :+.1" <cr>
 
 nnoremap <c-p>          <cmd>  call jerry#common#FileFuzzySearch()<CR>
+nnoremap <leader>po     <cmd>  lua require('telescope.builtin').oldfiles()<CR>
 nnoremap <leader>/      <cmd>  call jerry#common#LinesFuzzySearch()<CR>
 nnoremap <leader>b      <cmd>  call jerry#common#BufferFuzzySearch()<CR>
 nnoremap Q              <cmd>  call jerry#common#WordFuzzySearch()<CR>
