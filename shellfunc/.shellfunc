@@ -77,22 +77,6 @@ rt() (
     ./rr.sh tmux
 )
 
-# @brief Start tmux session in style
-# @param funcname - Name of the command to generate
-# @param callback - callback to run
-tmux_shortcut_gen() {
-    fname="$1"
-    cb="$2"
-
-    # check all valid
-    if [[ -z "$fname" ]]; then
-        echoerror "fname cannot be empty"
-        return 1
-    fi
-
-    eval "$fname() { tmux_attach '$fname' '$cb' \"\$1\" }"
-}
-
 # @brief Run the tmux routine
 # @param name - tmux name
 # @param cb - callback to configure the tmux session at creation time
@@ -139,7 +123,9 @@ function tmux_attach() {
 }
 
 # Quickly start the session
-tmux_shortcut_gen aoeu
+aoeu () {
+    tmux_attach "${FUNCNAME[0]}" '' "$1"
+}
 
 # configuration to rg and fd
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
