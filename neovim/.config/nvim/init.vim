@@ -22,7 +22,8 @@ set expandtab
 set smartindent
 set autoindent
 set mouse=nv
-set number relativenumber
+" set number relativenumber
+set signcolumn=no
 set nowrap
 set smartcase
 set ignorecase
@@ -43,7 +44,6 @@ set splitbelow splitright
 set termguicolors
 set guicursor=i-ci-ve:block-blinkwait175-blinkoff150-blinkon175
 set completeopt=menuone,noinsert,noselect
-set signcolumn=yes
 let g:netrw_banner = 0
 let g:netrw_browse_split = 4
 let g:netrw_winsize = 25
