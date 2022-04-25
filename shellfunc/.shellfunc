@@ -124,7 +124,7 @@ function tmux_attach() {
 
 # Quickly start the session
 aoeu () {
-    tmux_attach "${FUNCNAME[0]}" '' "$1"
+    tmux_attach aoeu '' "$1"
 }
 
 # configuration to rg and fd
