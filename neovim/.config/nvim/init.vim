@@ -98,8 +98,8 @@ nnoremap <leader>ty     <cmd> lua require('jerry.sourcer').lua_sourcer('SOURCE_T
 nnoremap <leader>ti     <cmd> lua require('jerry.sourcer').vim_sourcer('SOURCE_THESE_VIMS_START', 'SOURCE_THESE_VIMS_END') <cr>
 nnoremap <leader>tp     <cmd> lua require('jerry.marker').mark_these('MARK_THIS_PLACE') <cr>
 
-nnoremap <leader>tu     <cmd> call system("tmux load-buffer -", jerry#common#GetBlockSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
-nnoremap <leader>ta     <cmd> call system("tmux load-buffer -", jerry#common#GetBlockSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+2" <cr>
+nnoremap <leader>tu     <cmd> call system("tmux load-buffer -", jerry#common#GetBlockSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <bar> norm '}<cr>
+nnoremap <leader>ta     <cmd> call system("tmux load-buffer -", jerry#common#GetBlockSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+2" <bar> norm '}<cr>
 " " rarely used
 " nnoremap <leader>ta     <cmd> call system("tmux load-buffer -", jerry#common#GetBlockSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :-.1" <bar> silent execute "!tmux select-window -t :-.1" <cr>
 " nnoremap <leader>tu     <cmd> call system("tmux load-buffer -", jerry#common#GetBlockSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :+.1" <bar> silent execute "!tmux select-window -t :+.1" <cr>

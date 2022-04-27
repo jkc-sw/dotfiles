@@ -120,7 +120,7 @@ if (( $(bc -l <<< "$eqn") )); then
     size="$vsize"
     where=''
 
-    if [[ "$height" -lt 50 ]]; then
+    if [[ "$height" -le 45 ]]; then
         # Too narrow and too short, do nothing
         tooShort=true
     fi
@@ -129,6 +129,7 @@ fi
 # if too narrow and too short
 if [[ "$tooNarrow" == 'true' && "$tooShort" == 'true' ]]; then
     # do nothing
+    echodebug "Nothing to do; tooNarrow=$tooNarrow tooShort=$tooShort"
     exit 0
 fi
 
