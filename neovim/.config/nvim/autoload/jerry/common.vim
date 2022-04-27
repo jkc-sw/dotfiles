@@ -177,6 +177,27 @@ function! jerry#common#GetSelection(lnum1, col1, lnum2, col2)
     return join(jerry#common#GetSelectionAsList(a:lnum1, a:col1, a:lnum2, a:col2), "\r")
 endfunc
 
+" @brief Function to send block of text to tmux pane
+" @desc The condition is as follow
+"       - If current line is only space, then we will go from current line to
+"         the next closing paragraph
+"       - If the current line is non-empty, then we will go from start to end of
+"         the current paragraph
+function! jerry#common#GetBlockSelection()
+    " default is '{ to '}
+    let [lnum1, col1] = getpos("'{")[1:2]
+    let [lnum2, col2] = getpos("'}")[1:2]
+
+    " adjust based on the current line
+    let li = getline('.')
+    if match(li, '^ *\zs[^ ]') < 0
+        let [lnum1, col1] = getpos(".")[1:2]
+        let [lnum2, col2] = getpos("'}")[1:2]
+    endif
+
+    return join(jerry#common#GetSelectionAsList(lnum1, col1, lnum2, col2), "\r")
+endfunction
+
 " Function to get the visual selection
 " references: https://vi.stackexchange.com/questions/9888/how-to-pipe-characters-to-cmd
 function! jerry#common#GetVisualSelectionAsList()
