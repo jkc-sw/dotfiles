@@ -186,13 +186,13 @@ endfunc
 function! jerry#common#GetBlockSelection()
     " default is '{ to '}
     let [lnum1, col1] = getpos("'{")[1:2]
-    let [lnum2, col2] = getpos("'}")[1:2]
+    let col2 = 0
+    let lnum2 = search('^[ \t]*$', 'nW') - 1  " -1 to exclude the empty line
 
     " adjust based on the current line
     let li = getline('.')
-    if match(li, '^ *\zs[^ ]') < 0
+    if match(li, '^[ \t]*\zs[^ \t]') < 0
         let [lnum1, col1] = getpos(".")[1:2]
-        let [lnum2, col2] = getpos("'}")[1:2]
     endif
 
     return join(jerry#common#GetSelectionAsList(lnum1, col1, lnum2, col2), "\r")
