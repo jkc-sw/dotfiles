@@ -14,7 +14,7 @@ done <<<"$PATH"
 bins=()
 while read -r ebin; do
     bins+=("$ebin")
-done < <(find ${dirs[@]} -executable -type f)
+done < <(find ${dirs[@]} -executable -type l)
 
 # IFS=$'\n' sorted=($(sort <<<"${bins[*]}"))
 IFS=$'\n'
