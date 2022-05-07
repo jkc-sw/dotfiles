@@ -98,6 +98,9 @@ nnoremap <leader>ty     <cmd> lua require('jerry.sourcer').lua_sourcer('SOURCE_T
 nnoremap <leader>ti     <cmd> lua require('jerry.sourcer').vim_sourcer('SOURCE_THESE_VIMS_START', 'SOURCE_THESE_VIMS_END') <cr>
 nnoremap <leader>tp     <cmd> lua require('jerry.marker').mark_these('MARK_THIS_PLACE') <cr>
 
+" Just a vairable quick print, delimited by space
+nnoremap <leader>t.     <cmd> call system("tmux load-buffer -", expand('<cWORD>')."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
+
 " Stay after the end of the block at the blank line
 nnoremap <leader>tu     <cmd> call system("tmux load-buffer -", jerry#common#GetBlockSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <bar> exec "normal! '}" <bar> exec ':'.(search('[^ \t]', 'bceW') + 1)<cr>
 nnoremap <leader>ta     <cmd> call system("tmux load-buffer -", jerry#common#GetBlockSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.-1" <bar> exec "normal! '}" <bar> exec ':'.(search('[^ \t]', 'bceW') + 1)<cr>

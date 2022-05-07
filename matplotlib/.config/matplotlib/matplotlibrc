@@ -407,7 +407,7 @@ axes.labelcolor:    DCDCDC
 
 #axes.unicode_minus: True  # use Unicode for the minus symbol rather than hyphen.  See
                            # https://en.wikipedia.org/wiki/Plus_and_minus_signs#Character_codes
-axes.prop_cycle: cycler(linestyle=['-','-.',':']) * cycler(marker=[',','x','o']) * cycler(color=['DC143C','7FFFD4','FFA500','EEE8AA','556B2F','4169E1','E6E6FA','EE82EE','7CFC00','8B008B'])
+axes.prop_cycle: cycler(linestyle=['-','-.',':']) * cycler(marker=['x',',','o']) * cycler(color=['DC143C','7FFFD4','FFA500','EEE8AA','556B2F','4169E1','E6E6FA','EE82EE','7CFC00','8B008B'])
 
                   # color cycle for plot lines as list of string color specs:
                   # single letter, long name, or web-style hex
