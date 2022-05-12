@@ -189,6 +189,11 @@ function! jerry#common#GetBlockSelection()
     let col2 = 0
     let lnum2 = search('^[ \t]*$', 'nW') - 1  " -1 to exclude the empty line
 
+    " if end of the line, which means 0-1=-1, then set to the last line
+    if lnum2 < 0
+        let lnum2 = line('$')
+    endif
+
     " adjust based on the current line
     let li = getline('.')
     if match(li, '^[ \t]*\zs[^ \t]') < 0
@@ -309,4 +314,3 @@ func! jerry#common#CloseTab()
         qa!
     endif
 endfunc
-

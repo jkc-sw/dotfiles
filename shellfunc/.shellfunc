@@ -97,7 +97,7 @@ function tmux_attach() {
 
             # if there is callback, run it
             if command -v "$cb" &>/dev/null; then
-                "$cb"
+                "$cb" "$name"
             fi
         fi
 

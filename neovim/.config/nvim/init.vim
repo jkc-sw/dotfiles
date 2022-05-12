@@ -48,7 +48,7 @@ let g:netrw_banner = 0
 let g:netrw_browse_split = 4
 let g:netrw_winsize = 25
 set nofoldenable
-set scrolloff=15 " Make sure that cursor won't be too high
+set scrolloff=5 " Make sure that cursor won't be too high
 set cursorline
 let g:vimsyn_embed = 'l'
 let g:loaded_clipboard_provider = 1 " I don't need nvim to sync clipboard for me, I have my own tool

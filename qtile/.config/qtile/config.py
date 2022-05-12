@@ -78,8 +78,10 @@ keys.extend([
     add_key([mod, "shift",   ""],        "Right",  "Move window to the right",           lazy.layout.shuffle_right()),
 
     add_key([mod, "",        ""],        "h",      "Move focus to left",                 lazy.layout.left()),
-    add_key([mod, "",        ""],        "j",      "Move focus down",                    lazy.layout.down()),
-    add_key([mod, "",        ""],        "k",      "Move focus up",                      lazy.layout.up()),
+    add_key([mod, "",        ""],        "j",      "Next windew",                        lazy.group.next_window()),
+    add_key([mod, "",        ""],        "k",      "Previous windew",                    lazy.group.prev_window()),
+    # add_key([mod, "",        ""],        "j",      "Move focus down",                    lazy.layout.down()),
+    # add_key([mod, "",        ""],        "k",      "Move focus up",                      lazy.layout.up()),
     add_key([mod, "",        ""],        "l",      "Move focus to right",                lazy.layout.right()),
     add_key([mod, "",        ""],        "o",      "Move window focus to next window",   lazy.layout.next()),
 
