@@ -187,10 +187,10 @@ function! jerry#common#GetBlockSelection()
     " default is '{ to '}
     let [lnum1, col1] = getpos("'{")[1:2]
     let col2 = 0
-    let lnum2 = search('^[ \t]*$', 'nW') - 1  " -1 to exclude the empty line
+    let lnum2 = search('^[ \t]*$', 'nW')  " - 1  " to exclude the empty line
 
     " if end of the line, which means 0-1=-1, then set to the last line
-    if lnum2 < 0
+    if lnum2 <= 0
         let lnum2 = line('$')
     endif
 
