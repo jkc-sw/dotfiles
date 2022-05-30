@@ -6,9 +6,9 @@ nnoremap <leader>en :call perforce#GetChangelistWithJiraTags()<CR>
 nnoremap <leader>eS <cmd>w ! p4 submit -i -r<CR>
 nnoremap <leader>es <cmd>w ! p4 shelve -i<CR>
 nnoremap <leader>ep <cmd>! p4 sync ./...\#head<CR>
-nnoremap <leader>ee <cmd>! p4 edit '%'<CR>
-nnoremap <leader>ea <cmd>! p4 add '%'<CR>
-nnoremap <leader>eR <cmd>! p4 revert '%'<CR>
+nnoremap <leader>ee <cmd>exec "!p4 edit " . shellescape(perforce#SanitizePerforceFilename(expand('%')), 1)<CR>
+nnoremap <leader>ea <cmd>exec "!p4 add -f " . shellescape(perforce#SanitizePerforceFilename(expand('%')), 1)<CR>
+nnoremap <leader>eR <cmd>exec "!p4 revert " . shellescape(perforce#SanitizePerforceFilename(expand('%')), 1)<CR>
 nnoremap <leader>eN <cmd>tabnew <BAR> set noexpandtab <bar> read ! p4 change -o<CR>/<<CR>C
 nnoremap <leader>eO <cmd>lua RT('p4', {'opened'})<CR>
 nnoremap <leader>ec <cmd>call perforce#SubmitChangelistAndCloseSubtasks()<CR>

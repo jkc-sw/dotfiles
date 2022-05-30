@@ -2,10 +2,30 @@ let s:PERFORCE_STATUS_PAGE_NAME = 'PerforceStatus'
 let s:CHANGELIST_LINE_PREFIX = '# pending changelist'
 let s:SUBMITTED_CHANGELIST_LINE_PREFIX = '# submitted changelist'
 
+let s:PERFORCE_RESERVED_KEYWORDS_AND_SUBS = [
+    \ ['@\(40\)\@!', '%40'],
+    \ ['#\(23\)\@!', '%23'],
+    \ ['*\(2A\)\@!', '%2A'],
+    \ ['%\(25\)\@!', '%25'],
+    \ ]
+
+" @brief A filename might not be put in as is, since it might contains the
+"        reserved keywords
+" @param p - The raw filepath as it appears on the file system
+" @return sanitized filename for perforce command line
+func! perforce#SanitizePerforceFilename(p)
+    let ret = a:p
+    for group in s:PERFORCE_RESERVED_KEYWORDS_AND_SUBS
+        let ret = substitute(ret, group[0], group[1], 'g')
+    endfor
+    return ret
+endfunc
+
 
 if executable('p4') == 1
     func! perforce#ShowHistory()
-        let l:his = system("p4 annotate -a -u -du3 -I -db '" . expand('%') . "' | tr -d '\r'")
+        let pth = perforce#SanitizePerforceFilename(expand('%'))
+        let l:his = system("p4 annotate -a -u -du3 -I -db '" .. pth .. "' | tr -d '\r'")
         tabnew
         set noexpandtab
         put =l:his
@@ -15,11 +35,13 @@ if executable('p4') == 1
 
     func! perforce#GetDiff()
         let ft=&filetype
-        exec 'tabe '.expand('%')
+        let ori = expand('%')
+        let pth = shellescape(perforce#SanitizePerforceFilename(ori), 1)
+        exec 'tab sp'
         " leftabove vnew  " left | right
         leftabove new
         exec 'set filetype='.ft
-        exec 'read ! p4 print -q "' . expand('#') . '"\#head'
+        exec 'read ! p4 print -q ' .. pth .. '\#head'
         normal! ggdd
         setlocal nomodified readonly noswapfile
         windo difft
