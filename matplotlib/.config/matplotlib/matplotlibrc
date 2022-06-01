@@ -408,6 +408,8 @@ axes.labelcolor:    DCDCDC
 #axes.unicode_minus: True  # use Unicode for the minus symbol rather than hyphen.  See
                            # https://en.wikipedia.org/wiki/Plus_and_minus_signs#Character_codes
 axes.prop_cycle: cycler(linestyle=['-','-.',':']) * cycler(marker=['x',',','o']) * cycler(color=['DC143C','7FFFD4','FFA500','EEE8AA','556B2F','4169E1','E6E6FA','EE82EE','7CFC00','8B008B'])
+# #                                  solid    dotted       dash dotted        dashed       dash dot dotted          dashdot
+# axes.prop_cycle: cycler(linestyle=[(0, ()), (0, (1, 1)), (0, (3, 5, 1, 5)), (0, (5, 5)), (0, (3, 5, 1, 5, 1, 5)), (0, (7, 1, 1, 1))]) * cycler(color=['DC143C','7FFFD4','FFA500','EEE8AA','556B2F','4169E1','E6E6FA','EE82EE','7CFC00','8B008B'])
 
                   # color cycle for plot lines as list of string color specs:
                   # single letter, long name, or web-style hex
@@ -643,12 +645,12 @@ figure.edgecolor:   0.2, 0.2, 0.2     # figure edge color
 ## ***************************************************************************
 ## * PATHS                                                                   *
 ## ***************************************************************************
-#path.simplify: True  # When True, simplify paths by removing "invisible"
-                      # points to reduce file size and increase rendering
-                      # speed
-#path.simplify_threshold: 0.111111111111  # The threshold of similarity below
-                                          # which vertices will be removed in
-                                          # the simplification process.
+path.simplify: True  # When True, simplify paths by removing "invisible"
+                     # points to reduce file size and increase rendering
+                     # speed
+path.simplify_threshold: 0.5  # The threshold of similarity below
+                                         # which vertices will be removed in
+                                         # the simplification process.
 #path.snap: True  # When True, rectilinear axis-aligned paths will be snapped
                   # to the nearest pixel when certain criteria are met.
                   # When False, paths will never be snapped.
