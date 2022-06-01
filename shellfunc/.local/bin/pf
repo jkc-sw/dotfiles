@@ -1,0 +1,18 @@
+#!/bin/bash
+
+################################################################################
+# @brief Display the help
+################################################################################
+displayHelp() {
+    echo "$(basename "$0") - Call p4 command with default parameters and options" >&2
+    echo '' >&2
+    echo "$(basename "$0") SUBCMD [OPTION]... [PARAMS]..." >&2
+    echo '' >&2
+    echo 'This command is meant to put commonly used options and command in a' >&2
+    echo 'single command. This eliminate the unnecessary alias and history' >&2
+    echo 'requirement to auto populate and recall the commands.' >&2
+    echo '' >&2
+    # echo 'Get the latest files' >&2
+    # echo "$(basename "$0") SUBCMD [OPTION]... [PARAMS]..." >&2
+    # echo '' >&2
+}
