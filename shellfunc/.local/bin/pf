@@ -1,18 +1,116 @@
 #!/bin/bash
 
+: <<EOF
+SOURCE_THESE_VIMS_START
+nnoremap <leader>ne <cmd>silent exec "!tmux send-keys -t :.+ 'PF_TESTING=2 pf' Enter"<cr>
+let @h="yoechodebug \"\<c-r>\" = \$\<c-r>\"\"\<esc>j"
+echom 'Sourced'
+SOURCE_THESE_VIMS_END
+EOF
+
+# Put all the sub commands and their actual correspondens here
+declare -A subs
+
+# const
+SNAME="$(basename "$0")"
+RUNNER=command
+if [[ -n "$PF_TESTING" ]]; then
+    RUNNER=echo
+fi
+
+################################################################################
+# @brief Add bunch of subcommands
+# @decription Most of the commands are just single command if the command is 1
+#   element with prefix 'p4_', then it is a function and will be called
+################################################################################
+subs[pend]='changes -s pending --me -l ./...'
+subs[sub]='changes -s submitted -m 10 -l ./...'
+subs[o]='opened'
+subs[opened]='p4_opened_local'
+subs[unchanged]='diff -sr'
+subs[diff]='diff -du5 -db'
+
+################################################################################
+# @brief Checkout opened files in local path
+################################################################################
+p4_opened_local() {
+    "$RUNNER" p4 -ztag opened
+}
+
+################################################################################
+# @brief Debug print if enabled, PF_TESTING is set
+################################################################################
+echodebug() {
+    if [[ -n "$PF_TESTING" ]]; then
+        echo "DEBUG: $@" >&2
+    fi
+}
+
 ################################################################################
 # @brief Display the help
 ################################################################################
 displayHelp() {
-    echo "$(basename "$0") - Call p4 command with default parameters and options" >&2
-    echo '' >&2
-    echo "$(basename "$0") SUBCMD [OPTION]... [PARAMS]..." >&2
-    echo '' >&2
-    echo 'This command is meant to put commonly used options and command in a' >&2
-    echo 'single command. This eliminate the unnecessary alias and history' >&2
-    echo 'requirement to auto populate and recall the commands.' >&2
-    echo '' >&2
-    # echo 'Get the latest files' >&2
-    # echo "$(basename "$0") SUBCMD [OPTION]... [PARAMS]..." >&2
-    # echo '' >&2
+    echo "$SNAME - Call p4 command with default parameters and options"
+    echo ''
+    echo "$SNAME SUBCMD [OPTION]... [PARAMS]..."
+    echo ''
+    echo 'This command is meant to put commonly used options and command in a'
+    echo 'single command. This eliminate the unnecessary alias and history'
+    echo 'requirement to auto populate and recall the commands.'
+    echo ''
+
+    # printf template
+    tl="$SNAME %-${MAX_KEY_LENGTH}s -> %s\n"
+
+    # Iterate each command and populate the help
+    for key in "${!subs[@]}"; do
+        val="${subs[$key]}"
+        printf "$tl" "$key" "$val"
+    done
 }
+
+################################################################################
+# @brief The main function
+################################################################################
+main() {
+    # Calculate the max length of keys
+    MAX_KEY_LENGTH=0
+    for key in "${!subs[@]}"; do
+        if (( ${#key} > MAX_KEY_LENGTH )); then
+            MAX_KEY_LENGTH=$(( ${#key} ))
+        fi
+    done
+    echodebug "MAX_KEY_LENGTH = $MAX_KEY_LENGTH"
+
+    # if there is no args, or 1 arg but is '-h' '--help' 'help'
+    if [[ $# -lt 1 || "$1" == '-h' || "$1" == '--help' || "$1" == 'help' ]]; then
+        # display help
+        displayHelp >&2
+        return 0
+    fi
+
+    # Grab the subcommand
+    sub="$1"
+    echodebug "sub is $sub"
+
+    # Check if it is one of the sub commands, if not, error
+    if [[ ! "${subs[$sub]+_}" ]]; then
+        echo "sub '$sub' is not a valid subcommand. run '$SNAME -h' to find a list of subs" >&2
+        return 1
+    fi
+
+    # Put commands into an array
+    cargs=(${subs[$sub]})
+    echodebug "cargs = ${cargs[@]} with ${#cargs[@]} elements"
+
+    # run it
+    if [[ "${cargs[0]}" =~ ^p4_.* ]]; then
+        # Check if it has the p4_ prefix, print the val
+        "${cargs[0]}"
+    else
+        "$RUNNER" p4 "${cargs[@]}"
+    fi
+}
+
+# Run main
+main "$@"
