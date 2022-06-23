@@ -29,6 +29,8 @@ subs[o]='opened'
 subs[opened]='p4_opened_local'
 subs[unchanged]='diff -sr'
 subs[diff]='diff -du5 -db'
+subs[toadd]='rec -aedlmn ./...'
+subs[toclean]='rec -w -aedlmn ./...'
 
 ################################################################################
 # @brief Checkout opened files in local path
