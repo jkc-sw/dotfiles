@@ -47,6 +47,9 @@ cmp.setup{
   }
 }
 
+local neogit = require('neogit')
+neogit.setup{}
+
 require('nvim-treesitter.configs').setup{
   context_commentstring = {
     enable = false,

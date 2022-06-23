@@ -23,14 +23,14 @@ fi
 # @decription Most of the commands are just single command if the command is 1
 #   element with prefix 'p4_', then it is a function and will be called
 ################################################################################
-subs[pend]='changes -s pending --me -l ./...'
-subs[sub]='changes -s submitted -m 10 -l ./...'
+subs[diff]='diff -du5 -db'
 subs[o]='opened'
 subs[opened]='p4_opened_local'
-subs[unchanged]='diff -sr'
-subs[diff]='diff -du5 -db'
+subs[pend]='changes -s pending --me -l ./...'
+subs[sub]='changes -s submitted -m 10 -l ./...'
 subs[toadd]='rec -aedlmn ./...'
 subs[toclean]='rec -w -aedlmn ./...'
+subs[unchanged]='diff -sr'
 
 ################################################################################
 # @brief Checkout opened files in local path
