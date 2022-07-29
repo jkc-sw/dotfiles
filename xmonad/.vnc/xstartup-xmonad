@@ -1,3 +1,6 @@
 #!/bin/sh
 
+if command -v autocutsel &>/dev/null; then
+    autocutsel -fork
+fi
 exec /usr/bin/xmonad-session
