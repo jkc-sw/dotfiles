@@ -33,6 +33,7 @@ if executable('p4') == 1
     endfunc
 
 
+    " @brief Remove an entry from the diff file from output of the `p4 diff`
     func! perforce#RemoveThisDiffEntryFromFile()
         let p_orig = @/
         let lidx = search('^--- \/\/', 'nW')
