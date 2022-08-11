@@ -19,3 +19,4 @@ nnoremap <leader>ep <cmd>call perforce#NewPatchFromEdited()<CR>
 nnoremap <leader>ed <cmd>call perforce#GetDiff()<CR>
 nnoremap <leader>eA <cmd>call perforce#ShowHistory()<CR>
 nnoremap <leader>ef <cmd>diffoff <BAR> windo quit!<CR>
+nnoremap <leader>eu <cmd>call perforce#RemoveThisDiffEntryFromFile()<CR>

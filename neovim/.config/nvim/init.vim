@@ -177,6 +177,8 @@ vnoremap <leader>p "0p
 nnoremap <leader>fm vip:g/\|/Tab/\|/<cr>
 nnoremap ]c ]czz
 nnoremap [c [czz
+nnoremap n nzz
+nnoremap N Nzz
 inoremap <C-c> <ESC>
 nnoremap ; :
 nnoremap : ;

@@ -33,6 +33,25 @@ if executable('p4') == 1
     endfunc
 
 
+    func! perforce#RemoveThisDiffEntryFromFile()
+        let p_orig = @/
+        let lidx = search('^--- \/\/', 'nW')
+        " If no match, or at the end, do nothing
+        if lidx < 1
+            let [_, lidx, _, _] = getpos('$')
+        else
+            let lidx = lidx - 1
+        endif
+        " Get current line
+        let [bnr, cidx, _, _] = getpos('.')
+        " Delete the lines
+        let c = '' . cidx . ',' . lidx . ' ' . 'd'
+        call execute(c, 'silent')
+        " restore the search
+        let @/ = p_orig
+    endfunc
+
+
     func! perforce#GetDiff()
         let ft=&filetype
         let ori = expand('%')
