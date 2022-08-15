@@ -172,6 +172,9 @@ nv() {
         conda activate --stack "$HOME/miniconda3/envs/dev_env_ansible"
     fi
 
+    # Setup the dev env
+    sdev
+
     if test -n "$TMUX"; then
         # Get current panes
         beforepanenum="$(tmux list-panes | wc -l)"

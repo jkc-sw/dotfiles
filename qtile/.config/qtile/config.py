@@ -110,6 +110,7 @@ keys.extend([
     add_key([mod, "",        ""],        "b",      "Dimmer",                             lazy.spawn("xbacklight -dec 10")),
     add_key([mod, "shift",   ""],        "b",      "Brighter",                           lazy.spawn("xbacklight -inc 10")),
     add_key([mod, "shift",   ""],        "p",      "Open dmenu to start a program",      lazy.spawn("dmenu_run -p 'Run > '")),
+    add_key([mod, "",        ""],        "g",      "From /tmp/c.txt to clipboard",       lazy.spawn(os.path.expanduser("~/.local/bin/pc"))),
     add_key([mod, "shift",   ""],        "s",      "Take a screenshot with select tool", lazy.spawn(os.path.expanduser("~/.local/bin/shot -s"))),
     add_key([mod, "",        ""],        "s",      "Take a full screenshot",             lazy.spawn(os.path.expanduser("~/.local/bin/shot"))),
 ])

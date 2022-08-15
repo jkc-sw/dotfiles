@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# @brief Copy/Open vim to populate /tmp/c.txt for clipboard sharing
+# @desc When there is no argument, it opens vim
+#       When there is 1 argument, it populates file accordingly
+#       When there is more than 1 argument, it errors out
+
+# open the clipboard
+if [[ $# -eq 1 ]]; then
+    echo $@ > /tmp/c.txt
+elif [[ $# -lt 1 ]]; then
+    nvim /tmp/c.txt
+else
+    echo "oc:ERR: Cannot have 2 arguments for oc command. Please run without argument to open in vim" >&2
+fi

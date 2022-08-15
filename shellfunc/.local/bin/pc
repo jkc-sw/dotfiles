@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# @brief Read the /tmp/c.txt and send to the clipboard
+
+# Read the clipboard
+if [[ -f /tmp/c.txt ]]; then
+    txt="$(</tmp/c.txt)"
+    toclip "$txt"
+    echo "pc:INFO: Put ${#txt} chars to the clipboard" >&2
+fi
+
