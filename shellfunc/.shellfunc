@@ -65,6 +65,11 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 # To be save
 alias rm='rm -I'
 
+# Getting brew
+if [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
 # Need to source conda
 pomo() {
     conda activate "$HOME/miniconda3/envs/dev_env_ansible"
