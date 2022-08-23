@@ -70,6 +70,11 @@ if [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
+# Getting nix-env
+if [[ -r "$HOME/.nix-profile/etc/profile.d/nix.sh" ]]; then
+    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+fi
+
 # Need to source conda
 pomo() {
     conda activate "$HOME/miniconda3/envs/dev_env_ansible"
