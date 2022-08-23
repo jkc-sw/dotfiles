@@ -73,6 +73,7 @@ fi
 # Getting nix-env
 if [[ -r "$HOME/.nix-profile/etc/profile.d/nix.sh" ]]; then
     . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+    alias ni=nix-env
 fi
 
 # Need to source conda
