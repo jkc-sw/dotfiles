@@ -212,6 +212,14 @@ n() {
     fi
 }
 
+# Change keyboard layout
+AOE() {
+    doas localectl set-x11-keymap us '' '' us
+}
+ASD() {
+    doas localectl set-x11-keymap us '' '' dvorak
+}
+
 # shortcut to start nvim with host being a tmux
 nvt() {
     TOCLIP_HOST_TMUX=2 n "$@"
