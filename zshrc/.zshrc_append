@@ -104,6 +104,19 @@ setopt HIST_SAVE_NO_DUPS
 . "$HOME/.shellfunc"
 add_shell_specific zsh
 
+# Disable the bracketed paste mode, this makes the items I pasted in the
+# terminal to have last char capitalized.
+: <<'EOF'
+```ps1
+en ; nvim "personal-topic\2022-02-03-LinuxEverything.md" -c "/## Bracketed Paste Mode/"
+```
+EOF
+unset zle_bracketed_paste
+
+# # To bring back this behavior
+# autoload -Uz bracketed-paste-magic
+# zle -N bracketed-paste bracketed-paste-magic
+
 # refresh the ssh tty
 # https://babushk.in/posts/renew-environment-tmux.html
 if [ -n "$TMUX" ]; then
