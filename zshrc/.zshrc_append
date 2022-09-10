@@ -122,7 +122,7 @@ unset zle_bracketed_paste
 if [ -n "$TMUX" ]; then
     function refresh {
         tmux_env="$(tmux show-environment)"
-        new_ssh_tty="$(echo -n "$tmux_env" | grep '^SSH_TTY')"
+        new_ssh_tty="$(echo -n "$tmux_env" | grep '^SSH_TTY' | head -n 1)"
         if [[ -n $new_ssh_tty ]]; then
             export "$new_ssh_tty"
         fi

@@ -269,7 +269,7 @@ augroup markdownFenceHighlight
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ####T #### <c-r>=strftime('%Y-%m-%d %A')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ####t #### <c-r>=strftime('%Y-%m-%d %A')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md let g:markdown_fenced_languages += ['python', 'ps1', 'cpp', 'bash', 'vim', 'matlab']
-    autocmd BufEnter,BufWinEnter,TabEnter *.md exec 'edit'
+    autocmd BufEnter,BufWinEnter,TabEnter *.md silent exec 'edit'
 
     autocmd BufEnter,BufWinEnter,TabEnter *.ps1 iabbrev nfor <c-r>=jerry#common#JiraNoFormat()<cr><up>
     autocmd BufEnter,BufWinEnter,TabEnter *.ps1 iabbrev code; <c-r>=jerry#common#JiraCodeFormat()<cr><up>
