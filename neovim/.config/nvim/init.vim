@@ -56,6 +56,7 @@ set grepprg=rg\ --line-number\ --color=never
 set regexpengine=1
 set diffopt+=iwhiteeol
 
+
 colorscheme xcodedarkhc
 
 " load everything lua
