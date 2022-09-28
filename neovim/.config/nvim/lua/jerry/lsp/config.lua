@@ -3,6 +3,7 @@ require'jerry.lsp.setup'
 
 local vars = require'jerry.lsp.vars'
 local lspconfig = require'lspconfig'
+local util = lspconfig.util
 local vim = vim
 
 local updated_capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -94,6 +95,11 @@ local general_lsp = function()
   -- python
   if vim.fn.executable('pylsp') == 1 then
     setup_each_lsp('pylsp', {
+      single_file_support = false,
+      root_dir = function(client)
+        _ = client
+        return vim.fn.getcwd()
+      end,
       settings={
         pylsp={plugins={pycodestyle={maxLineLength=300}}}
       }
