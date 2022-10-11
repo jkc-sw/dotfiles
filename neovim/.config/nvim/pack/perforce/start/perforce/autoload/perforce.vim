@@ -426,7 +426,7 @@ if executable('p4') == 1
 
     function! perforce#FilterDiffOutput()
         tabnew
-        exec 'silent read ! p4 diff -du5'
+        exec 'silent read ! p4 diff -du5 -dw'
         call perforce#ApplyVimDiffOutput()
     endfunc
 endif
