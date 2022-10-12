@@ -101,6 +101,7 @@ nnoremap <leader>tp     <cmd> lua require('jerry.marker').mark_these('MARK_THIS_
 
 " Just a vairable quick print, delimited by space
 nnoremap <leader>t.     <cmd> call system("tmux load-buffer -", expand('<cWORD>')."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
+nnoremap <leader>t,     <cmd> call system("tmux load-buffer -", expand('<cWORD>')."\r") <bar> silent execute "!tmux paste-buffer -t :.-1" <cr>
 
 " Stay after the end of the block at the blank line
 nnoremap <leader>tu     <cmd> call system("tmux load-buffer -", jerry#common#GetBlockSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <bar> exec "normal! '}" <bar> exec ':'.(search('[^ \t]', 'bceW') + 1)<cr>
