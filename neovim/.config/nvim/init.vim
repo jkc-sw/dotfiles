@@ -36,6 +36,7 @@ set inccommand=split
 set wildmenu
 set cmdheight=1
 set updatetime=50
+set list
 set shortmess+=c
 set noshowmode
 set shiftround
