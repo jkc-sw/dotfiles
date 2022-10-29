@@ -51,6 +51,9 @@ local neogit = require('neogit')
 neogit.setup{}
 
 require('nvim-treesitter.configs').setup{
+  ensure_installed = 'all',
+  sync_install = false,
+  auto_install = false,
   context_commentstring = {
     enable = false,
   },

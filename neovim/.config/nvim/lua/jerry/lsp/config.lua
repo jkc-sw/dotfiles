@@ -6,8 +6,9 @@ local lspconfig = require'lspconfig'
 local util = lspconfig.util
 local vim = vim
 
-local updated_capabilities = vim.lsp.protocol.make_client_capabilities()
-updated_capabilities = require("cmp_nvim_lsp").update_capabilities(updated_capabilities)
+-- local updated_capabilities = vim.lsp.protocol.make_client_capabilities()
+-- updated_capabilities = require("cmp_nvim_lsp").update_capabilities(updated_capabilities)
+updated_capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 local on_attach_vim = function(client)
   -- require'lsp_signature'.on_attach()  -- This plugin has some ghost buffer remain
