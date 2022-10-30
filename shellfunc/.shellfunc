@@ -300,6 +300,36 @@ if command -v fcitx >/dev/null 2>&1; then
     export GLFW_IM_MODULE='ibus kitty'
 fi
 
+export_myvnc_display() {
+    # Try to find the display
+    displaystart=false
+    while IFS='' read -r li; do
+        # Print info
+        if [[ "$displaystart" == 'true' ]]; then
+            # Processing
+            if [[ "$li" =~ ^(:[0-9]+) ]]; then
+                [[ -n $BASH_VERSION ]] && reMatch=( "${BASH_REMATCH[@]}" )
+                [[ -n $ZSH_VERSION ]]  && reMatch=( "$MATCH" "${match[@]}" )
+                # Only do this if I have a result
+                if [[ -n "${reMatch[1]}" ]]; then
+                    # export it and stop
+                    export DISPLAY="${reMatch[1]}"
+                    break
+                fi
+            fi
+            # stop parsing
+            if [[ "$li" =~ ^\ *$ ]]; then
+                break
+            fi
+        fi
+        # find display start
+        if [[ "$li" =~ ^X\ DISPLAY\ # ]]; then
+            displaystart=true
+            continue
+        fi
+    done < <(myvnc)
+}
+
 # never run these
 _init_gpg_pass() {
     # Need these
