@@ -426,7 +426,7 @@ if executable('p4') == 1
 
     function! perforce#FilterDiffOutput()
         tabnew
-        exec 'silent read ! p4 diff -du5 -dw'
+        exec 'silent read ! p4 diff -du5 -dw -db'
         call perforce#ApplyVimDiffOutput()
     endfunc
 endif
@@ -434,9 +434,9 @@ endif
 function! perforce#ApplyVimDiffOutput()
     set filetype=diff
     exec 'silent g/^---.*\(hdl_prj\|hdl\/hdlsrc\)/.,/^--- \/\//-1 d'
-    keeppatterns %s/\s\+$//e
-    norm! gg
+    norm! ggdd
     setlocal nomodified readonly noswapfile
+    syn on
 endfunc
 
 function! perforce#MakeP4dPatchFile()
