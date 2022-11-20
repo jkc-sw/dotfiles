@@ -136,8 +136,8 @@ nnoremap <leader><c-]>  <cmd>  lua vim.lsp.buf.definition()<CR>
 " [UNMAINTAINED] Lspsaga hasn't been maintained for a long time.
 " nnoremap <leader>g<c-]> <cmd>  lua require'lspsaga.provider'.preview_definition()<CR>
 nnoremap <leader>gd     <cmd>  lua vim.lsp.buf.declaration()<CR>
-nnoremap <leader>gf     <cmd>  lua vim.lsp.buf.formatting()<CR>
-vnoremap <leader>gF     <cmd>  '<,'>lua vim.lsp.buf.range_formatting()<CR>
+nnoremap <leader>gf     <cmd>  lua vim.lsp.buf.format()<CR>
+vnoremap <leader>gf     <cmd>  '<,'>lua vim.lsp.buf.format()<CR>
 nnoremap <leader>gD     <cmd>  lua vim.lsp.buf.implementation()<CR>
 nnoremap <leader>gr     <cmd>  lua require('telescope.builtin').lsp_references()<CR>
 " [UNMAINTAINED] Lspsaga hasn't been maintained for a long time.
@@ -236,7 +236,6 @@ augroup END
 
 augroup Lsp
     autocmd!
-    autocmd BufEnter,BufWinEnter,TabEnter *.rs :lua require'lsp_extensions'.inlay_hints{}
     autocmd BufReadPost,FileReadPost lua require "lsp_signature".on_attach()
 augroup END
 

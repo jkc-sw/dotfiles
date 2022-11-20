@@ -46,7 +46,6 @@ return require('packer').startup(function(use)
   use 'hrsh7th/cmp-nvim-lua'
   use 'hrsh7th/nvim-cmp'
   use 'tjdevries/nlua.nvim'
-  use 'nvim-lua/lsp_extensions.nvim'
 
   -- Tree sitter
   use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate maintained'}
