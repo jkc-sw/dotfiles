@@ -103,6 +103,8 @@ nnoremap <leader>tp     <cmd> lua require('jerry.marker').mark_these('MARK_THIS_
 " Just a vairable quick print, delimited by space
 nnoremap <leader>t.     <cmd> call system("tmux load-buffer -", expand('<cWORD>')."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
 nnoremap <leader>t,     <cmd> call system("tmux load-buffer -", expand('<cWORD>')."\r") <bar> silent execute "!tmux paste-buffer -t :.-1" <cr>
+" " for cpp and gdb
+" nnoremap <leader>np <cmd> call system("tmux load-buffer -", "p ".expand('<cWORD>')."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
 
 " Stay after the end of the block at the blank line
 nnoremap <leader>tu     <cmd> call system("tmux load-buffer -", jerry#common#GetBlockSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <bar> exec "normal! '}" <bar> exec ':'.(search('[^ \t]', 'bceW') + 1)<cr>
@@ -119,6 +121,9 @@ nnoremap <leader>to     <cmd>  call system("tmux load-buffer -", substitute(getl
 
 vnoremap <leader>te     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
 vnoremap <leader>to     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.-1" <cr>
+" " c++ with gdb
+" vnoremap <leader>te     :<c-u> call system("tmux load-buffer -", "p ".jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.+1" <cr>
+" vnoremap <leader>to     :<c-u> call system("tmux load-buffer -", "p ".jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :.-1" <cr>
 " " rarely used
 " vnoremap <leader>ta     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :-.1" <bar> silent execute "!tmux select-window -t :-.1" <cr>
 " vnoremap <leader>tu     :<c-u> call system("tmux load-buffer -", jerry#common#GetVisualSelection()."\r") <bar> silent execute "!tmux paste-buffer -t :+.1" <bar> silent execute "!tmux select-window -t :+.1" <cr>

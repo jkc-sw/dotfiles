@@ -62,7 +62,7 @@ require('nvim-treesitter.configs').setup{
     disable = { 'cpp' }
   },
   indent = {
-    enable = true,
+    enable = false,
     disable = { 'python' }
   }
 }
