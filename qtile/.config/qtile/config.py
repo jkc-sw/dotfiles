@@ -204,6 +204,7 @@ extension_defaults = widget_defaults.copy()
 
 
 myGroupBoxProps = dict(
+    disable_drag=True,
     borderwidth=2,
     this_current_screen_border='#31e710',
     this_screen_border='#bababa',

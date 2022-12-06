@@ -230,6 +230,11 @@ dr() {
     ~/repos/dev-env-ansible/rr.sh use u20 "$@"
 }
 
+# add a command to start podman docker instance
+pd() {
+    ~/repos/dev-env-ansible/rr.sh use poddock "$@"
+}
+
 # try to use bat in man
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
