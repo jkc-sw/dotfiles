@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+pass="$(pass vpn/vpn | tr -d '\n')"
+pass="${pass//\[/\\[}"
+pass="${pass//\]/\\]}"
+
+username="$(pass vpn/vpn-user | tr -d '\n')"
+url="$(pass vpn/vpn-url | tr -d '\n')"
+
+if [[ -z "$pass" ]]; then
+    echo "Cannot find system in pass, add it" >&2
+    exit 1
+fi
+
+logpath="$HOME/Downloads/mksvpnlog.txt"
+
+starttime=$(date)
+echo "Start time is $starttime" | tee -a "$logpath"
+
+expect -c "set timeout 3
+    spawn doas openconnect --usergroup=portal --protocol=gp $url
+    expect {
+        timeout {
+            send_user { Waited too long }
+            exit 1
+        }
+        Username:
+    }
+    send \"$username\r\"
+    expect {
+        timeout {
+            send_user { Waited too long }
+            exit 1
+        }
+        Password:
+    }
+    send \"$pass\r\"
+    interact" | ts
+
+endtime=$(date)
+
+echo "Start time is $starttime"
+echo "end time is $endtime" | tee -a "$logpath"
