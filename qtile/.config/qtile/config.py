@@ -99,7 +99,7 @@ keys.extend([
     add_key([mod, "shift",   ""],        "y",      "Second level startup",               lazy.spawn(os.path.expanduser("~/.local/bin/wm_start_adv.sh"))),
     add_key([mod, "shift",   ""],        "q",      "Restart Qtile",                      lazy.restart()),
     add_key([mod, "shift",   ""],        "c",      "Lock the screen",                    lazy.spawn("xscreensaver-command -lock")),
-    add_key([mod, "shift",   "control"], "c",      "Sleep the computer",                 lazy.spawn("xscreensaver-command -lock ; sleep 5 ; systemctl suspend")),
+    add_key([mod, "shift",   "control"], "c",      "Sleep the computer",                 lazy.spawn("bash -c \"xscreensaver-command -lock ; sleep 5 ; systemctl suspend\"")),
 
     add_key([mod, "shift",   ""],        "Return", "Launch terminal",                    lazy.spawn(terminal)),
     add_key([mod, "",        ""],        "x",      "Launch arandr",                      lazy.spawn("arandr")),
