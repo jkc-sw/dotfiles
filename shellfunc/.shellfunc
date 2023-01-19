@@ -151,10 +151,26 @@ fi
 export FZF_DEFAULT_OPTS="--color=dark --height=50%"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
+# Allow us to bypass
+bypass_starship() {
+    # If we want to bypass, we use a temp dir in /tmp/bypass-starship
+    mkdir -p /tmp/bypass-starship
+}
+
+# Allow us to restore
+restore_starship() {
+    # If we want to bypass, we use a temp dir in /tmp/bypass-starship
+    [[ -d '/tmp/bypass-starship' ]] && rm -fd /tmp/bypass-starship
+}
+
 # handle shell specific
 add_shell_specific() {
     forshell="$1"
-    eval "$(starship init "$forshell")"
+    if [[ ! -d '/tmp/bypass-starship' ]]; then
+        eval "$(starship init "$forshell")"
+    else
+        echowarning "starship is bypassed in startup. Restore with \`restore_starship\`"
+    fi
     eval "$(zoxide init --cmd 'c' "$forshell")"
 
     # Handle the fzf
