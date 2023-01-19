@@ -337,11 +337,15 @@ export_myvnc_display() {
 
 # never run these
 _init_gpg_pass() {
+
     # Need these
     if [ -z "$MY_GPG_DIR" ]; then
         echo 'MY_GPG_DIR not found'
     fi
     if [ -z "$MY_PASS_ID" ]; then
+        echo 'MY_PASS_ID not found'
+    fi
+    if [ -z "$PASSWORD_STORE_DIR" ]; then
         echo 'MY_PASS_ID not found'
     fi
 
