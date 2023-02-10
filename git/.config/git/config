@@ -2,3 +2,5 @@
 	pushInsteadOf = https://github.com/
 [core]
 	editor = nvim
+[init]
+    defaultBranch = main
