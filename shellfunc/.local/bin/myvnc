@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #===============================================================================
 # @brief Print help
@@ -24,12 +24,16 @@ Usages:
   Create server with other size and depth
   $ myvnc -r -s 1920x1080 -d 24
 
+  Kill a running server at a specific port, :1, then, where first : is omitted
+  $ myvnc -k 1
+
   See help
   $ myvnc -h
 
 Options:
   -s <width>x<height> : The screen resolution. [default is 1920x1080]
   -d <depth>          : Depth of color. [default is 24]
+  -k <:port>          : The port to kill. [Default is :1]
 EOF
 }
 
@@ -41,6 +45,8 @@ main() {
     # Default options
     depth=24
     res=1920x1080
+    killport=:1
+    dokill=false
     new=false
 
     # check dependencies
@@ -68,12 +74,24 @@ main() {
             # resolution
             # make sure user has another argument passed in
             if test "$#" -lt 2; then
-                echo "-s needs an argument" >&2
+                echo "ERR: -s needs an argument" >&2
                 exit 1
             fi
             # process
             shift
             res="$1"
+            ;;
+
+        '-k')
+            # what port to kill
+            if [[ "$#" -lt 2 ]]; then
+                echo "ERR: -s needs an argument" >&2
+                exit 1
+            fi
+            # process
+            shift
+            killport="$1"
+            dokill=true
             ;;
 
         '-d')
@@ -101,16 +119,36 @@ main() {
     done
 
     # check it or run it
-    if test "$new" = 'false'; then
+    if [[ "$new" = 'true' ]]; then
+        # run it
+        ( unset SSH_TTY ; vncserver -depth "$depth" -geometry "$res" -xstartup "$HOME/.vnc/xstartup-qtile" )
+    elif [[ "$dokill" = 'true' ]]; then
+
+        # Get the current running ones
+        while IFS='' read -r li; do
+            # verbose print
+            echo "$li"
+            # Check if anything available to kill
+            rgx="$(printf "^(:$killport)\t")"
+            if [[ "$li" =~ $rgx ]]; then
+                # Format result into array
+                [[ -n $BASH_VERSION ]] && reMatch=( MAKE_BASH_1BASE_INDEX "${BASH_REMATCH[@]}" )
+                [[ -n $ZSH_VERSION ]]  && reMatch=(                       "$MATCH" "${match[@]}" )
+                # If I have the result
+                if [[ -n "${reMatch[2]}" ]]; then
+                    # kill the display
+                    vncserver -kill "${reMatch[2]}"
+                    exit "$?"
+                fi
+            fi
+        done < <(vncserver -list | sed '0,/^X DISPLAY/d')
+    else
         # check it
         vncserver -list
 
         # print
         echo ''
         echo "To create new session, check myvnc -h" >&2
-    else
-        # run it
-        ( unset SSH_TTY ; vncserver -depth "$depth" -geometry "$res" -xstartup "$HOME/.vnc/xstartup-qtile" )
     fi
 }
 
