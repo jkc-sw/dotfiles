@@ -351,6 +351,45 @@ export_myvnc_display() {
     done < <(myvnc)
 }
 
+# Need to manage runtime of sophos
+sophos() {
+    # Need to check if it is installed
+    if [[ ! -x "/opt/sophos-spl/plugins/av/bin/avscanner" ]]; then
+        echo "Sophos is not installed" >&2
+        exit 1
+    fi
+    action='status'
+    # Action is 1st argument if provided
+    if [[ "$#" -gt 0 ]]; then
+        action="$1"
+    fi
+    # Do something about it
+    case "$action" in
+    'start')
+        doas systemctl start sophos-spl
+        ;;
+    'restart')
+        doas systemctl restart sophos-spl
+        ;;
+    'status')
+        doas systemctl status sophos-spl
+        ;;
+    'stop')
+        doas systemctl stop sophos-spl
+        ;;
+    'log')
+        cat <<'EOF' | doas bash -l
+        # find /opt/sophos-spl/plugins/av/log/ -type f -name 'Sophos*log*' | sort -n -t . -k 3 -r | tr '\n' '\0' | xargs -0 cat | nvim -
+        find /opt/sophos-spl/plugins/av/log/ -type f -name 'av*log*' | sort -n -t . -k 3 -r | tr '\n' '\0' | xargs -0 cat | nvim -
+EOF
+        ;;
+    *)
+        echo "ERR: Action '$action' is not supported" >&2
+        exit 1
+        ;;
+    esac
+}
+
 # never run these
 _init_gpg_pass() {
 
