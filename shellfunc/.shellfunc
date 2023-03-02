@@ -243,7 +243,7 @@ nvt() {
 
 # add a command to start docker instance
 dr() {
-    ~/repos/dev-env-ansible/rr.sh use u20 "$@"
+    ~/repos/dev-env-ansible/rr.sh use u22 "$@"
 }
 
 # add a command to start podman docker instance
