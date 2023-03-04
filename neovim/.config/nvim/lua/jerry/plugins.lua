@@ -17,6 +17,7 @@ return require('packer').startup(function(use)
   use 'hoob3rt/lualine.nvim'
 
   -- Git
+  use 'tpope/vim-fugitive'
   use {
     "TimUntersberger/neogit",
     requires = 'nvim-lua/plenary.nvim'

@@ -45,8 +45,8 @@ local general_lsp = function()
   setup_each_lsp('rust_analyzer', true)
 
   -- lua
-  setup_each_lsp('sumneko_lua', {
-		cmd = {vars.luals_repos .. 'bin/Linux/lua-language-server', "-E", vars.luals_repos .. "main.lua"};
+  setup_each_lsp('lua_ls', {
+		cmd = {vars.luals_repos .. 'bin/lua-language-server'};
 		settings = {
 			Lua = {
 				runtime = {
