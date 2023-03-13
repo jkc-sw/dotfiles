@@ -5,11 +5,19 @@
 #       When there is 1 argument, it populates file accordingly
 #       When there is more than 1 argument, it errors out
 
+# Create temp
+temp="$(mktemp)"
+trap "rm -f '$temp'" EXIT INT KILL SIGINT
+
 # open the clipboard
 if [[ $# -eq 1 ]]; then
-    echo $@ > /tmp/c.txt
+    echo $@ > "$temp"
 elif [[ $# -lt 1 ]]; then
-    nvim /tmp/c.txt
+    nvim "$temp"
 else
     echo "oc:ERR: Cannot have 2 arguments for oc command. Please run without argument to open in vim" >&2
 fi
+
+# Encode /tmp/c.txt
+content="$(cat "$temp" | base64 -w 0 -)"
+echo -n "$content" > /tmp/c.txt
