@@ -10,7 +10,7 @@ if ! mkdir "$lockfile" &>/dev/null; then
 fi
 trap "rm -rf '$lockfile'" EXIT TERM KILL INT
 
-pass="$(pass system | tr -d '\n')"
+pass="$(pass perforce/perforce | tr -d '\n')"
 pass="${pass//\[/\\[}"
 pass="${pass//\]/\\]}"
 
