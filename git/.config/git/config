@@ -2,6 +2,7 @@
 	pushInsteadOf = https://github.com/
 [core]
 	editor = nvim
+    quotepath = off
 [init]
     defaultBranch = main
 [pull]
