@@ -395,6 +395,19 @@ EOF
     esac
 }
 
+# turn bracket-paste mode on/off
+: <<'EOF'
+en ; nvim "C:/Users/chenkua/OneDrive - MKS Instruments, Inc/Journal/personal-topic/2023-04-01-Terminal.md" -c "/^## Terminal cannot paste password correctly into the sudo password prompt due to the bracket-paste mode enabled/"
+EOF
+bpm() {
+    # Turn it on via
+    printf "\e[?2004h"
+}
+nobpm() {
+    # Turn it off via
+    printf "\e[?2004l"
+}
+
 # never run these
 _init_gpg_pass() {
 
