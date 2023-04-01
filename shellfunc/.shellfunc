@@ -397,7 +397,7 @@ EOF
 
 # turn bracket-paste mode on/off
 : <<'EOF'
-en ; nvim "C:/Users/chenkua/OneDrive - MKS Instruments, Inc/Journal/personal-topic/2023-04-01-Terminal.md" -c "/^## Terminal cannot paste password correctly into the sudo password prompt due to the bracket-paste mode enabled/"
+en ; nvim "./personal-topic/2023-04-01-Terminal.md" -c "/^## Terminal cannot paste password correctly into the sudo password prompt due to the bracket-paste mode enabled/"
 EOF
 bpm() {
     # Turn it on via
