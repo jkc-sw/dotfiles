@@ -237,6 +237,8 @@ myBarsPrimary = [
 ]
 
 myBarsSecondary = [
+    widget.Volume(device='pulse'),
+    widget.Sep(),
     widget.CurrentLayout(),
     widget.Sep(),
     widget.GroupBox(**myGroupBoxProps),
@@ -244,6 +246,16 @@ myBarsSecondary = [
     widget.WindowCount(fmt='# {}'),
     widget.Sep(),
     widget.TaskList(title_width_method='uniform', padding=1),
+    widget.Chord(
+        chords_colors={
+            'launch': ("#ff0000", "#ffffff"),
+        },
+        name_transform=lambda name: name.upper(),
+    ),
+    widget.Sep(),
+    widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
+    widget.Sep(),
+    widget.QuickExit(),
 ]
 
 # If the battery is there, use it
