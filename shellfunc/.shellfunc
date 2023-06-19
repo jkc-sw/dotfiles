@@ -89,8 +89,13 @@ pomo() {
 
 # Add the tmux command to start the tmux session
 rt() (
-    cd "$HOME/repos/dev-env-ansible"
-    ./rr.sh tmux
+    if ! (tmux ls | grep -q blah); then
+        pushd "$HOME/repos/dev-env-ansible"
+        ./rr.sh tmux
+        popd
+    else
+        tmux_attach 'blah' '' "$1"
+    fi
 )
 
 # @brief Run the tmux routine
@@ -115,9 +120,15 @@ function tmux_attach() {
             if command -v "$cb" &>/dev/null; then
                 "$cb" "$name"
             fi
-        fi
 
-        tmux attach-session -t "$name"
+            tmux attach-session -t "$name"
+        else
+            if [[ -n "$TMUX" ]]; then
+                tmux switch-client -t "$name"
+            else
+                tmux attach-session -t "$name"
+            fi
+        fi
         return 0
     fi
 
@@ -132,10 +143,16 @@ function tmux_attach() {
     # check if the session exists
     if ! (tmux ls | grep -q "$newname"); then
         tmux new-session -t "$name" -s "$newname" -d
+        tmux attach-session -t "$newname"
+        return 0
     fi
 
     # attach to the session
-    tmux attach-session -t "$newname"
+    if [[ -n "$TMUX" ]]; then
+        tmux switch-client -t "$newname"
+    else
+        tmux attach-session -t "$newname"
+    fi
 }
 
 # Quickly start the session
