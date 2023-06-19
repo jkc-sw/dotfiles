@@ -98,6 +98,7 @@ rt() (
     fi
 )
 
+
 # @brief Run the tmux routine
 # @param name - tmux name
 # @param cb - callback to configure the tmux session at creation time
