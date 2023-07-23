@@ -346,6 +346,17 @@ if command -v fcitx >/dev/null 2>&1; then
     export GLFW_IM_MODULE='ibus kitty'
 fi
 
+# start ssh-agent manually
+export SSH_AUTH_SOCK="~/.local/state/ssh-agent-for-jerry/agent.terminal"
+init_ssh_agent() {
+    sockdir="${SSH_AUTH_SOCK%/*}"
+    mkdir -p "$sockdir"
+    if [[ ! -f "$SSH_AUTH_SOCK" ]]; then
+        eval "$(ssh-agent -a "$SSH_AUTH_SOCK")"
+    fi
+}
+init_ssh_agent
+
 export_myvnc_display() {
     # Try to find the display
     displaystart=false
