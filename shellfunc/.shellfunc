@@ -67,6 +67,10 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 # To be save
 alias rm='rm -I'
 
+if command -v /usr/bin/curl &>/dev/null; then
+    alias curl=/usr/bin/curl
+fi
+
 # Use something better
 if command -v exa &>/dev/null; then
     alias dir='exa'
