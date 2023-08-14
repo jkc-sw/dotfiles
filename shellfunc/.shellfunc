@@ -359,7 +359,7 @@ init_ssh_agent() {
         eval "$(ssh-agent -a "$SSH_AUTH_SOCK")"
     fi
 }
-init_ssh_agent
+# init_ssh_agent
 
 export_myvnc_display() {
     # Try to find the display
