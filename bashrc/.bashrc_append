@@ -4,3 +4,4 @@
 add_shell_specific bash
 
 set -o vi
+set bell-style none
