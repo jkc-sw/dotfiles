@@ -130,8 +130,13 @@ require('nvim_context_vt').setup({
 })
 
 local actions = require('telescope.actions')
+
 require('telescope').setup({
   defaults = {
+    preview = {
+      filesize_limit = 1,  -- MB
+      treesitter = false,
+    },
     file_sorter = require('telescope.sorters').get_fzy_sorter,
     color_devicons = false,
     file_previewer   = require('telescope.previewers').vim_buffer_cat.new,
