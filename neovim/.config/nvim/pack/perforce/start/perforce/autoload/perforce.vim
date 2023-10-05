@@ -23,9 +23,18 @@ endfunc
 
 
 if executable('p4') == 1
+    func! perforce#ShowBlame()
+        let pth = perforce#SanitizePerforceFilename(expand('%'))
+        let l:his = system("p4 annotate -u -I -db '" .. pth .. "' | tr -d '\r'")
+        tabnew
+        set noexpandtab
+        put =l:his
+        normal! ggdd
+    endfunc
+
     func! perforce#ShowHistory()
         let pth = perforce#SanitizePerforceFilename(expand('%'))
-        let l:his = system("p4 annotate -a -u -du3 -I -db '" .. pth .. "' | tr -d '\r'")
+        let l:his = system("p4 annotate -a -u -I -db '" .. pth .. "' | tr -d '\r'")
         tabnew
         set noexpandtab
         put =l:his
