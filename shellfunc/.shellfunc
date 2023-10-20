@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Declare function to add path
 # https://unix.stackexchange.com/questions/14895/duplicate-entries-in-path-a-problem
@@ -17,22 +17,22 @@ GREEN_BOLD_TEXT='\e[1;92m'
 BLUE_BOLD_TEXT='\e[1;96m'
 RED_BOLD_TEXT='\e[1;91m'
 PLAIN='\e[0m'
-function echobold() {
+echobold() {
     echo -e "${BOLD_TEXT}$1${PLAIN}"
 }
-function echosubcommand() {
+echosubcommand() {
     echo -e "${BLUE_BOLD_TEXT}$1${PLAIN}"
 }
-function echoinfo() {
+echoinfo() {
     echo -e "${BOLD_TEXT}INFO${PLAIN}: $1"
 }
-function echoerror() {
+echoerror() {
     echo -e "${RED_BOLD_TEXT}ERROR${PLAIN}: $1" >&2
 }
-function echosuccess() {
+echosuccess() {
     echo -e "${GREEN_BOLD_TEXT}SUCCESS${PLAIN}: $1"
 }
-function echowarning() {
+echowarning() {
     echo -e "${YELLO_BOLD_TEXT}WARNING${PLAIN}: $1"
 }
 
@@ -109,7 +109,7 @@ rt() (
 # @param name - tmux name
 # @param cb - callback to configure the tmux session at creation time
 # @param label - The label to start alternative client
-function tmux_attach() {
+tmux_attach() {
     name="$1"
     cb="$2"
     label="$3"
