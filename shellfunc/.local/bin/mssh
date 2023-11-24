@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+SCRIPT_ROOT="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
+SCRIPT_NAME="${BASH_SOURCE[0]##*/}"
+
+displayHelp() {
+    cat <<EOF >&2
+$SCRIPT_NAME [options] [<server name> | <server name> <args>...]
+
+Run ssh command from a farm of servers with help from GNU pass
+
+Dependencies:
+  - 'pass' is in the PATH
+  - 'PASSWORD_STORE_DIR' environmental variable is set.
+  - 'fd' is in the PATH
+  - 'ssh' is in the PATH
+  - 'toclip' is in the PATH
+  - Servers are located in a subfolder of store called 'servers',
+    in which every server is a folder containing 3 entries,
+    'login' (ssh password), 'login-user' (ssh username) and 'login-ip' (ssh ip address).
+
+Usages:
+  Find/List a server to connect
+  $SCRIPT_NAME
+
+  Connect to a server
+  $SCRIPT_NAME <server name>
+
+  Connect to a server with rest of the arguments passed to ssh
+  $SCRIPT_NAME <server name> -o ServerAliveInterval=60
+
+  See help
+  $SCRIPT_NAME
+
+Options:
+  -h|--help: See help
+EOF
+}
+
+main() {
+    # Check dependencies
+    # TODO
+    # Get a list of server names
+    # TODO
+    args=("$@")
+    argInd=0
+    argLen=${#args[@]}
+    serverName=''
+    sshArgs=()
+    while [[ $argInd -lt $argLen ]]; do
+        # use a case statement to iterate each command
+        case "${args[$argInd]}" in
+        '-h'|'--help')
+            displayHelp
+            return 0
+            ;;
+        # '-h'|'--help')
+        #     # Preview port
+        #     # this requires 1 arg, check length
+        #     if ((($argLen - $argInd) < 2)); then
+        #         # error
+        #         echoerror "${args[$argInd]} argument needs to pass in an arg"
+        #         # return
+        #         exit 1
+        #     fi
+        #     # get the argument
+        #     argInd=$(($argInd + 1))
+        #     # store local port number
+        #     port="${args[$argInd]}"
+        #     ;;
+        *)
+            ;;
+        esac
+        # increate index
+        argInd=$(($argInd + 1))
+    done
+
+}
+
+# Call main
+main "$@"
+
+# vim:et sw=4 sts=4 ts=4
