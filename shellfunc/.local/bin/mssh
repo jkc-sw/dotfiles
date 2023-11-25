@@ -39,9 +39,32 @@ EOF
 
 main() {
     # Check dependencies
-    # TODO
+    missingDependencies=false
+    for e in 'pass' 'fd' 'ssh' 'toclip'; do
+        if ! command -v "$e" &>/dev/null; then
+            echo "ERR ($SCRIPT_NAME): '$e' is not in your PATH" >&2
+            missingDependencies=true
+        fi
+    done
+    if [[ "$missingDependencies" = 'true' ]]; then
+        return 1
+    fi
+    # Check env
+    if [[ -z "$PASSWORD_STORE_DIR" ]]; then
+        echo "ERR ($SCRIPT_NAME): 'PASSWORD_STORE_DIR' is not defined. Please export it." >&2
+        return 1
+    fi
+    if [[ ! -d "$PASSWORD_STORE_DIR" ]]; then
+        echo "ERR ($SCRIPT_NAME): '$PASSWORD_STORE_DIR' is not found." >&2
+        return 1
+    fi
     # Get a list of server names
-    # TODO
+    availableServers=()
+    while IFS='' read -r li; do
+        tempServerName="${li%/*}"
+        tempServerName="${tempServerName##*/}"
+        availableServers+=("$tempServerName")
+    done < <(fd -p '/servers/.*?/login.gpg' "$PASSWORD_STORE_DIR" | sort)
     args=("$@")
     argInd=0
     argLen=${#args[@]}
@@ -54,30 +77,55 @@ main() {
             displayHelp
             return 0
             ;;
-        # '-h'|'--help')
-        #     # Preview port
-        #     # this requires 1 arg, check length
-        #     if ((($argLen - $argInd) < 2)); then
-        #         # error
-        #         echoerror "${args[$argInd]} argument needs to pass in an arg"
-        #         # return
-        #         exit 1
-        #     fi
-        #     # get the argument
-        #     argInd=$(($argInd + 1))
-        #     # store local port number
-        #     port="${args[$argInd]}"
-        #     ;;
         *)
+            # If we get here, we need to check if the first argument is an available server name
+            if [[ -z "$serverName" ]]; then
+                potentialServerName="${args[$argInd]}"
+                # echo "DEBUG ($SCRIPT_NAME): potentialServerName = $potentialServerName"
+                if [[ " ${availableServers[@]} " = *" $potentialServerName "* ]]; then
+                    serverName="$potentialServerName"
+                    # echo "DEBUG ($SCRIPT_NAME): serverName = $serverName"
+                fi
+            else
+                # Rest of the arguments are collected for ssh use
+                sshArgs+=("${args[$argInd]}")
+            fi
             ;;
         esac
         # increate index
         argInd=$(($argInd + 1))
     done
 
+    # No serverName, it means user wants to see the list of servers
+    if [[ -z "$serverName" ]]; then
+        echo "INFO ($SCRIPT_NAME): List of servers available are"
+        for e in "${availableServers[@]}"; do
+            echo "- $e"
+        done
+    else
+        # Format the arguments
+        serverUserName="$(pass "servers/$serverName/login-user" | tr -d '\r\n')"
+        serverIp="$(pass "servers/$serverName/login-ip" | tr -d '\r\n')"
+        sshArgs+=(-l "$serverUserName" -o 'ServerAliveInterval=60' "$serverIp")
+        # Store the server password to clipboard
+        pass "servers/$serverName/login" | tr -d '\r\n' | toclip
+        echo "INFO ($SCRIPT_NAME): Password should be in the clipboard. If not, run"
+        echo "INFO ($SCRIPT_NAME):   pass 'servers/$serverName/login' | tr -d '\r\n' | toclip"
+        # Connect to the server
+        ssh "${sshArgs[@]}"
+    fi
 }
 
 # Call main
 main "$@"
+
+: <<EOF
+SOURCE_THESE_VIMS_START
+nnoremap <leader>ne <cmd>silent exec "!tmux send-keys -t :.+ './shellfunc/.local/bin/mssh' Enter"<cr>
+nnoremap <leader>no <cmd>silent exec "!tmux send-keys -t :.+ './shellfunc/.local/bin/mssh anthrax' Enter"<cr>
+let @h="yoecho \"DEBUG (\$SCRIPT_NAME): \<c-r>\" = \$\<c-r>\"\"\<esc>j"
+echom 'Sourced'
+SOURCE_THESE_VIMS_END
+EOF
 
 # vim:et sw=4 sts=4 ts=4
