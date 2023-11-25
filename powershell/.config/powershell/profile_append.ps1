@@ -9,3 +9,10 @@ Invoke-Expression (& {
 Invoke-Expression (& starship init powershell)
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
 
+# Source it
+function sdev() {
+    #region conda initialize
+    # !! Contents within this block are managed by 'conda init' !!
+    (& "~/miniconda3/bin/conda" "shell.powershell" "hook") | Out-String | Invoke-Expression
+    #endregion
+}

@@ -102,7 +102,6 @@ setopt HIST_SAVE_NO_DUPS
 #===============================================================================
 # custom setup
 . "$HOME/.shellfunc"
-add_shell_specific zsh
 
 # Disable the bracketed paste mode, this makes the items I pasted in the
 # terminal to have last char capitalized.
