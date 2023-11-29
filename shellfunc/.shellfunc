@@ -222,6 +222,9 @@ add_shell_specific
 
 # @brief Source the environment
 nv() {
+    # Setup the dev env
+    sdev
+
     if test -d "$HOME/miniconda3/envs/dev_env_ansible2"; then
         conda activate "$HOME/miniconda3/envs/dev_env_ansible2"
     fi
@@ -229,9 +232,6 @@ nv() {
     if test -d "$HOME/miniconda3/envs/dev_env_ansible"; then
         conda activate --stack "$HOME/miniconda3/envs/dev_env_ansible"
     fi
-
-    # Setup the dev env
-    sdev
 
     if test -n "$TMUX"; then
         # Get current panes
