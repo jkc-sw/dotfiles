@@ -61,12 +61,7 @@ return require('packer').startup(function(use)
 
   -- Color
   use 'norcalli/nvim-colorizer.lua'
-  use 'arzg/vim-colors-xcode'
-  -- use 'tjdevries/gruvbuddy.nvim'
-  -- use 'tjdevries/colorbuddy.vim'
-  -- use 'sainnhe/gruvbox-material'
-  -- use 'gruvbox-community/gruvbox'
-  -- use 'navarasu/onedark.nvim'
+  use 'sainnhe/gruvbox-material'
 
   -- Local
   use {vim.loop.os_homedir()..'/repos/focus-side.vim'}

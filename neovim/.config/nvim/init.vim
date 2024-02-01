@@ -58,7 +58,10 @@ set regexpengine=1
 set diffopt+=iwhiteeol
 
 
-colorscheme xcodedarkhc
+let g:gruvbox_material_background = 'hard'
+let g:gruvbox_material_foreground = 'material'
+let g:gruvbox_material_better_performance = 1
+colorscheme gruvbox-material
 
 " load everything lua
 lua require('jerry')
