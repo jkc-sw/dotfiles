@@ -5,7 +5,7 @@ return require('packer').startup(function(use)
 
   -- Editing
   use 'mbbill/undotree'
-  use 'JoosepAlviste/nvim-ts-context-commentstring'
+  -- use 'JoosepAlviste/nvim-ts-context-commentstring'
   use 'numToStr/Comment.nvim'
   -- use 'tomtom/tcomment_vim'
   use 'machakann/vim-sandwich'
