@@ -28,6 +28,9 @@ elif test "$#" -eq 1; then
     if ! type -p doas &>/dev/null; then
         runsudo=sudo
     fi
+    if [ $(id -u) -eq 0 ]; then
+        runsudo=command
+    fi
     find /sys/devices/system/cpu/ -type f -name scaling_governor | "$runsudo" xargs -I% bash -c "echo $cmd > %"
 else
     echo "Error, there should only be 1 argument"
