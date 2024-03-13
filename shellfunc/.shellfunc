@@ -82,8 +82,8 @@ if [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
 fi
 
 # Getting nix-env
-if [[ -r "$HOME/.nix-profile/etc/profile.d/nix.sh" ]]; then
-    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+if [[ -r '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]]; then
+    . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
     alias ni=nix-env
 fi
 
