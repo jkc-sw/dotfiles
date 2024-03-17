@@ -61,10 +61,10 @@ set nofixendofline
 let g:gruvbox_material_background = 'hard'
 let g:gruvbox_material_foreground = 'material'
 let g:gruvbox_material_better_performance = 1
-colorscheme gruvbox-material
+" colorscheme gruvbox-material
 
 " load everything lua
-lua require('jerry')
+" lua require('jerry')
 
 " Whether if I want to use fzf or telescope
 let g:rg_derive_root='true'
