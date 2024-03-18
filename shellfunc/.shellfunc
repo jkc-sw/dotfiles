@@ -331,28 +331,30 @@ update_zsh_plugins() { (
 sdev() {
     if ! command -v nvm >/dev/null 2>&1; then
         # shellcheck source=/dev/null
-        . "$NVM_DIR/nvm.sh"  # This loads nvm
+        test -r "$NVM_DIR/nvm.sh" && . "$NVM_DIR/nvm.sh" || echowarning "'$NVM_DIR/nvm.sh' not found" # This loads nvm
         # shellcheck source=/dev/null
-        . "$NVM_DIR/bash_completion"  # Too slow
+        test -r "$NVM_DIR/bash_completion" && . "$NVM_DIR/bash_completion" || echowarning "'$NVM_DIR/bash_completion' not found" # This loads nvm
         # shellcheck source=/dev/null
-        . "$ASDF_DIR/asdf.sh"
+        test -r "$ASDF_DIR/asdf.sh" && . "$ASDF_DIR/asdf.sh" || echowarning "'$ASDF_DIR/asdf.sh' not found" # This loads nvm
     fi
-    # Add conda based on your shell
-    thisShell="$(ps --no-headers -o comm -p $$)"
-    # >>> conda initialize >>>
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$("$HOME/miniconda3/bin/conda" "shell.$thisShell" 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "$HOME/miniconda3/etc/profile.d/conda.sh"
+    if command -v conda >/dev/null 2>&1; then
+        # Add conda based on your shell
+        thisShell="$(ps --no-headers -o comm -p $$)"
+        # >>> conda initialize >>>
+        # !! Contents within this block are managed by 'conda init' !!
+        __conda_setup="$("$HOME/miniconda3/bin/conda" "shell.$thisShell" 'hook' 2> /dev/null)"
+        if [ $? -eq 0 ]; then
+            eval "$__conda_setup"
         else
-            export PATH="$HOME/miniconda3/bin:$PATH"
+            if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+                . "$HOME/miniconda3/etc/profile.d/conda.sh"
+            else
+                export PATH="$HOME/miniconda3/bin:$PATH"
+            fi
         fi
+        unset __conda_setup
+        # <<< conda initialize <<<
     fi
-    unset __conda_setup
-    # <<< conda initialize <<<
 }
 
 # Need an easier way to handle the pass
