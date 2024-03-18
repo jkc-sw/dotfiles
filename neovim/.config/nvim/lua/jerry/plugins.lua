@@ -25,7 +25,7 @@ return require('packer').startup(function(use)
   -- use 'tpope/vim-fugitive'
 
   -- Fuzzy stuff
-  use {'junegunn/fzf', run = function() vim.fn['fzf#install']() end}
+  use 'junegunn/fzf'
   use 'junegunn/fzf.vim'
 
   -- Telescope
