@@ -38,11 +38,11 @@ function zsh_add_plugin() {
 # 	if [ "$2" = true ] && compinit "${completion_file:1}"
 # }
 
-#===============================================================================
-# Plugins
-#===============================================================================
-zsh_add_plugin "zsh-users/zsh-autosuggestions"
-zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
+# #===============================================================================
+# # Plugins
+# #===============================================================================
+# zsh_add_plugin "zsh-users/zsh-autosuggestions"
+# zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
 
 #===============================================================================
 # Borrowed from other, check to make sure I understand
