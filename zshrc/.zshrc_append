@@ -100,8 +100,8 @@ setopt HIST_SAVE_NO_DUPS
 #===============================================================================
 # User configuration
 #===============================================================================
-# custom setup
-. "$HOME/.shellfunc"
+# # custom setup
+# . "$HOME/.shellfunc"
 
 # Disable the bracketed paste mode, this makes the items I pasted in the
 # terminal to have last char capitalized.
