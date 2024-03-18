@@ -332,11 +332,11 @@ update_zsh_plugins() { (
 sdev() {
     if ! command -v nvm >/dev/null 2>&1; then
         # shellcheck source=/dev/null
-        test -r "$NVM_DIR/nvm.sh" && . "$NVM_DIR/nvm.sh" || echowarning "'$NVM_DIR/nvm.sh' not found" # This loads nvm
+        test -r "$NVM_DIR/nvm.sh" && . "$NVM_DIR/nvm.sh" # || echowarning "'$NVM_DIR/nvm.sh' not found" # This loads nvm
         # shellcheck source=/dev/null
-        test -r "$NVM_DIR/bash_completion" && . "$NVM_DIR/bash_completion" || echowarning "'$NVM_DIR/bash_completion' not found" # This loads nvm
+        test -r "$NVM_DIR/bash_completion" && . "$NVM_DIR/bash_completion" # || echowarning "'$NVM_DIR/bash_completion' not found" # This loads nvm
         # shellcheck source=/dev/null
-        test -r "$ASDF_DIR/asdf.sh" && . "$ASDF_DIR/asdf.sh" || echowarning "'$ASDF_DIR/asdf.sh' not found" # This loads nvm
+        test -r "$ASDF_DIR/asdf.sh" && . "$ASDF_DIR/asdf.sh" # || echowarning "'$ASDF_DIR/asdf.sh' not found" # This loads nvm
     fi
     if command -v conda >/dev/null 2>&1; then
         # Add conda based on your shell
