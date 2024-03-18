@@ -61,7 +61,7 @@ set nofixendofline
 let g:gruvbox_material_background = 'hard'
 let g:gruvbox_material_foreground = 'material'
 let g:gruvbox_material_better_performance = 0
-colorscheme gruvbox-material
+" colorscheme gruvbox-material
 
 " load everything lua
 lua require('jerry')
