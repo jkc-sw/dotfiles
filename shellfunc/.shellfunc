@@ -304,7 +304,7 @@ add_shell_specific() {
     # Handle the fzf
     eval "$(fzf "--$forshell")"
 }
-add_shell_specific
+# add_shell_specific
 
 # @brief Source the environment
 nv() {
