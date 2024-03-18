@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. "$HOME/.shellfunc"
+# . "$HOME/.shellfunc"
 
 set -o vi
 set bell-style none

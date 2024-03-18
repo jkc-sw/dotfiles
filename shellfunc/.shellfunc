@@ -49,12 +49,12 @@ echowarning() {
 
 export PASSWORD_STORE_DIR="$HOME/repos/mypasswordstore/"
 
-addThisPath "$HOME/.cargo/bin"
-addThisPath "$HOME/.local/bin"
-addThisPath "/usr/local/sbin"
-addThisPath "/usr/sbin"
-addThisPath "/opt/TurboVNC/bin"
-addThisPath "$HOME/.local/p4v/bin"
+# addThisPath "$HOME/.cargo/bin"
+# addThisPath "$HOME/.local/bin"
+# addThisPath "/usr/local/sbin"
+# addThisPath "/usr/sbin"
+# addThisPath "/opt/TurboVNC/bin"
+# addThisPath "$HOME/.local/p4v/bin"
 
 # some configuration to shell
 export TERM=xterm-256color
