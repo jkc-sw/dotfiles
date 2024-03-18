@@ -52,6 +52,7 @@ neogit.setup{}
 
 require('nvim-treesitter.configs').setup{
   ensure_installed = 'all',
+  parser_install_dir = "$XDG_DATA_HOME/nvim/treesitter",
   sync_install = false,
   auto_install = false,
   context_commentstring = {
