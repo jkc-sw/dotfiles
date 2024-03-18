@@ -50,6 +50,24 @@ cmp.setup{
 local neogit = require('neogit')
 neogit.setup{}
 
+require('nvim-treesitter.configs').setup{
+  ensure_installed = 'all',
+  parser_install_dir = "$XDG_DATA_HOME/nvim/treesitter",
+  sync_install = false,
+  auto_install = false,
+  context_commentstring = {
+    enable = false,
+  },
+  highlight = {
+    enable = true,
+    disable = { 'cpp' }
+  },
+  indent = {
+    enable = false,
+    disable = { 'python' }
+  }
+}
+
 require('nvim_context_vt').setup({
   -- -- Override default virtual text prefix
   -- -- Default: '-->'
