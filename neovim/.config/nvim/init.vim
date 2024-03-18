@@ -61,7 +61,7 @@ set nofixendofline
 let g:gruvbox_material_background = 'hard'
 let g:gruvbox_material_foreground = 'material'
 let g:gruvbox_material_better_performance = 0
-" colorscheme gruvbox-material
+colorscheme gruvbox-material
 
 " load everything lua
 lua require('jerry')
@@ -217,13 +217,13 @@ vnoremap : ;
 " augroup END
 
 let s:clip_supplier = []
-if executable('toclip') == 1
-    let s:clip_supplier = ['toclip']
-elseif executable('win32yank.exe')
-    let s:clip_supplier = ['win32yank.exe', '-i', '--crlf']
-elseif executable('clip.exe')
-    let s:clip_supplier = ['clip.exe']
-endif
+" if executable('toclip') == 1
+"     let s:clip_supplier = ['toclip']
+" elseif executable('win32yank.exe')
+"     let s:clip_supplier = ['win32yank.exe', '-i', '--crlf']
+" elseif executable('clip.exe')
+"     let s:clip_supplier = ['clip.exe']
+" endif
 
 " Use clip.exe to send content to clipboard
 augroup toClipBoard
