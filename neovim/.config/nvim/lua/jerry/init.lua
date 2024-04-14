@@ -31,7 +31,7 @@ require('lualine').setup {
   }
 }
 
--- require('jerry.lsp.config').general_lsp()
+require('jerry.lsp.config').general_lsp()
 
 require('lspkind').init{}
 
