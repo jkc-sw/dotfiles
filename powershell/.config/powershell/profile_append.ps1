@@ -13,6 +13,11 @@ Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory
 function sdev() {
     #region conda initialize
     # !! Contents within this block are managed by 'conda init' !!
-    (& "~/miniconda3/bin/conda" "shell.powershell" "hook") | Out-String | Invoke-Expression
+    $CondaExe = 'conda'
+    if (-not (Get-Command conda -ErrorAction SilentlyContinue)) {
+        $CondaExe = "~/miniconda3/bin/conda"
+    }
+    (& $CondaExe "shell.powershell" "hook") | Out-String | Invoke-Expression
+    # (& "~/miniconda3/bin/conda" "shell.powershell" "hook") | Out-String | Invoke-Expression
     #endregion
 }
