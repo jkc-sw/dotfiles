@@ -119,9 +119,12 @@ local general_lsp = function()
 
 end
 
-local alternative_lsp = function()
-  setup_each_lsp('powershell_editor_service', true)
-end
+setup_each_lsp('powershell_es', {
+  cmd = {'powershell_es', '-Stdio'}
+})
+-- local alternative_lsp = function()
+--   setup_each_lsp('powershell_editor_service', true)
+-- end
 
 return {
   general_lsp = general_lsp,
