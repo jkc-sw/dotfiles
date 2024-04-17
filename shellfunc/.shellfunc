@@ -258,6 +258,24 @@ n() {
         nvim -c "lua require'jerry.lsp.config'.alternative_lsp{}" "$@"
     fi
 }
+nt() {
+    nv
+    local nvimFound=false
+    if command -v nvim >/dev/null 2>&1; then
+        nvimFound=true
+    fi
+    local sessionFound=false
+    if [[ -r ./Session.vim ]]; then
+        sessionFound=true
+    fi
+    if [[ "$nvimFound" == 'true' && "$sessionFound" == 'true' ]]; then
+        nvim -S ./Session.vim "$@"
+    elif [[ "$nvimFound" == 'true' ]]; then
+        nvim "$@"
+    else
+        echo "WARN: nvim not in the PATH"
+    fi
+}
 
 # Change keyboard layout
 AOE() {
