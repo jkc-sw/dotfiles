@@ -56,7 +56,7 @@ let g:loaded_clipboard_provider = 1 " I don't need nvim to sync clipboard for me
 set grepprg=rg\ --line-number\ --color=never
 set regexpengine=1
 set diffopt+=iwhiteeol
-
+set nofixendofline
 
 let g:gruvbox_material_background = 'hard'
 let g:gruvbox_material_foreground = 'material'
