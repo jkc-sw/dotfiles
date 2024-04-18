@@ -216,7 +216,8 @@ vnoremap : ;
 "         \| endif
 " augroup END
 
-let s:clip_supplier = []
+let s:clip_supplier = ['toclip']
+" let s:clip_supplier = []
 " if executable('toclip') == 1
 "     let s:clip_supplier = ['toclip']
 " elseif executable('win32yank.exe')
