@@ -252,10 +252,10 @@ augroup Lsp
     autocmd BufReadPost,FileReadPost lua require "lsp_signature".on_attach()
 augroup END
 
-" augroup nowhitespaceattheend
-"     autocmd!
-"     autocmd BufWritePre * :call jerry#common#TrimWhitespace()
-" augroup END
+augroup nowhitespaceattheend
+    autocmd!
+    autocmd BufWritePre * :call jerry#common#TrimWhitespace()
+augroup END
 
 augroup matlabFileDetection
     autocmd!
