@@ -1,16 +1,16 @@
+let mapleader = " "
 
-" if define headless update
+" " if define headless update
 lua require('jerry.plugins')
-if $ANSIBLE_UPDATE
-    autocmd User PackerComplete quitall
-    PackerSync
-    finish
-endif
+" if $ANSIBLE_UPDATE
+"     autocmd User PackerComplete quitall
+"     PackerSync
+"     finish
+" endif
 
 " Native settings
 syntax on
 filetype plugin on
-let mapleader = " "
 set hidden
 set nohlsearch
 set path+=**
