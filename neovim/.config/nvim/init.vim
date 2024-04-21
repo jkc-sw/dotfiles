@@ -1,6 +1,6 @@
 let mapleader = " "
 
-" " if define headless update
+" if define headless update
 lua require('jerry.plugins')
 " if $ANSIBLE_UPDATE
 "     autocmd User PackerComplete quitall
