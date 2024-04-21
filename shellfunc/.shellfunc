@@ -204,19 +204,7 @@ add_shell_specific() {
     eval "$(zoxide init --cmd 'c' "$forshell")"
 
     # Handle the fzf
-    fzf_dir="$HOME/.local/share/nvim/site/pack/packer/start/fzf"
-    fzf_bindir="$fzf_dir/bin"
-    fzf_shelldir="$fzf_dir/shell"
-    if test -d "$fzf_bindir"; then
-        addThisPath "$fzf_bindir"
-        if test -n "$forshell"; then
-            # # shellcheck source=/dev/null
-            # . "$fzf_shelldir/completion.$forshell" # Too slow
-
-            # shellcheck source=/dev/null
-            . "$fzf_shelldir/key-bindings.$forshell"
-        fi
-    fi
+    eval "$(fzf "--$forshell")"
 }
 add_shell_specific
 
