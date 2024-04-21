@@ -69,9 +69,21 @@ return {
   'sainnhe/gruvbox-material',
 
   -- Local
-  {dir = vim.uv.os_homedir()..'/repos/focus-side.vim'},
-  {dir = vim.uv.os_homedir()..'/repos/vim-matlab.vim'},
+  {
+    dir = vim.uv.os_homedir()..'/repos/focus-side.vim'
+  },
+  {
+    dir = vim.uv.os_homedir()..'/repos/vim-matlab.vim'
+  },
+  {
+    dir = vim.uv.os_homedir()..'/.config/nvim/pack/perforce/start/perforce'
+  },
 
+
+  -- for work
+  {
+    dir = vim.uv.os_homedir()..'/.config/nvim/pack/mks/start/mks'
+  },
   -- Not working
   -- use 'sheerun/vim-polyglot'
 
