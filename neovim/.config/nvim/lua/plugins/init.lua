@@ -69,12 +69,14 @@ return {
   'sainnhe/gruvbox-material',
 
   -- Local
-  {
-    dir = vim.uv.os_homedir()..'/repos/focus-side.vim'
-  },
-  {
-    dir = vim.uv.os_homedir()..'/repos/vim-matlab.vim'
-  },
+  -- {
+  --   dir = vim.uv.os_homedir()..'/repos/focus-side.vim'
+  -- },
+  'jkc-sw/focus-side.vim',
+  -- {
+  --   dir = vim.uv.os_homedir()..'/repos/vim-matlab.vim'
+  -- },
+  'jkc-sw/vim-matlab.vim',
   {
     dir = vim.uv.os_homedir()..'/.config/nvim/pack/perforce/start/perforce'
   },
