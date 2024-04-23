@@ -51,11 +51,10 @@ return {
   'tjdevries/nlua.nvim',
 
   -- Tree sitter
-  {
-    'nvim-treesitter/nvim-treesitter',
-    -- -- not needed for the nix home manager config
-    -- build = ':TSUpdate'
-  },
+  -- {
+  --   'nvim-treesitter/nvim-treesitter',
+  --   build = ':TSUpdate'
+  -- },
   'nvim-treesitter/playground',
   -- use 'romgrk/nvim-treesitter-context'
   'haringsrob/nvim_context_vt',
