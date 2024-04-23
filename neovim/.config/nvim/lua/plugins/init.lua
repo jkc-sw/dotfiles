@@ -31,10 +31,10 @@ return {
   'nvim-lua/plenary.nvim',
   'nvim-lua/telescope.nvim',
   -- use 'nvim-telescope/telescope-fzy-native.nvim'
-  {
-    'nvim-telescope/telescope-fzf-native.nvim',
-    build = 'make'
-  },
+  -- {
+  --   'nvim-telescope/telescope-fzf-native.nvim',
+  --   build = 'make'
+  -- },
 
   -- LSP
   {
@@ -53,7 +53,8 @@ return {
   -- Tree sitter
   {
     'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate'
+    -- -- not needed for the nix home manager config
+    -- build = ':TSUpdate'
   },
   'nvim-treesitter/playground',
   -- use 'romgrk/nvim-treesitter-context'
@@ -78,13 +79,12 @@ return {
   -- },
   'jkc-sw/vim-matlab.vim',
   {
-    dir = vim.uv.os_homedir()..'/.config/nvim/pack/perforce/start/perforce'
+    dir = jkcswDotfilesGithub .. '/neovim/.config/nvim/pack/perforce/start/perforce'
   },
-
 
   -- for work
   {
-    dir = vim.uv.os_homedir()..'/.config/nvim/pack/mks/start/mks'
+    dir = vim.uv.os_homedir() .. '/.config/nvim/pack/mks/start/mks'
   },
   -- Not working
   -- use 'sheerun/vim-polyglot'
