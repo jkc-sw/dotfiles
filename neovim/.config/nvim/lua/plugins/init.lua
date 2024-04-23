@@ -77,7 +77,7 @@ return {
   -- {
   --   dir = vim.uv.os_homedir()..'/repos/vim-matlab.vim'
   -- },
-  'jkc-sw/vim-matlab.vim',
+  'jkc-sw/vim-matlab',
   {
     dir = jkcswDotfilesGithub .. '/neovim/.config/nvim/pack/perforce/start/perforce'
   },
