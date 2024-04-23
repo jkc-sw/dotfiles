@@ -51,10 +51,6 @@ return {
   'tjdevries/nlua.nvim',
 
   -- Tree sitter
-  {
-    'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate'
-  },
   'nvim-treesitter/playground',
   -- use 'romgrk/nvim-treesitter-context'
   'haringsrob/nvim_context_vt',
@@ -69,12 +65,14 @@ return {
   'sainnhe/gruvbox-material',
 
   -- Local
-  {
-    dir = vim.uv.os_homedir()..'/repos/focus-side.vim'
-  },
-  {
-    dir = vim.uv.os_homedir()..'/repos/vim-matlab.vim'
-  },
+  'jkc-sw/focus-side.vim',
+  -- {
+  --   dir = vim.uv.os_homedir()..'/repos/focus-side.vim'
+  -- },
+  'jkc-sw/vim-matlab',
+  -- {
+  --   dir = vim.uv.os_homedir()..'/repos/vim-matlab.vim'
+  -- },
   {
     dir = vim.uv.os_homedir()..'/.config/nvim/pack/perforce/start/perforce'
   },
