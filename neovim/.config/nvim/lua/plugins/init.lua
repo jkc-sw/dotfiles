@@ -37,10 +37,8 @@ return {
   },
 
   -- LSP
-  {
-    'neovim/nvim-lspconfig',
-    -- commit = '10ad0cca1b83713ed98ed4cb7ea60f2ea8e55c49'
-  },
+  'neovim/nvim-lspconfig',
+  ,
 
   'onsails/lspkind-nvim',
   'hrsh7th/cmp-nvim-lsp',
