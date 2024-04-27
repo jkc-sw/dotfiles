@@ -311,13 +311,13 @@ nv() {
     # Setup the dev env
     sdev
 
-    if test -d "$HOME/miniconda3/envs/dev_env_ansible2"; then
-        conda activate "$HOME/miniconda3/envs/dev_env_ansible2"
-    fi
+    # if test -d "$HOME/miniconda3/envs/dev_env_ansible2"; then
+    #     conda activate "$HOME/miniconda3/envs/dev_env_ansible2"
+    # fi
 
-    if test -d "$HOME/miniconda3/envs/dev_env_ansible"; then
-        conda activate --stack "$HOME/miniconda3/envs/dev_env_ansible"
-    fi
+    # if test -d "$HOME/miniconda3/envs/dev_env_ansible"; then
+    #     conda activate --stack "$HOME/miniconda3/envs/dev_env_ansible"
+    # fi
 
     if test -n "$TMUX"; then
         # Get current panes
