@@ -329,14 +329,6 @@ update_zsh_plugins() { (
 
 # Source some tools that I don't use often
 sdev() {
-    if ! command -v nvm >/dev/null 2>&1; then
-        # shellcheck source=/dev/null
-        . "$NVM_DIR/nvm.sh"  # This loads nvm
-        # shellcheck source=/dev/null
-        . "$NVM_DIR/bash_completion"  # Too slow
-        # shellcheck source=/dev/null
-        . "$ASDF_DIR/asdf.sh"
-    fi
     # Add conda based on your shell
     thisShell="$(ps --no-headers -o comm -p $$)"
     # >>> conda initialize >>>
