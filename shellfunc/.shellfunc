@@ -75,8 +75,8 @@ alias rm='rm -I'
 # fi
 
 # Use something better
-if command -v exa &>/dev/null; then
-    alias dir='exa'
+if command -v eza &>/dev/null; then
+    alias dir='eza'
 fi
 
 # For my personal note
