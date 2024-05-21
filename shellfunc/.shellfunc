@@ -47,6 +47,9 @@ echowarning() {
 # fi
 # export LINUX_ALIAS_DIR="${LINUX_ALIAS_PATH%/*}"
 
+# Timezone
+export TZ='America/Los_Angeles'
+
 export PASSWORD_STORE_DIR="$HOME/repos/mypasswordstore/"
 
 addThisPath "$HOME/.cargo/bin"
