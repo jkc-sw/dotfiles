@@ -156,19 +156,21 @@ function! AskUserForJiraTagReturnJfOutput(prefix)
         echoerr "No jira tag is entered"
     endif
     if has("win32")
-        let g:AskUserForJiraTagReturnJfOutputCmds = ["pwsh.exe", "-NoProfile", "-Command", "Import-Module MyModules00 ; jf '" . jtag . "' -Passthru"]
+        let AskUserForJiraTagReturnJfOutputCmds = ["pwsh.exe", "-NoProfile", "-Command", "Import-Module MyModules00 ; jf '" . jtag . "' -Passthru"]
+        let jfoutput = system(AskUserForJiraTagReturnJfOutputCmds)
     else
         let l:ip = getenv('BOXX_IP')
         if l:ip == v:null
             throw 'AskUserForJiraTagReturnJfOutput needs to access env var BOXX_IP, but it is not found'
         endif
-        if empty(g:boxx_user)
-            let g:boxx_user = system(['pass', 'system-user'])
+        let l:user = getenv('BOXX_USER')
+        if l:user == v:null
+            throw 'AskUserForJiraTagReturnJfOutput needs to access env var BOXX_USER, but it is not found'
         endif
-        let cred = g:boxx_user .. ':' .. l:ip
-        let g:AskUserForJiraTagReturnJfOutputCmds = ['ssh', '-p', '2222', cred, 'zsh', '-c', '". /home/chenkua/.zshrc ; jf ' .. jtag .. '"']
+        let l:cred = l:user .. '@' .. l:ip
+        let l:zshrc = '/home/' .. l:user .. '/.zshrc'
+        let jfoutput = luaeval(printf("vim.system({'jfssh', '%s'}, { text = true, stderr = false }):wait().stdout", jtag))
     endif
-    let jfoutput = system(g:AskUserForJiraTagReturnJfOutputCmds)
     let jfoutput = trim(jfoutput)
     if !empty(a:prefix)
         return a:prefix .. ' ' .. jfoutput

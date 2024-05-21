@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [[ $# -ne 1 ]]; then
+    echo 'ERR (jfssh): Need 1 argument, the jira string to search' >&2
+    exit 1
+fi
+if [[ -z "$BOXX_IP" ]]; then
+    echo 'ERR (jfssh): Cannot locate env var: BOXX_IP' >&2
+    exit 1
+fi
+if [[ -z "$BOXX_USER" ]]; then
+    echo 'ERR (jfssh): Cannot locate env var: BOXX_USER' >&2
+    exit 1
+fi
+
+tag="$1"
+# cmd="zsh -c '. /home/$BOXX_USER/.zshrc ; jf $tag'"
+# sshargs=(-p 2222 "${BOXX_USER}@${BOXX_IP}" "\"$cmd\"")
+cmd="'. /home/$BOXX_USER/.zshrc ; jf $tag'"
+sshargs=(-p 2222 "${BOXX_USER}@${BOXX_IP}" zsh -c "$cmd")
+
+if tty &>/dev/null; then
+    sshargs=(-t "${sshargs[@]}")
+fi
+ssh "${sshargs[@]}"
