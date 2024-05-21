@@ -167,8 +167,6 @@ function! AskUserForJiraTagReturnJfOutput(prefix)
         if l:user == v:null
             throw 'AskUserForJiraTagReturnJfOutput needs to access env var BOXX_USER, but it is not found'
         endif
-        let l:cred = l:user .. '@' .. l:ip
-        let l:zshrc = '/home/' .. l:user .. '/.zshrc'
         let jfoutput = luaeval(printf("vim.system({'jfssh', '%s'}, { text = true, stderr = false }):wait().stdout", jtag))
     endif
     let jfoutput = trim(jfoutput)
