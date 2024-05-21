@@ -21,3 +21,37 @@ function sdev() {
     # (& "~/miniconda3/bin/conda" "shell.powershell" "hook") | Out-String | Invoke-Expression
     #endregion
 }
+
+Set-Alias -Name e -Value ./r.ps1
+
+function eo() {
+    <#
+    .SYNOPSIS
+    Quickly start work journal
+    #>
+    [CmdletBinding()]
+    Param(
+        # Day offset
+        [Parameter(HelpMessage = 'Day offset')]
+        [String]
+        $NoteDate
+    )
+    ./r.ps1 -Work -NoteDate $NoteDate
+}
+
+function u() {
+    <#
+    .SYNOPSIS
+    Quickly start personal journal
+    #>
+    [CmdletBinding()]
+    Param(
+        # Date of the note
+        [Parameter(HelpMessage = 'Date of the note')]
+        [String]
+        $NoteDate
+    )
+    ./r.ps1 -Personal -NoteDate $NoteDate
+}
+
+
