@@ -238,16 +238,14 @@ augroup CodeBlockEnterExitInsertMode
     autocmd! InsertLeave *.md call CodeBlockEnablePasteMode(v:false)
 augroup END
 
-function! GetDateOffset(...)
-    let offset = 0
-    if a:0 == 1
-        let offset = a:1
-    else
+function! GetDateOffset(dayoffset, prefix)
+    let offset = a:dayoffset
+    if empty(offset)
         call inputsave()
         let offset = input('Day of offset:')
         call inputrestore()
     endif
-    return strftime('%Y-%m-%d %A', localtime() + offset*60*60*24)
+    return a:prefix .. strftime('%Y-%m-%d %A', localtime() + str2nr(offset)*60*60*24)
 endfunction
 
 function! GetDateOffsetNoDay(...)
@@ -261,14 +259,6 @@ function! GetDateOffsetNoDay(...)
     endif
     return strftime('%Y-%m-%d', localtime() + offset*60*60*24)
 endfunction
-
-" augroup maraoeu
-"     autocmd!
-"     autocmd BufEnter,BufWinEnter,TabEnter init.vim iabbrev #T  # <c-r>=GetDateOffset(0)<cr>
-"     autocmd BufEnter,BufWinEnter,TabEnter init.vim iabbrev #t  # <c-r>=GetDateOffset(0)<cr>
-"     autocmd BufEnter,BufWinEnter,TabEnter init.vim iabbrev #n  # <c-r>=GetDateOffset()<cr>
-"     autocmd BufEnter,BufWinEnter,TabEnter init.vim iabbrev #h  # <c-r>=GetDateOffset()<cr>
-" augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " @brief Search and replace the bad sharepoint url failing to be stored onto
@@ -358,7 +348,7 @@ augroup markdownFenceHighlight
     autocmd BufEnter,BufWinEnter,TabEnter *.md nnoremap <leader>,u "ryygg/^-<space>/<cr>}"rP0d4Wi<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p ')<cr><esc>A<space>
     autocmd BufEnter,BufWinEnter,TabEnter *.md let @c="V/^## \<cr>k\"Ld"
     autocmd BufEnter,BufWinEnter,TabEnter *.md set wrap spell
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ats <c-r>=GetDateOffset()<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ats <c-r>=GetDateOffset('', '')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev `3 <c-r>=CodeBlock()<cr><Up><End>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev cnk <c-r>=WrapLinkWithBrowser('', 'Crucible')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev enk <c-r>=AskLabelLinkWithEdge('Open in Edge')<cr>
@@ -376,10 +366,10 @@ augroup markdownFenceHighlight
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev spt <c-r>=WrapLinkWithBrowser('', 'SharePoint')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev tnk <c-r>=WrapLinkWithBrowser('', 'Topic')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ynk <c-r>=WrapLinkWithBrowser('', 'Youtube')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,t  ## <c-r>=GetDateOffset(0)<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,h  ## <c-r>=GetDateOffset()<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .u  - <c-r>=strftime('%m/%d/%Y %H:%M:%S %p')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .b  - <c-r>=strftime('%m/%d/%Y %H:%M:%S %p Break')<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,t  <c-r>=GetDateOffset('0', '## ')<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,h  <c-r>=GetDateOffset('', '## ')<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .u  <c-r>=strftime('- %m/%d/%Y %H:%M:%S %p')<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .b  <c-r>=strftime('- %m/%d/%Y %H:%M:%S %p Break')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .n  +
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev jff <c-r>=AskUserForJiraTagReturnJfOutput('')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev jf  <c-r>=AskUserForJiraTagReturnJfOutput('Work on')<cr>
