@@ -158,7 +158,15 @@ function! AskUserForJiraTagReturnJfOutput(prefix)
     if has("win32")
         let g:AskUserForJiraTagReturnJfOutputCmds = ["pwsh.exe", "-NoProfile", "-Command", "Import-Module MyModules00 ; jf '" . jtag . "' -Passthru"]
     else
-        let g:AskUserForJiraTagReturnJfOutputCmds = ["jf", jtag]
+        let l:ip = getenv('BOXX_IP')
+        if l:ip == v:null
+            throw 'AskUserForJiraTagReturnJfOutput needs to access env var BOXX_IP, but it is not found'
+        endif
+        if empty(g:boxx_user)
+            let g:boxx_user = system(['pass', 'system-user'])
+        endif
+        let cred = g:boxx_user .. ':' .. l:ip
+        let g:AskUserForJiraTagReturnJfOutputCmds = ['ssh', '-p', '2222', cred, 'zsh', '-c', '". /home/chenkua/.zshrc ; jf ' .. jtag .. '"']
     endif
     let jfoutput = system(g:AskUserForJiraTagReturnJfOutputCmds)
     let jfoutput = trim(jfoutput)
