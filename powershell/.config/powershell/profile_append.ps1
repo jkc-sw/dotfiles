@@ -1,5 +1,10 @@
 #!/usr/bin/pwsh
 
+# Getting brew
+if (Test-Path "/home/linuxbrew/.linuxbrew/bin/brew") {
+    (& /home/linuxbrew/.linuxbrew/bin/brew shellenv) | Out-String | Invoke-Expression
+}
+
 # Set the VI mode
 Set-PSReadlineOption -EditMode vi -PredictionSource History
 Invoke-Expression (& {
