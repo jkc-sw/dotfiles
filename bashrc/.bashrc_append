@@ -18,7 +18,7 @@ fzf_git_branch_select_widget() {
     READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
     READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
 }
-bind -m emacs-standard -x '"\C-b": fzf_git_branch_select_widget'
-bind -m vi-command     -x '"\C-b": fzf_git_branch_select_widget'
-bind -m vi-insert      -x '"\C-b": fzf_git_branch_select_widget'
+bind -m emacs-standard -x '"\C-n": fzf_git_branch_select_widget'
+bind -m vi-command     -x '"\C-n": fzf_git_branch_select_widget'
+bind -m vi-insert      -x '"\C-n": fzf_git_branch_select_widget'
 

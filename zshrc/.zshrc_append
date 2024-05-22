@@ -133,9 +133,9 @@ fzf_git_branch_select_widget() {
     return $ret
 }
 zle     -N            fzf_git_branch_select_widget
-bindkey -M emacs '^B' fzf_git_branch_select_widget
-bindkey -M vicmd '^B' fzf_git_branch_select_widget
-bindkey -M viins '^B' fzf_git_branch_select_widget
+bindkey -M emacs '^N' fzf_git_branch_select_widget
+bindkey -M vicmd '^N' fzf_git_branch_select_widget
+bindkey -M viins '^N' fzf_git_branch_select_widget
 
 # # To bring back this behavior
 # autoload -Uz bracketed-paste-magic
