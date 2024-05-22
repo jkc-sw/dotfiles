@@ -4,3 +4,20 @@
 
 set -o vi
 set bell-style none
+
+#===============================================================================
+# Custom fzf definitions
+#===============================================================================
+# Quickly selecting git branches using fzf
+__fzf_git_branch_select() {
+    git for-each-ref refs/heads/ --format='%(refname:short)' | fzf --layout=reverse
+}
+fzf_git_branch_select_widget() {
+    local selected="$(__fzf_git_branch_select "$@")"
+    READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
+    READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
+}
+bind -m emacs-standard -x '"\C-b": fzf_git_branch_select_widget'
+bind -m vi-command     -x '"\C-b": fzf_git_branch_select_widget'
+bind -m vi-insert      -x '"\C-b": fzf_git_branch_select_widget'
+

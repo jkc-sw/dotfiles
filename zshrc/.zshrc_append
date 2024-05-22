@@ -112,6 +112,30 @@ en ; nvim "personal-topic\2022-02-03-LinuxEverything.md" -c "/## Bracketed Paste
 EOF
 unset zle_bracketed_paste
 
+
+#===============================================================================
+# Custom fzf definitions
+#===============================================================================
+# Quickly selecting git branches using fzf
+__fzf_git_branch_select() {
+    setopt localoptions pipefail no_aliases 2> /dev/null
+    local item
+    git for-each-ref refs/heads/ --format='%(refname:short)' | fzf --layout=reverse
+    local ret=$?
+    echo
+    return $ret
+}
+fzf_git_branch_select_widget() {
+    LBUFFER="${LBUFFER}$(__fzf_git_branch_select)"
+    local ret=$?
+    zle reset-prompt
+    return $ret
+}
+zle     -N            fzf_git_branch_select_widget
+bindkey -M emacs '^B' fzf_git_branch_select_widget
+bindkey -M vicmd '^B' fzf_git_branch_select_widget
+bindkey -M viins '^B' fzf_git_branch_select_widget
+
 # # To bring back this behavior
 # autoload -Uz bracketed-paste-magic
 # zle -N bracketed-paste bracketed-paste-magic
