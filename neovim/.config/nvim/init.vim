@@ -216,23 +216,23 @@ vnoremap : ;
 "         \| endif
 " augroup END
 
-let s:clip_supplier = []
+let g:clip_supplier = []
 if executable('toclip') == 1
-    let s:clip_supplier = ['toclip']
+    let g:clip_supplier = ['toclip']
 elseif executable('win32yank.exe')
-    let s:clip_supplier = ['win32yank.exe', '-i', '--crlf']
+    let g:clip_supplier = ['win32yank.exe', '-i', '--crlf']
 elseif executable('clip.exe')
-    let s:clip_supplier = ['clip.exe']
+    let g:clip_supplier = ['clip.exe']
 endif
 
 " Use clip.exe to send content to clipboard
 augroup toClipBoard
     autocmd!
-    if len(s:clip_supplier) > 0
+    if len(g:clip_supplier) > 0
         autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
-            \|   let ret = system(s:clip_supplier, getreg('"'))
+            \|   let ret = system(g:clip_supplier, getreg('"'))
             \|   if exists('g:toclip_verbose')
-            \|     echom join(s:clip_supplier, ' ') . ' (' . v:shell_error .'): ' . ret
+            \|     echom join(g:clip_supplier, ' ') . ' (' . v:shell_error .'): ' . ret
             \|   endif
             \| endif
     else

@@ -1,4 +1,20 @@
 
+nnoremap <leader>th     <cmd>  call search('^## \d\{4}-\d\{2}-\d\{2}', 'bW') <cr>
+nnoremap <leader>tn     <cmd>  call search('^## \d\{4}-\d\{2}-\d\{2}', 'W') <cr>
+nnoremap <leader>pt     <cmd>  call ToClip(TakeMeHereShell(v:false))<CR>
+nnoremap <leader>pn     <cmd>  call ToClip(TakeMeHereShell(v:true))<CR>
+nnoremap <leader>pf     <cmd>  call ToClip(TakeMeHereVim())<CR>
+
+" Define a Toclip Vim Function
+" @param content - The string content
+func! ToClip(content)
+    if len(g:clip_supplier) < 1
+        throw "No clipboard supplier found. Check g:clip_supplier"
+    endif
+    let jfoutput = luaeval("vim.system({_A[1]}, { stdin = _A[2], text = true, stderr = false }):wait()", [g:clip_supplier[0], a:content])
+    echom jfoutput
+endfunc
+
 " A function to copy the stuff
 " @brief when working for the journal, need a way to reference the line
 " @param oneLiner When true, it will return a 1 liner
