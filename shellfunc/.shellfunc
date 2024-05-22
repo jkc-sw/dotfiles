@@ -130,9 +130,9 @@ rt() (
 # @param cb - callback to configure the tmux session at creation time
 # @param label - The label to start alternative client
 tmux_attach() {
-    name="$1"
-    cb="$2"
-    label="$3"
+    local name="$1"
+    local cb="$2"
+    local label="$3"
 
     if [[ -z "$name" ]]; then
         echowarning "Nothing to be done"
@@ -140,7 +140,7 @@ tmux_attach() {
     fi
 
     if [[ -n "$name" && -z "$label" ]]; then
-        if ! (tmux ls | grep -q "$name"); then
+        if [[ "$(tmux ls -F '#{session_name}')" != *"$name"* ]]; then
             tmux new-session -s "$name" -d
 
             # if there is callback, run it
@@ -148,7 +148,11 @@ tmux_attach() {
                 "$cb" "$name"
             fi
 
-            tmux attach-session -t "$name"
+            if [[ -n "$TMUX" ]]; then
+                tmux switch-client -t "$name"
+            else
+                tmux attach-session -t "$name"
+            fi
         else
             if [[ -n "$TMUX" ]]; then
                 tmux switch-client -t "$name"
