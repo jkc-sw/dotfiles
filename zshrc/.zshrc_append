@@ -117,6 +117,7 @@ unset zle_bracketed_paste
 # Custom fzf definitions
 #===============================================================================
 # Quickly selecting git branches using fzf
+# ref: https://github.com/junegunn/fzf/blob/master/shell/key-bindings.zsh
 __fzf_git_branch_select() {
     setopt localoptions pipefail no_aliases 2> /dev/null
     local item

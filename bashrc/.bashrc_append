@@ -9,6 +9,7 @@ set bell-style none
 # Custom fzf definitions
 #===============================================================================
 # Quickly selecting git branches using fzf
+# ref: https://github.com/junegunn/fzf/blob/master/shell/key-bindings.bash#L42
 __fzf_git_branch_select() {
     git for-each-ref refs/heads/ refs/remotes/ --format='%(refname:short)' | fzf --layout=reverse
 }
