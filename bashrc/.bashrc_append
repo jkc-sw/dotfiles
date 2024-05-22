@@ -10,7 +10,7 @@ set bell-style none
 #===============================================================================
 # Quickly selecting git branches using fzf
 __fzf_git_branch_select() {
-    git for-each-ref refs/heads/ --format='%(refname:short)' | fzf --layout=reverse
+    git for-each-ref refs/heads/ refs/remotes/ --format='%(refname:short)' | fzf --layout=reverse
 }
 fzf_git_branch_select_widget() {
     local selected="$(__fzf_git_branch_select "$@")"

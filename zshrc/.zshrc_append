@@ -120,7 +120,7 @@ unset zle_bracketed_paste
 __fzf_git_branch_select() {
     setopt localoptions pipefail no_aliases 2> /dev/null
     local item
-    git for-each-ref refs/heads/ --format='%(refname:short)' | fzf --layout=reverse
+    git for-each-ref refs/heads/ refs/remotes/ --format='%(refname:short)' | fzf --layout=reverse
     local ret=$?
     echo
     return $ret
