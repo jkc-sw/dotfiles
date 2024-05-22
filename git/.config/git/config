@@ -9,3 +9,5 @@
     rebase = true
 [alias]
     p4 = !~/.local/bin/git-p4.py
+[rerere]
+	enabled = true
