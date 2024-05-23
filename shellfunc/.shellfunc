@@ -124,6 +124,23 @@ rt() (
     fi
 )
 
+en() {
+    if [[ -z "$ASUS_IP" ]]; then
+        echo 'ERR (jfssh): Cannot locate env var: ASUS_IP' >&2
+        return 1
+    fi
+    if [[ -z "$ASUS_USER" ]]; then
+        echo 'ERR (jfssh): Cannot locate env var: ASUS_USER' >&2
+        return 1
+    fi
+    cmd="\". /home/chenkua/.zshrc ; pwsh -NoLogo -NoExit -Login -WorkingDirectory '/home/chenkua/repos/journal'\""
+    sshargs=("${ASUS_USER}@${ASUS_IP}" zsh -c "$cmd")
+
+    if tty &>/dev/null; then
+        sshargs=(-t "${sshargs[@]}")
+    fi
+    ssh "${sshargs[@]}"
+}
 
 # @brief Run the tmux routine
 # @param name - tmux name
