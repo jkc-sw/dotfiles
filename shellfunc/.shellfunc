@@ -124,6 +124,26 @@ rt() (
     fi
 )
 
+note_cb() {
+    local name="$1"
+    local jdir='/home/chenkua/repos/journal'
+    tmux set-option -t "$name:1" default-shell "$(which pwsh)"
+    tmux rename-window -t "$name:1" note
+    tmux send-keys -t "$name:note" "exec pwsh -NoLogo -NoExit -Login -WorkingDirectory '$jdir'" Enter
+
+}
+note() {
+    local jdir='/home/chenkua/repos/journal'
+    if [[ ! -d "$jdir" ]]; then
+        echo "ERR (note): cannot switch to '$jdir' directory" >&2
+        echo 'ERR (note): Press any key to close this session.' >&2
+        read
+        return 1
+    fi
+    cd "$jdir"
+    tmux_attach 'note' 'note_cb' ''
+}
+
 en() {
     if [[ -z "$ASUS_IP" ]]; then
         echo 'ERR (jfssh): Cannot locate env var: ASUS_IP' >&2
@@ -133,8 +153,8 @@ en() {
         echo 'ERR (jfssh): Cannot locate env var: ASUS_USER' >&2
         return 1
     fi
-    cmd="\". /home/chenkua/.zshrc ; pwsh -NoLogo -NoExit -Login -WorkingDirectory '/home/chenkua/repos/journal'\""
-    sshargs=("${ASUS_USER}@${ASUS_IP}" zsh -c "$cmd")
+    local cmd="\". /home/chenkua/.zshrc ; note\""
+    local sshargs=("${ASUS_USER}@${ASUS_IP}" zsh -c "$cmd")
 
     if tty &>/dev/null; then
         sshargs=(-t "${sshargs[@]}")
@@ -189,7 +209,7 @@ tmux_attach() {
     newname="$name-$label"
 
     # check if the session exists
-    if ! (tmux ls | grep -q "$newname"); then
+    if [[ "$(tmux ls -F '#{session_name}')" != *"$newname"* ]]; then
         tmux new-session -t "$name" -s "$newname" -d
         tmux attach-session -t "$newname"
         return 0
