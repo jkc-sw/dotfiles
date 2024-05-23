@@ -220,14 +220,14 @@ vunmap Q
 "         \| endif
 " augroup END
 
-let s:clip_supplier = ['toclip']
-" let s:clip_supplier = []
+let g:clip_supplier = ['toclip']
+" let g:clip_supplier = []
 " if executable('toclip') == 1
-"     let s:clip_supplier = ['toclip']
+"     let g:clip_supplier = ['toclip']
 " elseif executable('win32yank.exe')
-"     let s:clip_supplier = ['win32yank.exe', '-i', '--crlf']
+"     let g:clip_supplier = ['win32yank.exe', '-i', '--crlf']
 " elseif executable('clip.exe')
-"     let s:clip_supplier = ['clip.exe']
+"     let g:clip_supplier = ['clip.exe']
 " endif
 
 " Use clip.exe to send content to clipboard
