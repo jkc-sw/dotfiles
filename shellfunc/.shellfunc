@@ -156,11 +156,16 @@ en() {
     local cmd="\". /home/chenkua/.zshrc ; note\""
     local sshargs=("${ASUS_USER}@${ASUS_IP}" zsh -c "$cmd")
 
-    if tty &>/dev/null; then
+    if tty -s; then
         sshargs=(-t "${sshargs[@]}")
     fi
     ssh "${sshargs[@]}"
 }
+
+if tty -s; then
+    GPG_TTY="$(tty)"
+    export GPG_TTY
+fi
 
 # @brief Run the tmux routine
 # @param name - tmux name
