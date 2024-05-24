@@ -584,8 +584,8 @@ _init_gpg_pass() {
     gpg --edit-key "$MY_PASS_ID"  # Then enter "trust"
 
     # Generate a key
-    gpg --quick-generate-key "$MY_PASS_ID"
-    # gpg --generate-key
+    # gpg --quick-generate-key "$MY_PASS_ID"
+    gpg --expert --full-generate-key
 
     # Backup key
     if [ -d "$MY_GPG_DIR" ]; then
