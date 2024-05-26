@@ -3,7 +3,7 @@ return {
   -- Editing
   'mbbill/undotree',
   -- use 'JoosepAlviste/nvim-ts-context-commentstring'
-  'numToStr/Comment.nvim',
+  -- 'numToStr/Comment.nvim',
   -- use 'tomtom/tcomment_vim'
   'machakann/vim-sandwich',
   'michaeljsmith/vim-indent-object',
