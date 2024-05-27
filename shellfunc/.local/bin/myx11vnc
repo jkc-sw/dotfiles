@@ -9,7 +9,6 @@ Start VNC Server for Headless Server
 
 Dependencies:
   - vncserver
-  - startup file in ~/.vnc/xstartup
 
 Installation:
   Copy this file to \$HOME/.local/bin folder
