@@ -127,7 +127,6 @@ rt() (
 note_cb() {
     local name="$1"
     local jdir='/home/chenkua/repos/journal'
-    tmux set-option -t "$name:1" default-shell "$(which pwsh)"
     tmux rename-window -t "$name:1" note
     tmux send-keys -t "$name:note" "exec pwsh -NoLogo -NoExit -Login -WorkingDirectory '$jdir'" Enter
 
