@@ -59,4 +59,7 @@ function u() {
     ./r.ps1 -Personal -NoteDate $NoteDate
 }
 
+function de() {
+    (Get-Command $args[0]).Definition
+}
 
