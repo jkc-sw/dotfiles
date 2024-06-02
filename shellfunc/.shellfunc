@@ -159,6 +159,7 @@ _in_asus() {
 en() {
     if _in_asus; then
         note
+        return 0
     fi
     if [[ -z "$ASUS_IP" ]]; then
         echo 'ERR (jfssh): Cannot locate env var: ASUS_IP' >&2
