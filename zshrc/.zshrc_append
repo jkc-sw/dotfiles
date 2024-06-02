@@ -136,6 +136,12 @@ zle     -N            fzf_git_branch_select_widget
 bindkey -M emacs '^B' fzf_git_branch_select_widget
 bindkey -M vicmd '^B' fzf_git_branch_select_widget
 bindkey -M viins '^B' fzf_git_branch_select_widget
+if which fzf-git-worktrees-widget &>/dev/null; then
+    zle     -N            fzf-git-worktrees-widget
+    bindkey -M emacs '^E' fzf-git-worktrees-widget
+    bindkey -M vicmd '^E' fzf-git-worktrees-widget
+    bindkey -M viins '^E' fzf-git-worktrees-widget
+fi
 
 # # To bring back this behavior
 # autoload -Uz bracketed-paste-magic
