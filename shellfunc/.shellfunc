@@ -143,7 +143,23 @@ note() {
     tmux_attach 'note' 'note_cb' ''
 }
 
+_in_asus() {
+    local out=''
+    if command -v ip &>/dev/null; then
+        out="$(ip -br a)"
+    elif command -v ifconfig &>/dev/null; then
+        out="$(ifconfig)"
+    fi
+    if [[ -n "$out" && -n "$ASUS_IP" && "$out" == *"$ASUS_IP"* ]]; then
+        return 0
+    fi
+    return 1
+}
+
 en() {
+    if _in_asus; then
+        note
+    fi
     if [[ -z "$ASUS_IP" ]]; then
         echo 'ERR (jfssh): Cannot locate env var: ASUS_IP' >&2
         return 1
