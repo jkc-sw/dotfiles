@@ -81,20 +81,26 @@ fi
 
 # For my personal note
 eo() {
-    args=(-Work)
+    args=()
     if [[ $# -eq 1 ]]; then
         args+=(-NoteDate "$1")
     fi
-    pwsh -NoProfile -Login -File ./r.ps1 "${args[@]}"
+    pwsh -NoExit -Command "eo ${args[@]}"
 }
 u() {
-    args=(-Personal)
+    args=()
     if [[ $# -eq 1 ]]; then
         args+=(-NoteDate "$1")
     fi
-    pwsh -NoProfile -Login -File ./r.ps1 "${args[@]}"
+    pwsh -NoExit -Command "u ${args[@]}"
 }
-alias e='./r.ps1'
+e() {
+    args=()
+    if [[ $# -eq 1 ]]; then
+        args+=(-NoteDate "$1")
+    fi
+    pwsh -NoExit -Command "e"
+}
 
 # Getting brew
 if [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
