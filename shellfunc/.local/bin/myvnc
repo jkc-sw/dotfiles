@@ -121,7 +121,8 @@ main() {
     # check it or run it
     if [[ "$new" = 'true' ]]; then
         # run it
-        ( unset SSH_TTY ; vncserver -depth "$depth" -geometry "$res" -xstartup "$HOME/.vnc/xstartup-qtile" )
+        # ( unset SSH_TTY ; vncserver -depth "$depth" -geometry "$res" -xstartup "$HOME/.vnc/xstartup-qtile" )
+        ( unset SSH_TTY ; vncserver -depth "$depth" -geometry "$res" )
     elif [[ "$dokill" = 'true' ]]; then
 
         # Get the current running ones
