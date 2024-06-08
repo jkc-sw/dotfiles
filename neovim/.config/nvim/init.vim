@@ -26,7 +26,7 @@ set mouse=nv
 set signcolumn=no
 set nowrap
 set smartcase
-set ignorecase
+" set ignorecase  # Has to disable this on 6/8/2024 where it broke my @h debug macro
 set noswapfile
 set nobackup
 set undodir=~/.vim/undodir
