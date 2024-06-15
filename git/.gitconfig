@@ -11,3 +11,7 @@
     p4 = !~/.local/bin/git-p4.py
 [rerere]
 	enabled = true
+[includeIf "gitdir:~/Perforce/"]
+    path = ~/.gitconfig.work
+[includeIf "gitdir:~/Bitbucket/"]
+    path = ~/.gitconfig.work
