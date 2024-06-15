@@ -196,10 +196,6 @@ nnoremap : ;
 vnoremap ; :
 vnoremap : ;
 
-" Has to disable this on 6/8/2024 where it broke my @h debug macro. Github issue https://github.com/neovim/neovim/issues/28287, GR 28289
-vunmap @
-vunmap Q
-
 " Takes too long for big project
 " nnoremap <leader>gW    <cmd> lua require'telescope.builtin'.lsp_workspace_symbols{}<CR>
 
