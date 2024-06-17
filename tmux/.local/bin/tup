@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+# Check if we are in tmux
+if test -z "$TMUX"; then
+    echo "ERR: Not in tmux session." >&2
+    exit 0
+fi
+
+echodebug() {
+    if [[ -n "$TSWITCH_DEBUG" ]]; then
+        echo "$@"
+    fi
+}
+
+# help
+displayHelp() {
+    echo "$(basename "$0"): Take the current working directory name"
+    echo "  and apply to the tmux window"
+    echo ""
+    echo "Args"
+    echo "  -h           : Help message"
+}
+
+# parse args
+while getopts 'h' opt; do
+    case "$opt" in
+    h)
+        displayHelp
+        exit 0
+        ;;
+    *)
+        echo "Unrecognized option $opt" >&2
+        displayHelp
+        exit 1
+        ;;
+    esac
+done
+
+set_tmux_name() {
+    local pr="$(pwd -P)"
+    local newtitle="${pr##*/}"
+    winid=$(tmux display-message -p '#I')
+    tmux rename-window -t "$winid" "$newtitle"
+}
+
+set_tmux_name
+
+# vim:et ts=4 sts=4 sw=4
