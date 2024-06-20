@@ -73,6 +73,10 @@ local general_lsp = function()
   -- bash
   setup_each_lsp('bashls', true)
 
+  -- nix
+  setup_each_lsp('nil', true)
+  -- setup_each_lsp('nixd', true)
+
   -- docker
   setup_each_lsp('dockerls', true)
 
