@@ -3,3 +3,4 @@
 *.log
 session.json
 Session.vim
+PowerShellEditorServices.json
