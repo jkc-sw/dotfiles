@@ -3,9 +3,9 @@
 # Find all the dir in the PATH and filter only existed folder
 dirs=()
 while IFS=':' read -ra pdirs; do
-    for edir in ${pdirs[@]}; do
+    for edir in "${pdirs[@]}"; do
         if [[ -d "$edir" ]]; then
-            dirs+=($edir)
+            dirs+=("$edir")
         fi
     done
 done <<<"$PATH"
@@ -14,7 +14,7 @@ done <<<"$PATH"
 bins=()
 while read -r ebin; do
     bins+=("$ebin")
-done < <(find ${dirs[@]} -executable -or -type l)
+done < <(fd -t x -t l '.*' "${dirs[@]}")
 
 # IFS=$'\n' sorted=($(sort <<<"${bins[*]}"))
 IFS=$'\n'
