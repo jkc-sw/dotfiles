@@ -55,7 +55,6 @@ return {
   -- Language support
   'modille/groovy.vim',
   'kergoth/vim-bitbake',
-  'pprovost/vim-ps1',
 
   -- Color
   'norcalli/nvim-colorizer.lua',
