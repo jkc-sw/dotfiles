@@ -97,6 +97,11 @@ local general_lsp = function()
     cmd = {vars.lsp_condaenv_bin..'cmake-language-server'},
   })
 
+  -- java
+  setup_each_lsp('jdtls', {
+    cmd = { 'jdtls' },
+  })
+
   -- python
   if vim.fn.executable('pylsp') == 1 then
     setup_each_lsp('pylsp', {
