@@ -24,4 +24,4 @@ if test -d "$HOME/miniconda3/envs/dev_env_ansible"; then
 fi
 
 # pass the command now to kitty
-kitty nvim -c "lua require'jerry.lsp.config'.alternative_lsp{}" "$@"
+kitty nvim -c "$@"

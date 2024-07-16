@@ -93,9 +93,10 @@ local general_lsp = function()
   -- setup_each_lsp('hls', true)
 
   -- cmake
-  setup_each_lsp('cmake', {
-    cmd = {vars.lsp_condaenv_bin..'cmake-language-server'},
-  })
+  -- setup_each_lsp('cmake', {
+  --   cmd = {vars.lsp_condaenv_bin..'cmake-language-server'},
+  -- })
+  setup_each_lsp('cmake', true)
 
   -- java
   setup_each_lsp('jdtls', {
@@ -126,18 +127,21 @@ local general_lsp = function()
   -- -- hdl
   -- setup_each_lsp('hdl_checker', true)
 
-end
+  if vim.fn.executable('power_es_work.sh') == 1 then
+    setup_each_lsp('powershell_es', {
+      cmd = {'power_es_work.sh'}
+    })
+  else
+    setup_each_lsp('powershell_es', {
+      cmd = {'powershell_es', '-Stdio'}
+    })
+  end
 
-local alternative_lsp = function()
-  setup_each_lsp('powershell_es', {
-    cmd = {'powershell_es', '-Stdio'}
-  })
 end
 
 return {
   general_lsp = general_lsp,
   setup_each_lsp = setup_each_lsp,
-  alternative_lsp = alternative_lsp,
   -- construct_statusline = construct_statusline
 }
 
