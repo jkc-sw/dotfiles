@@ -95,9 +95,9 @@ nnoremap <leader>T      <cmd>  lua SL()<cr>
 vnoremap <leader>T      :<c-u> lua SV()<cr>
 
 nnoremap <leader>oe     <cmd> silent execute "!tmux send-keys -t :.+1 Up Enter"<cr>
-nnoremap <leader>oo     <cmd> silent execute "!tmux send-keys -t :.-1 Up Enter"<cr>
+nnoremap <leader>ou     <cmd> silent execute "!tmux send-keys -t :.-1 Up Enter"<cr>
 nnoremap <leader>oa     <cmd> silent execute "!tmux send-keys -t :-.1 Up Enter"<cr>
-nnoremap <leader>ou     <cmd> silent execute "!tmux send-keys -t :+.1 Up Enter"<cr>
+nnoremap <leader>oo     <cmd> silent execute "!tmux send-keys -t :+.1 Up Enter"<cr>
 
 nnoremap <leader>ty     <cmd> lua require('jerry.sourcer').lua_sourcer('SOURCE_THESE_LUAS_START', 'SOURCE_THESE_LUAS_END') <cr>
 nnoremap <leader>ti     <cmd> lua require('jerry.sourcer').vim_sourcer('SOURCE_THESE_VIMS_START', 'SOURCE_THESE_VIMS_END') <cr>
