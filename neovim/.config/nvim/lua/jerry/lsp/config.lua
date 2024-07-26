@@ -70,6 +70,9 @@ local general_lsp = function()
   -- json
   setup_each_lsp('jsonls', true)
 
+  -- matlab
+  setup_each_lsp('matlab_ls', true)
+
   -- bash
   setup_each_lsp('bashls', true)
 
