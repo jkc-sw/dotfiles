@@ -92,7 +92,7 @@ local general_lsp = function()
       {
         MATLAB = {
           indexWorkspace = false,
-          installPath = findLatestMatlabInstall(),
+          installPath = '',
           matlabConnectionTiming = "onStart",
           telemetry = true
         }
