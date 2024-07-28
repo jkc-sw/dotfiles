@@ -10,6 +10,22 @@ local vim = vim
 -- updated_capabilities = require("cmp_nvim_lsp").update_capabilities(updated_capabilities)
 updated_capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+local function findLatestMatlabInstall()
+    local matlabInstallationDir = '/usr/local/MATLAB'
+    local iter = vim.fs.dir(matlabInstallationDir)
+    local versions = {}
+    for name, type in iter do
+        if type == 'directory' and string.find(name, 'R20') ~= nil then
+            table.insert(versions, vim.fs.joinpath(matlabInstallationDir, name))
+        end
+    end
+    if #versions == 0 then
+        return nil
+    end
+    table.sort(versions)
+    return versions[#versions]
+end
+
 local on_attach_vim = function(client)
   -- require'lsp_signature'.on_attach()  -- This plugin has some ghost buffer remain
 end
@@ -71,7 +87,18 @@ local general_lsp = function()
   setup_each_lsp('jsonls', true)
 
   -- matlab
-  setup_each_lsp('matlab_ls', true)
+  setup_each_lsp('matlab_ls', {
+    settings = {
+      {
+        MATLAB = {
+          indexWorkspace = true,
+          installPath = findLatestMatlabInstall(),
+          matlabConnectionTiming = "onStart",
+          telemetry = false
+        }
+      }
+    }
+  })
 
   -- bash
   setup_each_lsp('bashls', true)
