@@ -87,18 +87,7 @@ local general_lsp = function()
   setup_each_lsp('jsonls', true)
 
   -- matlab
-  setup_each_lsp('matlab_ls', {
-    settings = {
-      {
-        MATLAB = {
-          indexWorkspace = false,
-          installPath = '',
-          matlabConnectionTiming = "onStart",
-          telemetry = true
-        }
-      }
-    }
-  })
+  setup_each_lsp('matlab_ls', true)
 
   -- bash
   setup_each_lsp('bashls', true)
