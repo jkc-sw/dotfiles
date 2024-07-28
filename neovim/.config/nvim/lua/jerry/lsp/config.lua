@@ -90,10 +90,10 @@ local general_lsp = function()
   setup_each_lsp('matlab_ls', {
     settings = {
       MATLAB = {
-        indexWorkspace = false,
+        indexWorkspace = true,
         installPath = findLatestMatlabInstall(),
         matlabConnectionTiming = 'onStart',
-        telemetry = true,
+        telemetry = false,
       },
     }
   })
