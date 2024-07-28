@@ -94,7 +94,7 @@ local general_lsp = function()
           indexWorkspace = false,
           installPath = findLatestMatlabInstall(),
           matlabConnectionTiming = "onStart",
-          telemetry = false
+          telemetry = true
         }
       }
     }
