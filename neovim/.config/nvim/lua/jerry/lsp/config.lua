@@ -91,7 +91,7 @@ local general_lsp = function()
     settings = {
       {
         MATLAB = {
-          indexWorkspace = true,
+          indexWorkspace = false,
           installPath = findLatestMatlabInstall(),
           matlabConnectionTiming = "onStart",
           telemetry = false
