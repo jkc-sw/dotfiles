@@ -11,7 +11,6 @@ Invoke-Expression (& {
     $hook = if ($PSVersionTable.PSVersion.Major -lt 6) { 'prompt' } else { 'pwd' }
     (zoxide init --cmd 'c' --hook $hook powershell) -join "`n"
 })
-Invoke-Expression (& starship init powershell)
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
 
 # Source it
