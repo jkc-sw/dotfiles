@@ -28,6 +28,8 @@ function sdev() {
 
 Set-Alias -Name e -Value ./r.ps1
 
+Set-Alias -Name n -Value nvim
+
 function eo() {
     <#
     .SYNOPSIS
