@@ -23,17 +23,20 @@ echobold() {
 echosubcommand() {
     echo -e "${BLUE_BOLD_TEXT}$1${PLAIN}"
 }
+echodebug() {
+    echo -e "${BOLD_TEXT}DEBUG${PLAIN}: $*"
+}
 echoinfo() {
-    echo -e "${BOLD_TEXT}INFO${PLAIN}: $1"
+    echo -e "${BOLD_TEXT}INFO${PLAIN}: $*"
 }
 echoerror() {
-    echo -e "${RED_BOLD_TEXT}ERROR${PLAIN}: $1" >&2
+    echo -e "${RED_BOLD_TEXT}ERROR${PLAIN}: $*" >&2
 }
 echosuccess() {
-    echo -e "${GREEN_BOLD_TEXT}SUCCESS${PLAIN}: $1"
+    echo -e "${GREEN_BOLD_TEXT}SUCCESS${PLAIN}: $*"
 }
 echowarning() {
-    echo -e "${YELLO_BOLD_TEXT}WARNING${PLAIN}: $1"
+    echo -e "${YELLO_BOLD_TEXT}WARNING${PLAIN}: $*"
 }
 
 # # Awesome stuff from https://unix.stackexchange.com/a/351658
@@ -409,13 +412,16 @@ update_zsh_plugins() { (
 
 # Source some tools that I don't use often
 sdev() {
-    if command -v conda >/dev/null 2>&1; then
+    out="$(type conda)"
+    if [[ "$out" == *shell\ function* ]] ; then
+        # echodebug "conda is a function already"
         return 0
     fi
     if [[ ! -e "$HOME/miniconda3/bin/conda" ]]; then
         echowarning "Miniconda is not installed. After install, try again"
         return 1
     fi
+    # echodebug "Need to source conda"
     # Add conda based on your shell
     thisShell="$(ps --no-headers -o comm -p $$)"
     # >>> conda initialize >>>
