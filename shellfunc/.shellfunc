@@ -133,6 +133,14 @@ rt() (
     fi
 )
 
+ag() {
+    if ! type -p lazygit &>/dev/null; then
+        echowarning "lazygit not found in the PATH"
+        return
+    fi
+    lazygit
+}
+
 note_cb() {
     local name="$1"
     local jdir='/home/chenkua/repos/journal'
