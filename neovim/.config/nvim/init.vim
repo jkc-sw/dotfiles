@@ -169,7 +169,7 @@ inoremap <c-k>          <cmd>  lua vim.lsp.buf.signature_help()<CR>
 
 nnoremap <leader>gO     <cmd>  lua vim.diagnostic.set_loclist() <CR>
 nnoremap <leader>gs     <cmd>  LspInfo <CR>
-nnoremap <leader>gg     <cmd>  lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>
+nnoremap <leader>gg     <cmd>  lua vim.lsp.stop_client(vim.lsp.get_clients())<CR>
 nnoremap <leader>gn     <cmd>  lua vim.diagnostic.goto_next { wrap = false, severity = 'Error' }<CR>
 nnoremap <leader>gp     <cmd>  lua vim.diagnostic.goto_prev { wrap = false, severity = 'Error' }<CR>
 nnoremap <leader>gN     <cmd>  lua vim.diagnostic.goto_next { wrap = false, severity_limit = 'Warning' }<CR>
