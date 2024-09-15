@@ -8,7 +8,7 @@ local vim = vim
 
 -- local updated_capabilities = vim.lsp.protocol.make_client_capabilities()
 -- updated_capabilities = require("cmp_nvim_lsp").update_capabilities(updated_capabilities)
-updated_capabilities = require("cmp_nvim_lsp").default_capabilities()
+local updated_capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 local function findLatestMatlabInstall()
     local matlabInstallationDir = '/usr/local/MATLAB'
@@ -132,22 +132,31 @@ local general_lsp = function()
   })
 
   -- python
-  if vim.fn.executable('pylsp') == 1 then
-    setup_each_lsp('pylsp', {
-      single_file_support = false,
-      root_dir = function(client)
-        _ = client
-        return vim.fn.getcwd()
-      end,
-      settings={
-        pylsp={plugins={pycodestyle={maxLineLength=300}}}
+  -- Trying out ruff_lsp
+  setup_each_lsp('ruff_lsp', {
+    init_options = {
+      settings = {
+        -- Any extra CLI arguments for `ruff` go here.
+        args = {},
       }
-    })
-  else
-    if vim.fn.executable('pyright') == 1 then
-      setup_each_lsp('pyright', true)
-    end
-  end
+    }
+  })
+  -- if vim.fn.executable('pylsp') == 1 then
+  --   setup_each_lsp('pylsp', {
+  --     single_file_support = false,
+  --     root_dir = function(client)
+  --       _ = client
+  --       return vim.fn.getcwd()
+  --     end,
+  --     settings={
+  --       pylsp={plugins={pycodestyle={maxLineLength=300}}}
+  --     }
+  --   })
+  -- else
+  --   if vim.fn.executable('pyright') == 1 then
+  --     setup_each_lsp('pyright', true)
+  --   end
+  -- end
 
   -- -- verilog & systemverilog
   -- setup_each_lsp('svls', true)
