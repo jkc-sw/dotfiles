@@ -53,7 +53,7 @@ echowarning() {
 # Timezone
 export TZ='America/Los_Angeles'
 
-export PASSWORD_STORE_DIR="$HOME/repos/mypasswordstore/"
+export PASSWORD_STORE_DIR="$HOME/repos/mypasswordstore"
 
 # addThisPath "$HOME/.cargo/bin"
 # addThisPath "$HOME/.local/bin"
