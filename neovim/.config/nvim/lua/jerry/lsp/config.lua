@@ -105,7 +105,7 @@ local general_lsp = function()
   -- Need to do some special configuration
   -- Missing range token handling in neovim: https://github.com/neovim/neovim/issues/23026
   -- Known performance issue in Nil: https://github.com/oxalica/nil/issues/83
-  setup_each_lsp('nil', true)
+  setup_each_lsp('nil_ls', true)
   -- setup_each_lsp('nixd', true)
 
   -- docker
