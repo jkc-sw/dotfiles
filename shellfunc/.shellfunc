@@ -133,13 +133,8 @@ rt() (
     fi
 )
 
-ag() {
-    if ! type -p lazygit &>/dev/null; then
-        echowarning "lazygit not found in the PATH"
-        return
-    fi
-    lazygit
-}
+alias ag=lazygit
+alias ai=yazi
 
 note_cb() {
     local name="$1"
