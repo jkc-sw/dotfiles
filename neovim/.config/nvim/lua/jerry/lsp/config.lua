@@ -62,7 +62,7 @@ local general_lsp = function()
 
   -- lua
   setup_each_lsp('lua_ls', {
-		cmd = 'lua-language-server',
+		cmd = {'lua-language-server'},
 		settings = {
 			Lua = {
 				runtime = {
