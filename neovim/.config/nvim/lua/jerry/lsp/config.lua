@@ -1,8 +1,7 @@
+require 'jerry.lsp.setup'
 
-require'jerry.lsp.setup'
-
-local vars = require'jerry.lsp.vars'
-local lspconfig = require'lspconfig'
+local vars = require 'jerry.lsp.vars'
+local lspconfig = require 'lspconfig'
 local util = lspconfig.util
 local vim = vim
 
@@ -11,19 +10,19 @@ local vim = vim
 local updated_capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 local function findLatestMatlabInstall()
-    local matlabInstallationDir = '/usr/local/MATLAB'
-    local iter = vim.fs.dir(matlabInstallationDir)
-    local versions = {}
-    for name, type in iter do
-        if type == 'directory' and string.find(name, 'R20') ~= nil then
-            table.insert(versions, vim.fs.joinpath(matlabInstallationDir, name))
-        end
+  local matlabInstallationDir = '/usr/local/MATLAB'
+  local iter = vim.fs.dir(matlabInstallationDir)
+  local versions = {}
+  for name, type in iter do
+    if type == 'directory' and string.find(name, 'R20') ~= nil then
+      table.insert(versions, vim.fs.joinpath(matlabInstallationDir, name))
     end
-    if #versions == 0 then
-        return nil
-    end
-    table.sort(versions)
-    return versions[#versions]
+  end
+  if #versions == 0 then
+    return nil
+  end
+  table.sort(versions)
+  return versions[#versions]
 end
 
 local on_attach_vim = function(client)
@@ -48,7 +47,6 @@ local function setup_each_lsp(target, opt)
 end
 
 local general_lsp = function()
-
   -- clangd
   setup_each_lsp('clangd', {
     filetypes = { "c", "cpp", "cc", "objc", "objcpp" },
@@ -62,26 +60,26 @@ local general_lsp = function()
 
   -- lua
   setup_each_lsp('lua_ls', {
-		cmd = {'lua-language-server'},
-		settings = {
-			Lua = {
-				runtime = {
-					version = 'LuaJIT', -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-					path = vim.split(package.path, ';'), -- Setup your lua path
-				},
-				diagnostics = {
-					globals = {'vim'}, -- Get the language server to recognize the `vim` global
-				},
-				workspace = {
-					-- Make the server aware of Neovim runtime files
-					library = {
-						[vim.fn.expand('$VIMRUNTIME/lua')] = true,
-						[vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
-					},
-				},
-			},
-		},
-	})
+    cmd = { 'lua-language-server' },
+    settings = {
+      Lua = {
+        runtime = {
+          version = 'LuaJIT',             -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+          path = vim.split(package.path, ';'), -- Setup your lua path
+        },
+        diagnostics = {
+          globals = { 'vim' }, -- Get the language server to recognize the `vim` global
+        },
+        workspace = {
+          -- Make the server aware of Neovim runtime files
+          library = {
+            [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+            [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+          },
+        },
+      },
+    },
+  })
 
   -- json
   setup_each_lsp('jsonls', true)
@@ -150,8 +148,8 @@ local general_lsp = function()
         _ = client
         return vim.fn.getcwd()
       end,
-      settings={
-        pylsp={plugins={pycodestyle={maxLineLength=300}}}
+      settings = {
+        pylsp = { plugins = { pycodestyle = { maxLineLength = 300 } } }
       }
     })
   else
@@ -168,14 +166,36 @@ local general_lsp = function()
 
   if vim.fn.executable('power_es_work.sh') == 1 then
     setup_each_lsp('powershell_es', {
-      cmd = {'power_es_work.sh'}
+      cmd = { 'power_es_work.sh' }
     })
   else
     setup_each_lsp('powershell_es', {
-      cmd = {'powershell_es', '-Stdio'}
+      cmd = { 'powershell_es', '-Stdio' }
     })
   end
 
+  -- Sonarlint
+  require('sonarlint').setup({
+    server = {
+      cmd = { 'sonarlint-ls' },
+      -- All settings are optional
+      -- settings = {
+      --   -- The default for sonarlint is {}, this is just an example
+      --   sonarlint = {
+      --     rules = {
+      --       ['typescript:S101'] = { level = 'on', parameters = { format = '^[A-Z][a-zA-Z0-9]*$' } },
+      --       ['typescript:S103'] = { level = 'on', parameters = { maximumLineLength = 180 } },
+      --       ['typescript:S106'] = { level = 'on' },
+      --       ['typescript:S107'] = { level = 'on', parameters = { maximumFunctionParameters = 7 } }
+      --     }
+      --   }
+      -- }
+    },
+    filetypes = {
+      'python',
+      'cpp',
+    }
+  })
 end
 
 return {
