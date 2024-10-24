@@ -141,6 +141,7 @@ local general_lsp = function()
       }
     }
   })
+
   if vim.fn.executable('pylsp') == 1 then
     setup_each_lsp('pylsp', {
       single_file_support = false,
