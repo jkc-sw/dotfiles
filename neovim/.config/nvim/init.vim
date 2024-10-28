@@ -91,6 +91,8 @@ nnoremap <leader>V      <cmd>  exec("lua require('jerry.telescope.pickers').find
 nnoremap <leader>r      <cmd>  silent exec '!tswitch -c nv'<CR>
 nnoremap <leader>,.     <cmd>  call execute(getline('.'), '')<cr>
 vnoremap <leader>,.     :<C-u> lua require('jerry.sourcer').eval_vimscript(table.concat(vim.fn['jerry#common#GetVisualSelectionAsList'](), "\n"))<cr>
+nnoremap <leader>,p     <cmd>  call luaeval(getline('.'), '')<cr>
+vnoremap <leader>,p     :<C-u> lua require('jerry.sourcer').eval_lua(table.concat(vim.fn['jerry#common#GetVisualSelectionAsList'](), "\n"))<cr>
 nnoremap <leader>T      <cmd>  lua SL()<cr>
 vnoremap <leader>T      :<c-u> lua SV()<cr>
 

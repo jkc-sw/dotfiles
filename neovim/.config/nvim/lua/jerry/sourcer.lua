@@ -135,7 +135,7 @@ end
 -- @brief take a block of text and execute them as vimscript
 -- @param x (str) - block of text, \n as line ending
 M.eval_vimscript = function (x)
-  vim.api.nvim_exec(x, false)
+  vim.api.nvim_exec2(x, {output = false})
 end
 
 -- @brief take a block of text and execute them as lua code
