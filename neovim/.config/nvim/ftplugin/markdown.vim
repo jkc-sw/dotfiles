@@ -13,6 +13,7 @@ func! ToClip(content)
     endif
     let jfoutput = luaeval("vim.system({_A[1]}, { stdin = _A[2], text = true, stderr = false }):wait()", [g:clip_supplier[0], a:content])
     echom jfoutput
+    let @" = a:content
 endfunc
 
 " A function to copy the stuff
