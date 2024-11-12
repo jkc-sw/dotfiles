@@ -111,14 +111,17 @@ setopt HIST_SAVE_NO_DUPS
 # # custom setup
 # . "$HOME/.shellfunc"
 
-# Disable the bracketed paste mode, this makes the items I pasted in the
-# terminal to have last char capitalized.
-: <<'EOF'
-```ps1
-en ; nvim "personal-topic\2022-02-03-LinuxEverything.md" -c "/## Bracketed Paste Mode/"
-```
-EOF
-unset zle_bracketed_paste
+# # I have switched to Wezterm, so I don't need this hack anymore.
+# # On Windows Terminal, I should unset the bracketed paste mode.
+# # Reason:
+# #   Disable the bracketed paste mode, this makes the items I pasted in the
+# #   terminal to have last char capitalized.
+# : <<'EOF'
+# ```ps1
+# en ; nvim "personal-topic\2022-02-03-LinuxEverything.md" -c "/## Bracketed Paste Mode/"
+# ```
+# EOF
+# unset zle_bracketed_paste
 
 
 #===============================================================================
