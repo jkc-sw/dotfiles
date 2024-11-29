@@ -63,20 +63,20 @@ return {
   -- Local
   'jkc-sw/focus-side.vim',
   -- {
-  --   dir = vim.uv.os_homedir()..'/repos/focus-side.vim'
+  --   dir = (vim.uv or vim.loop).os_homedir()..'/repos/focus-side.vim'
   -- },
   'jkc-sw/vim-matlab',
   -- {
-  --   dir = vim.uv.os_homedir()..'/repos/vim-matlab.vim'
+  --   dir = (vim.uv or vim.loop).os_homedir()..'/repos/vim-matlab.vim'
   -- },
   {
-    dir = vim.uv.os_homedir()..'/.config/nvim/pack/perforce/start/perforce'
+    dir = (vim.uv or vim.loop).os_homedir()..'/.config/nvim/pack/perforce/start/perforce'
   },
 
 
   -- for work
   {
-    dir = vim.uv.os_homedir()..'/.config/nvim/pack/mks/start/mks'
+    dir = (vim.uv or vim.loop).os_homedir()..'/.config/nvim/pack/mks/start/mks'
   },
   -- Not working
   -- use 'sheerun/vim-polyglot'
