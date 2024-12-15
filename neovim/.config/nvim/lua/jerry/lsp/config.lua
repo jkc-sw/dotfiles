@@ -115,8 +115,8 @@ local general_lsp = function()
   -- yaml
   setup_each_lsp('yamlls', true)
 
-  -- tsserver
-  setup_each_lsp('tsserver', true)
+  -- ts_ls
+  setup_each_lsp('ts_ls', true)
 
   -- -- haskell -- Cannot get it to work, not sure how to handle the import/setup the haskell project for xmonad
   -- setup_each_lsp('hls', true)
@@ -133,7 +133,7 @@ local general_lsp = function()
   })
 
   -- python
-  setup_each_lsp('ruff_lsp', {
+  setup_each_lsp('ruff', {
     init_options = {
       settings = {
         -- Any extra CLI arguments for `ruff` go here.
