@@ -84,25 +84,22 @@ fi
 
 # For my personal note
 eo() {
-    args=()
-    if [[ $# -eq 1 ]]; then
+    local args=()
+    if [[ "$#" -eq 1 ]]; then
         args+=(-NoteDate "$1")
     fi
-    pwsh -NoExit -Command "eo ${args[@]}"
+    pwsh -NoExit -Command "eo ${args[*]}"
 }
 u() {
-    args=()
-    if [[ $# -eq 1 ]]; then
+    local args=()
+    if [[ "$#" -eq 1 ]]; then
         args+=(-NoteDate "$1")
     fi
-    pwsh -NoExit -Command "u ${args[@]}"
+    pwsh -NoExit -Command "u ${args[*]}"
 }
 e() {
-    args=()
-    if [[ $# -eq 1 ]]; then
-        args+=(-NoteDate "$1")
-    fi
-    pwsh -NoExit -Command "e"
+    local args=("$@")
+    pwsh -NoExit -Command "e ${args[*]}"
 }
 
 # Getting brew
