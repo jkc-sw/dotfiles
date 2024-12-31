@@ -11,7 +11,7 @@ Invoke-Expression (& {
     $hook = if ($PSVersionTable.PSVersion.Major -lt 6) { 'prompt' } else { 'pwd' }
     (zoxide init --cmd 'c' --hook $hook powershell) -join "`n"
 })
-Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
+# Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
 
 # Source it
 function sdev() {
@@ -25,6 +25,10 @@ function sdev() {
     # (& "~/miniconda3/bin/conda" "shell.powershell" "hook") | Out-String | Invoke-Expression
     #endregion
 }
+
+Set-Alias -Name ai -Value yazi
+
+Set-Alias -Name ag -Value lazygit
 
 Set-Alias -Name e -Value ./r.ps1
 
