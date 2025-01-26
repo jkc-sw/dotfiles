@@ -81,6 +81,10 @@ local general_lsp = function()
     },
   })
 
+  -- go
+  setup_each_lsp('gopls', true)
+  setup_each_lsp('golangci_lint_ls', true)
+
   -- json
   setup_each_lsp('jsonls', true)
 
