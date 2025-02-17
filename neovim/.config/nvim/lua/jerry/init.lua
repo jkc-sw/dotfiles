@@ -188,4 +188,15 @@ require('telescope').load_extension('fzf')
 
 require'colorizer'.setup()
 
+-- Add custom filetype
+vim.filetype.add({
+  extensions = {
+    inc = 'bitbake',
+    keymap = 'keymap',
+  },
+  pattern = {
+    ['want.*.rc'] = 'wantrc'
+  }
+})
+
 -- vim:et sw=2 ts=2 sts=2

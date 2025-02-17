@@ -255,11 +255,6 @@ augroup nowhitespaceattheend
     autocmd BufWritePre * :call jerry#common#TrimWhitespace()
 augroup END
 
-augroup matlabFileDetection
-    autocmd!
-    autocmd BufRead,BufNewFile *.m set filetype=matlab
-augroup END
-
 augroup LuaHighlight
     autocmd!
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
