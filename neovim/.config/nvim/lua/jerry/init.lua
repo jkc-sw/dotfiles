@@ -193,9 +193,6 @@ vim.filetype.add({
   extensions = {
     inc = 'bitbake',
     keymap = 'keymap',
-  },
-  pattern = {
-    ['want.*.rc'] = 'wantrc'
   }
 })
 
