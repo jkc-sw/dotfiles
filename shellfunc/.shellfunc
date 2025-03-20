@@ -135,13 +135,13 @@ alias ai=yazi
 
 note_cb() {
     local name="$1"
-    local jdir='/home/chenkua/repos/journal'
+    local jdir="$HOME/repos/journal"
     tmux rename-window -t "$name:1" note
     tmux send-keys -t "$name:note" "exec pwsh -NoLogo -NoExit -Login -WorkingDirectory '$jdir'" Enter
 
 }
 note() {
-    local jdir='/home/chenkua/repos/journal'
+    local jdir="$HOME/repos/journal"
     if [[ ! -d "$jdir" ]]; then
         echo "ERR (note): cannot switch to '$jdir' directory" >&2
         echo 'ERR (note): Press any key to close this session.' >&2
@@ -178,7 +178,7 @@ en() {
         echo 'ERR (jfssh): Cannot locate env var: ASUS_USER' >&2
         return 1
     fi
-    local cmd="\". /home/chenkua/.zshrc ; note\""
+    local cmd="\". '$HOME/.zshrc' ; note\""
     local sshargs=("${ASUS_USER}@${ASUS_IP}" zsh -c "$cmd")
 
     if tty -s; then
