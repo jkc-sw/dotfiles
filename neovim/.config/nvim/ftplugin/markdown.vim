@@ -33,7 +33,7 @@ func! TakeMeHereShell(oneLiner)
     let cl = substitute(cl, '\*', '\\\\*', 'g')
     let cl = substitute(cl, '/', '\\/', 'g')
     let cl = substitute(cl, '[', '\\[', 'g')
-    let out = "```ps1\n" . 'en ; nvim "' . fp . '" -c "/^' . cl . '/"' . "\n```\n"
+    let out = "```\n" . 'en ; nvim "' . fp . '" -c "/^' . cl . '/"' . "\n```\n"
     if a:oneLiner
         let out = '`en ; nvim "' . fp . '" -c "/^' . cl . '/"`'
     endif
@@ -87,7 +87,7 @@ function! WrapLink(exe, label, link)
     let alabel = v:lua.string.gsub(alabel, "1~$", "")
     let txt = 'Use below to handle this: ' . alabel . "\n"
     " let txt = txt . "\n"
-    let txt = txt . "```ps1\n"
+    let txt = txt . "```\n"
     let csp1 = "Start-Process \"" . a:exe . "\" -ArgumentList '\"" . link . "\"'\n"
     if strlen(a:exe) < 1
         let csp1 = "Start-Process \"" . link . "\"\n"
