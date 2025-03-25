@@ -221,6 +221,8 @@ tmux_attach() {
                 tmux attach-session -t "$name"
             fi
         else
+            # Detach other clients first
+            tmux detach-client -s "$name"
             if [[ -n "$TMUX" ]]; then
                 tmux switch-client -t "$name"
             else
@@ -246,6 +248,8 @@ tmux_attach() {
     fi
 
     # attach to the session
+    # Detach other clients first
+    tmux detach-client -s "$newname"
     if [[ -n "$TMUX" ]]; then
         tmux switch-client -t "$newname"
     else
