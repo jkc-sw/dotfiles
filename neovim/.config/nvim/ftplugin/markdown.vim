@@ -5,6 +5,7 @@ nnoremap <leader>pt     <cmd>  call ToClip(TakeMeHereShell(v:false))<CR>
 nnoremap <leader>pn     <cmd>  call ToClip(TakeMeHereShell(v:true))<CR>
 nnoremap <leader>pf     <cmd>  call ToClip(TakeMeHereVim())<CR>
 
+
 " Define a Toclip Vim Function
 " @param content - The string content
 func! ToClip(content)
@@ -364,6 +365,15 @@ function! AskLabelForPictureName(label)
     return txt
 endfunction
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" @brief Get the UUID from the uuidgen
+" @return str - str:<uuid>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! GetUuid()
+    let out = luaeval("string.sub(vim.system({'uuidgen'}, { text = true }):wait().stdout, 1, -2)")
+    return 'src:' . out
+endfunction
+
 augroup markdownFenceHighlight
     autocmd!
     autocmd BufWritePre                   *.md call SearchAndReplaceInvalidSharePointLink()
@@ -393,6 +403,7 @@ augroup markdownFenceHighlight
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ynk <c-r>=WrapLinkWithBrowser('', 'Youtube')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,t  <c-r>=GetDateOffset('0', '## ')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,h  <c-r>=GetDateOffset('', '## ')<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,n  <c-r>=FormatUuid()<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .u  <c-r>=strftime('- %m/%d/%Y %H:%M:%S %p')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .b  <c-r>=strftime('- %m/%d/%Y %H:%M:%S %p Break')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .n  +
