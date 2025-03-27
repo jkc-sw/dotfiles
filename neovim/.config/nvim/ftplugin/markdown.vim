@@ -365,15 +365,6 @@ function! AskLabelForPictureName(label)
     return txt
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" @brief Get the UUID from the uuidgen
-" @return str - str:<uuid>
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! GetUuid()
-    let out = luaeval("string.sub(vim.system({'uuidgen'}, { text = true }):wait().stdout, 1, -2)")
-    return 'src:' . out
-endfunction
-
 augroup markdownFenceHighlight
     autocmd!
     autocmd BufWritePre                   *.md call SearchAndReplaceInvalidSharePointLink()

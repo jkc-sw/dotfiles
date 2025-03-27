@@ -12,9 +12,9 @@ local M = {}
 --- @param tag string The `src:uuid` tag to search for.
 --- @throws string Error message if the tag format is invalid, ripgrep fails, or multiple results are found.
 M.jump_to_srcuuid = function(tag)
-  local pattern = "^src:%w%w%w%w%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%w%w%w%w%w%w%w%w$"
+  local pattern = "^%w%w%w%w%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%w%w%w%w%w%w%w%w$"
   if not tag:match(pattern) then
-    error("Invalid tag format. Expected src:<uuid>")
+    error("Invalid tag format. Expected <uuid>")
   end
 
   -- I don't check whether rg exist. I am using home-manager with nix to build neovim setup.
@@ -26,7 +26,7 @@ M.jump_to_srcuuid = function(tag)
     "--no-heading",
     "--color=never",
     "-e",
-    tag,
+    "src:" .. tag,
     "-g",
     "*.md",
   }
@@ -53,4 +53,28 @@ M.jump_to_srcuuid = function(tag)
   vim.cmd(string.format(':%d', line_number))
 end
 
+--- @brief Matches a specific pattern in the current line and returns it.
+--- @return The matched pattern if found.
+--- @error Throws an error if the pattern is not found.
+M.match_uuid = function ()
+  local line = vim.api.nvim_get_current_line()
+  local pattern = "src:(%w%w%w%w%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%w%w%w%w%w%w%w%w)"
+  local uuid = line:match(pattern)
+  if not uuid then
+    error("Cannot find src:uuid in the current line")
+  end
+  return uuid
+end
+
+--- @brief Generate and return a new uuid tag as string
+--- @return string
+--- @throws string Error message if the tag format is invalid, ripgrep fails, or multiple results are found.
+M.get_uuid = function()
+  local uuid = string.sub(vim.system({'uuidgen'}, { text = true }):wait().stdout, 1, -2)
+  local out = 'src:' .. uuid
+  return out
+end
+
 return M
+
+-- vim:et ts=2 sts=2 sw=2
