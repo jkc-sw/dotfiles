@@ -44,22 +44,22 @@ M.setup = function()
         end
       })
 
-      vim.cmd("iabbrev ,n  <c-r>=v:lua.require('jerry.markdown').new_srcuuid()<cr>")
+      vim.cmd("iabbrev ,n  <c-r>=v:lua.require('jerry.markdown').new_originuuid()<cr>")
     end
   })
 end
 
---- @brief Given the src:uuid tag, jump to the file with that line
---- Jump to the source file and line number corresponding to a given `src:uuid` tag.
+--- @brief Given the origin:uuid tag, jump to the file with that line
+--- Jump to the source file and line number corresponding to a given `origin:uuid` tag.
 ---
---- This function searches for a specific `src:uuid` tag within markdown files in the current working directory
---- using ripgrep. It expects the tag to be in the format `src:cf8d08d2-5b5b-4d20-9fc3-878b1ac78b18`.
+--- This function searches for a specific `origin:uuid` tag within markdown files in the current working directory
+--- using ripgrep. It expects the tag to be in the format `origin:cf8d08d2-5b5b-4d20-9fc3-878b1ac78b18`.
 --- If the tag is found, it opens the corresponding file and moves the cursor to the line number
 --- where the tag was found.
 ---
---- @param uuid string The `src:uuid` uuid to search for.
+--- @param uuid string The `origin:uuid` uuid to search for.
 --- @throws string Error message if the tag format is invalid, ripgrep fails, or multiple results are found.
-M.jump_to_srcuuid = function(uuid)
+M.jump_to_originuuid = function(uuid)
   local pattern = "^%w%w%w%w%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%w%w%w%w%w%w%w%w$"
   if not uuid:match(pattern) then
     error("Invalid uuid format. Expected <uuid>")
@@ -74,7 +74,7 @@ M.jump_to_srcuuid = function(uuid)
     "--no-heading",
     "--color=never",
     "-e",
-    "src:" .. uuid,
+    "origin:" .. uuid,
     "-g",
     "*.md",
   }
@@ -85,7 +85,7 @@ M.jump_to_srcuuid = function(uuid)
 
   local output = ret.stdout
   if not output then
-    error(string.format("ripgrep cannot find any src:uuid matching %s", uuid))
+    error(string.format("ripgrep cannot find any origin:uuid matching %s", uuid))
   end
   local lines = vim.split(output, "\n", { trimempty = true })
 
@@ -109,10 +109,10 @@ end
 --- @error Throws an error if the pattern is not found.
 M.match_uuid_in_current_line = function()
   local line = vim.api.nvim_get_current_line()
-  local pattern = "src:(%w%w%w%w%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%w%w%w%w%w%w%w%w)"
+  local pattern = "origin:(%w%w%w%w%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%w%w%w%w%w%w%w%w)"
   local uuid = line:match(pattern)
   if not uuid then
-    error("Cannot find src:uuid in the current line")
+    error("Cannot find origin:uuid in the current line")
   end
   return uuid
 end
@@ -120,9 +120,9 @@ end
 --- @brief Generate and return a new uuid tag as string
 --- @return string
 --- @throws string Error message if the tag format is invalid, ripgrep fails, or multiple results are found.
-M.new_srcuuid = function()
+M.new_originuuid = function()
   local uuid = string.sub(vim.system({'uuidgen'}, { text = true }):wait().stdout, 1, -2)
-  local out = 'src:' .. uuid
+  local out = 'origin:' .. uuid
   return out
 end
 
@@ -133,7 +133,7 @@ end
 M.new_search_pattern_as_markdown_multiline_code_block = function()
   local uuid = M.match_uuid_in_current_line()
   local out = string.format([[```
-en ; nvim "lua require('jerry.markdown').jump_to_srcuuid('%s')"
+en ; nvim "lua require('jerry.markdown').jump_to_originuuid('%s')"
 ```]], uuid)
   return out
 end
@@ -144,7 +144,7 @@ end
 --- @throws When uuid is not found
 M.new_search_pattern_as_markdown_singleline_code_block = function()
   local uuid = M.match_uuid_in_current_line()
-  local out = string.format([[`en ; nvim "lua require('jerry.markdown').jump_to_srcuuid('%s')"`]], uuid)
+  local out = string.format([[`en ; nvim "lua require('jerry.markdown').jump_to_originuuid('%s')"`]], uuid)
   return out
 end
 
@@ -158,7 +158,7 @@ M.new_search_pattern_from_inside_vim = function()
   local out = string.format([[%s
 
 ```vim
-lua require('jerry.markdown').jump_to_srcuuid('%s')
+lua require('jerry.markdown').jump_to_originuuid('%s')
 ```]], heading, uuid)
   return out
 end
