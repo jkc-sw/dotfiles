@@ -9,6 +9,8 @@ RT = function(...) require('jerry.asyncjob').run_to_tab(...) end
 RS = function(...) require('jerry.asyncjob').run_to_split(...) end
 RV = function(...) require('jerry.asyncjob').run_to_vsplit(...) end
 
+require('jerry.markdown').setup()
+
 require('lualine').setup {
   options = {
     theme = 'jellybeans'

@@ -1,21 +1,7 @@
 
 nnoremap <leader>th     <cmd>  call search('^## \d\{4}-\d\{2}-\d\{2}', 'bW') <cr>
 nnoremap <leader>tn     <cmd>  call search('^## \d\{4}-\d\{2}-\d\{2}', 'W') <cr>
-nnoremap <leader>pt     <cmd>  call ToClip(v:lua.require('jerry.markdown').new_search_pattern_as_markdown_multiline_code_block())<CR>
-nnoremap <leader>pn     <cmd>  call ToClip(v:lua.require('jerry.markdown').new_search_pattern_as_markdown_singleline_code_block())<CR>
-nnoremap <leader>pf     <cmd>  call ToClip(v:lua.require('jerry.markdown').new_search_pattern_from_inside_vim())<CR>
 
-
-" Define a Toclip Vim Function
-" @param content - The string content
-func! ToClip(content)
-    if len(g:clip_supplier) < 1
-        throw "No clipboard supplier found. Check g:clip_supplier"
-    endif
-    let jfoutput = luaeval("vim.system({_A[1]}, { stdin = _A[2], text = true, stderr = false }):wait()", [g:clip_supplier[0], a:content])
-    echom jfoutput
-    let @" = a:content
-endfunc
 
 " A function to copy the stuff
 " @brief when working for the journal, need a way to reference the line
@@ -394,7 +380,6 @@ augroup markdownFenceHighlight
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ynk <c-r>=WrapLinkWithBrowser('', 'Youtube')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,t  <c-r>=GetDateOffset('0', '## ')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,h  <c-r>=GetDateOffset('', '## ')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,n  <c-r>=v:lua.require('jerry.markdown').new_srcuuid()<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .u  <c-r>=strftime('- %m/%d/%Y %H:%M:%S %p')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .b  <c-r>=strftime('- %m/%d/%Y %H:%M:%S %p Break')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .n  +

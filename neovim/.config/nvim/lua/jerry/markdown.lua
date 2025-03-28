@@ -8,6 +8,46 @@ SOURCE_THESE_VIMS_END
 --]]
 
 local M = {}
+local send_to_clipboard = require('jerry.clipboard').send_to_clipboard
+
+--- @brief Setup all the autocommand
+--- @throws TBD
+M.setup = function()
+  local augroup_id = vim.api.nvim_create_augroup("jerry_markdown", {})
+  vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter", "TabEnter"}, {
+    group = augroup_id,
+    desc = 'TBD',
+    pattern = {"*.md"},
+    callback = function(ev)
+
+      vim.api.nvim_buf_set_keymap(0, 'n', '<leader>pt', '', {
+        noremap = true,
+        desc = 'TBD',
+        callback = function()
+          send_to_clipboard(M.new_search_pattern_as_markdown_multiline_code_block())
+        end
+      })
+
+      vim.api.nvim_buf_set_keymap(0, 'n', '<leader>pn', '', {
+        noremap = true,
+        desc = 'TBD',
+        callback = function()
+          send_to_clipboard(M.new_search_pattern_as_markdown_singleline_code_block())
+        end
+      })
+
+      vim.api.nvim_buf_set_keymap(0, 'n', '<leader>pf', '', {
+        noremap = true,
+        desc = 'TBD',
+        callback = function()
+          send_to_clipboard(M.new_search_pattern_from_inside_vim())
+        end
+      })
+
+      vim.cmd("iabbrev ,n  <c-r>=v:lua.require('jerry.markdown').new_srcuuid()<cr>")
+    end
+  })
+end
 
 --- @brief Given the src:uuid tag, jump to the file with that line
 --- Jump to the source file and line number corresponding to a given `src:uuid` tag.
