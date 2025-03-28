@@ -9,12 +9,12 @@ local M = {}
 --- If the tag is found, it opens the corresponding file and moves the cursor to the line number
 --- where the tag was found.
 ---
---- @param tag string The `src:uuid` tag to search for.
+--- @param uuid string The `src:uuid` uuid to search for.
 --- @throws string Error message if the tag format is invalid, ripgrep fails, or multiple results are found.
-M.jump_to_srcuuid = function(tag)
+M.jump_to_srcuuid = function(uuid)
   local pattern = "^%w%w%w%w%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%w%w%w%w%w%w%w%w$"
-  if not tag:match(pattern) then
-    error("Invalid tag format. Expected <uuid>")
+  if not uuid:match(pattern) then
+    error("Invalid uuid format. Expected <uuid>")
   end
 
   -- I don't check whether rg exist. I am using home-manager with nix to build neovim setup.
@@ -26,7 +26,7 @@ M.jump_to_srcuuid = function(tag)
     "--no-heading",
     "--color=never",
     "-e",
-    "src:" .. tag,
+    "src:" .. uuid,
     "-g",
     "*.md",
   }
@@ -36,6 +36,9 @@ M.jump_to_srcuuid = function(tag)
   end
 
   local output = ret.stdout
+  if not output then
+    error(string.format("ripgrep cannot find any src:uuid matching %s", uuid))
+  end
   local lines = vim.split(output, "\n", { trimempty = true })
 
   if #lines ~= 1 then
@@ -69,7 +72,7 @@ end
 --- @brief Generate and return a new uuid tag as string
 --- @return string
 --- @throws string Error message if the tag format is invalid, ripgrep fails, or multiple results are found.
-M.get_uuid = function()
+M.new_uuid = function()
   local uuid = string.sub(vim.system({'uuidgen'}, { text = true }):wait().stdout, 1, -2)
   local out = 'src:' .. uuid
   return out
