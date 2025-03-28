@@ -136,9 +136,8 @@ alias ai=yazi
 note_cb() {
     local name="$1"
     local jdir="$HOME/repos/journal"
+    cd "$jdir" || return 1
     tmux rename-window -t "$name:1" note
-    tmux send-keys -t "$name:note" "exec pwsh -NoLogo -NoExit -Login -WorkingDirectory '$jdir'" Enter
-
 }
 note() {
     local jdir="$HOME/repos/journal"
@@ -148,7 +147,6 @@ note() {
         read
         return 1
     fi
-    cd "$jdir"
     tmux_attach 'note' 'note_cb' ''
 }
 
