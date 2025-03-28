@@ -80,7 +80,7 @@ end
 --- @brief Generate and return a new uuid tag as string
 --- @return string
 --- @throws string Error message if the tag format is invalid, ripgrep fails, or multiple results are found.
-M.new_uuid = function()
+M.new_srcuuid = function()
   local uuid = string.sub(vim.system({'uuidgen'}, { text = true }):wait().stdout, 1, -2)
   local out = 'src:' .. uuid
   return out

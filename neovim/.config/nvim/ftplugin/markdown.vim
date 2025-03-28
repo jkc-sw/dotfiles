@@ -394,7 +394,7 @@ augroup markdownFenceHighlight
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ynk <c-r>=WrapLinkWithBrowser('', 'Youtube')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,t  <c-r>=GetDateOffset('0', '## ')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,h  <c-r>=GetDateOffset('', '## ')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,n  <c-r>=FormatUuid()<cr>
+    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,n  <c-r>=v:lua.require('jerry.markdown').new_srcuuid()<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .u  <c-r>=strftime('- %m/%d/%Y %H:%M:%S %p')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .b  <c-r>=strftime('- %m/%d/%Y %H:%M:%S %p Break')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .n  +
