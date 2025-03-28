@@ -1,9 +1,9 @@
 
 nnoremap <leader>th     <cmd>  call search('^## \d\{4}-\d\{2}-\d\{2}', 'bW') <cr>
 nnoremap <leader>tn     <cmd>  call search('^## \d\{4}-\d\{2}-\d\{2}', 'W') <cr>
-nnoremap <leader>pt     <cmd>  call ToClip(TakeMeHereShell(v:false))<CR>
-nnoremap <leader>pn     <cmd>  call ToClip(TakeMeHereShell(v:true))<CR>
-nnoremap <leader>pf     <cmd>  call ToClip(TakeMeHereVim())<CR>
+nnoremap <leader>pt     <cmd>  call ToClip(v:lua.require('jerry.markdown').new_search_pattern_as_markdown_multiline_code_block())<CR>
+nnoremap <leader>pn     <cmd>  call ToClip(v:lua.require('jerry.markdown').new_search_pattern_as_markdown_singleline_code_block())<CR>
+nnoremap <leader>pf     <cmd>  call ToClip(v:lua.require('jerry.markdown').new_search_pattern_from_inside_vim())<CR>
 
 
 " Define a Toclip Vim Function
