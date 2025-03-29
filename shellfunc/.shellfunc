@@ -199,60 +199,42 @@ tmux_attach() {
     local cb="$2"
     local label="$3"
 
+    if [[ -n "$label" ]]; then
+        name="$name-$label"
+    fi
+
     if [[ -z "$name" ]]; then
         echowarning "Nothing to be done"
         return 1
     fi
 
-    if [[ -n "$name" && -z "$label" ]]; then
-        if [[ "$(tmux ls -F '#{session_name}')" != *"$name"* ]]; then
-            tmux new-session -s "$name" -d
+    local client_session
+    client_session="$(tmux display-message -p '#{client_session}')"
 
-            # if there is callback, run it
-            if command -v "$cb" &>/dev/null; then
-                "$cb" "$name"
-            fi
+    # When the session doesn't exist, create it
+    if [[ "$(tmux ls -F '#{session_name}')" != *"$name"* ]]; then
+        tmux new-session -s "$name" -d
 
-            if [[ -n "$TMUX" ]]; then
-                tmux switch-client -t "$name"
-            else
-                tmux attach-session -t "$name"
-            fi
-        else
-            # Detach other clients first
-            tmux detach-client -s "$name"
-            if [[ -n "$TMUX" ]]; then
-                tmux switch-client -t "$name"
-            else
-                tmux attach-session -t "$name"
-            fi
+        # if there is callback, run it
+        if command -v "$cb" &>/dev/null; then
+            "$cb" "$name"
         fi
-        return 0
     fi
 
-    # no label, nothing to be done further
-    if [[ -z "$label" ]]; then
-        return 0
-    fi
-
-    # store the name
-    newname="$name-$label"
-
-    # check if the session exists
-    if [[ "$(tmux ls -F '#{session_name}')" != *"$newname"* ]]; then
-        tmux new-session -t "$name" -s "$newname" -d
-        tmux attach-session -t "$newname"
-        return 0
-    fi
-
-    # attach to the session
-    # Detach other clients first
-    tmux detach-client -s "$newname"
+    # When we are in a tmux session
     if [[ -n "$TMUX" ]]; then
-        tmux switch-client -t "$newname"
-    else
-        tmux attach-session -t "$newname"
+        #  when the session name matches the name, do nothing
+        if [[ "$client_session" == "$name" ]]; then
+            return 0
+        fi
+        #  when the session name is different, we will detach and switch to that
+        tmux detach-client -s "$name"
+        tmux switch-client -t "$name"
+        return 0
     fi
+    # When there is no tmux session, we will detach and attach to that
+    tmux detach-client -s "$name"
+    tmux attach-session -t "$name"
 }
 
 # Quickly start the session
