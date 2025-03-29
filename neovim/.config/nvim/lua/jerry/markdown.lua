@@ -25,6 +25,7 @@ M.setup = function()
         desc = 'TBD',
         callback = function()
           send_to_clipboard(M.new_search_pattern_as_markdown_multiline_code_block())
+          print('pt content sent to clipboard')
         end
       })
 
@@ -33,6 +34,7 @@ M.setup = function()
         desc = 'TBD',
         callback = function()
           send_to_clipboard(M.new_search_pattern_as_markdown_singleline_code_block())
+          print('pn content sent to clipboard')
         end
       })
 
@@ -41,6 +43,7 @@ M.setup = function()
         desc = 'TBD',
         callback = function()
           send_to_clipboard(M.new_search_pattern_from_inside_vim())
+          print('pf content sent to clipboard')
         end
       })
 
