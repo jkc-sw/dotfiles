@@ -8,8 +8,8 @@ let mapleader = " "
 "     finish
 " endif
 
-" Native settings
-syntax on
+"" Native settings
+" syntax on " Have to disable this, because lua_ls blink.cmp completion will break
 filetype plugin on
 set hidden
 set nohlsearch
@@ -24,6 +24,7 @@ set autoindent
 set mouse=nv
 " set number relativenumber
 set signcolumn=no
+
 set nowrap
 set smartcase
 set ignorecase
