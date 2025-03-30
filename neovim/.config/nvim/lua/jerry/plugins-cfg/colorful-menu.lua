@@ -1,0 +1,2 @@
+require("colorful-menu").setup()
+

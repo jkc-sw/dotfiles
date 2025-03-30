@@ -1,13 +1,8 @@
-require 'jerry.lsp.setup'
-
-local vars = require 'jerry.lsp.vars'
+local M = {}
 local lspconfig = require 'lspconfig'
-local util = lspconfig.util
 local vim = vim
 
--- local updated_capabilities = vim.lsp.protocol.make_client_capabilities()
--- updated_capabilities = require("cmp_nvim_lsp").update_capabilities(updated_capabilities)
-local updated_capabilities = require("cmp_nvim_lsp").default_capabilities()
+local capabilities = require('blink.cmp').get_lsp_capabilities()
 
 local function findLatestMatlabInstall()
   local matlabInstallationDir = '/usr/local/MATLAB'
@@ -25,10 +20,9 @@ local function findLatestMatlabInstall()
   return versions[#versions]
 end
 
-local on_attach_vim = function(client)
-  -- require'lsp_signature'.on_attach()  -- This plugin has some ghost buffer remain
-end
-
+--- @brief Setup an lsp source with options
+--- @param target string the lsp name
+--- @param opt table [options]
 local function setup_each_lsp(target, opt)
   if not opt then
     return
@@ -39,14 +33,14 @@ local function setup_each_lsp(target, opt)
   end
 
   opt = vim.tbl_deep_extend("force", {
-    on_attach = on_attach_vim,
-    capabilities = updated_capabilities,
+    capabilities = capabilities,
   }, opt)
 
   lspconfig[target].setup(opt)
 end
 
-local general_lsp = function()
+--- @brief setup all the lsp
+M.setup = function()
   -- clangd
   setup_each_lsp('clangd', {
     filetypes = { "c", "cpp", "cc", "objc", "objcpp" },
@@ -126,9 +120,6 @@ local general_lsp = function()
   -- setup_each_lsp('hls', true)
 
   -- cmake
-  -- setup_each_lsp('cmake', {
-  --   cmd = {vars.lsp_condaenv_bin..'cmake-language-server'},
-  -- })
   setup_each_lsp('cmake', true)
 
   -- java
@@ -203,10 +194,4 @@ local general_lsp = function()
   })
 end
 
-return {
-  general_lsp = general_lsp,
-  setup_each_lsp = setup_each_lsp,
-  -- construct_statusline = construct_statusline
-}
-
--- vim:et ts=2 sw=2
+return M
