@@ -22,7 +22,7 @@ end
 
 --- @brief Setup an lsp source with options
 --- @param target string the lsp name
---- @param opt table [options]
+--- @param opt? table|boolean
 local function setup_each_lsp(target, opt)
   if not opt then
     return
@@ -71,8 +71,11 @@ M.setup = function()
             [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
           },
         },
-      },
-    },
+        telemetry = {
+          enable = false
+        }
+      }
+    }
   })
 
   -- go
