@@ -71,12 +71,6 @@ lua require('jerry')
 let g:rg_derive_root='true'
 let g:use_fzf = 0
 
-" rg function to use later
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg -- '.shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview(), <bang>0)
-
 " Key map
 nnoremap <leader>h      <cmd>  wincmd h<CR>
 nnoremap <leader>j      <cmd>  wincmd j<CR>
@@ -85,10 +79,6 @@ nnoremap <leader>l      <cmd>  wincmd l<CR>
 nnoremap <leader>U      <cmd>  UndotreeShow<CR>
 nnoremap <leader>pv     <cmd>  vertical topleft wincmd v<bar> Ex <bar> vertical resize 50<CR>
 nnoremap <leader>pp     <cmd>  call jerry#common#TogglePasteMode()<CR>
-nnoremap <leader>v      <cmd>  vertical botright split ~/repos/dotfiles/neovim/.config/nvim/init.vim <CR>
-nnoremap <leader>V      <cmd>  exec("lua require('jerry.telescope.pickers').find_dotfiles{}") <bar> lcd ~/repos/dotfiles <CR>
-" nnoremap <leader>r      <cmd>  FS<CR>
-" nnoremap <leader>R      <cmd>  FSOffset -3<CR>
 nnoremap <leader>r      <cmd>  silent exec '!tswitch -c nv'<CR>
 nnoremap <leader>,.     <cmd>  call execute(getline('.'), '')<cr>
 vnoremap <leader>,.     :<C-u> lua require('jerry.sourcer').eval_vimscript(table.concat(vim.fn['jerry#common#GetVisualSelectionAsList'](), "\n"))<cr>
@@ -208,26 +198,7 @@ vnoremap : ;
 " nnoremap <silent> <Leader>+ :vertical resize +5<CR>
 " nnoremap <silent> <Leader>- :vertical resize -5<CR>
 
-" " Use toclip to send content to clipboard
-" augroup toClipBoard
-"     autocmd!
-"     autocmd TextYankPost * if v:event.operator ==# 'y' && v:event.regname == ''
-"         \|   let ret = system('toclip', getreg('"'))
-"         \|   if exists('g:toclip_verbose')
-"         \|     echom 'toclip: ' . ret
-"         \|   endif
-"         \| endif
-" augroup END
-
 let g:clip_supplier = ['toclip']
-" let g:clip_supplier = []
-" if executable('toclip') == 1
-"     let g:clip_supplier = ['toclip']
-" elseif executable('win32yank.exe')
-"     let g:clip_supplier = ['win32yank.exe', '-i', '--crlf']
-" elseif executable('clip.exe')
-"     let g:clip_supplier = ['clip.exe']
-" endif
 
 " Use clip.exe to send content to clipboard
 augroup toClipBoard
