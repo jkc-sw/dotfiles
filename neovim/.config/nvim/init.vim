@@ -45,7 +45,7 @@ set background=dark
 set splitbelow splitright
 set termguicolors
 set guicursor=i-ci-ve:block-blinkwait175-blinkoff150-blinkon175
-set completeopt=menuone,noinsert,noselect
+" set completeopt=menuone,noinsert,noselect
 let g:netrw_banner = 0
 let g:netrw_browse_split = 4
 let g:netrw_winsize = 25
