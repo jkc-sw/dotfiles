@@ -1,4 +1,3 @@
-
 --[[
 SOURCE_THESE_VIMS_START
 " lua
@@ -14,12 +13,11 @@ local send_to_clipboard = require('jerry.clipboard').send_to_clipboard
 --- @throws TBD
 M.setup = function()
   local augroup_id = vim.api.nvim_create_augroup("jerry_markdown", {})
-  vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter", "TabEnter"}, {
+  vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TabEnter" }, {
     group = augroup_id,
     desc = 'TBD',
-    pattern = {"*.md"},
+    pattern = { "*.md" },
     callback = function(ev)
-
       vim.api.nvim_buf_set_keymap(0, 'n', '<leader>pt', '', {
         noremap = true,
         desc = 'TBD',
@@ -52,6 +50,47 @@ M.setup = function()
   })
 end
 
+
+--- @brief Given a pattern, find the line number and file name it has
+--- @param pattern string
+--- @return {filepath: string, line_number: integer}[]
+M.get_filename_linenum_of_a_pattern = function(pattern)
+  -- I don't check whether rg exist. I am using home-manager with nix to build neovim setup.
+  -- Ripgrep is a dependency for my neovim install
+  local cmd = {
+    "rg",
+    "--column",
+    "--line-number",
+    "--no-heading",
+    "--color=never",
+    "-e",
+    pattern,
+    "-g",
+    "*.md",
+  }
+  local ret = vim.system(cmd, { text = true }):wait()
+  if ret.code ~= 0 then
+    return {}
+  end
+
+  local output = ret.stdout
+  if not output then
+    return {}
+  end
+  local lines = vim.split(output, "\n", { trimempty = true })
+
+  local matches = {}
+  for _, line in ipairs(lines) do
+    local filepath, line_number, _ = line:match("([^:]+):(%d+):(.*)")
+    table.insert(matches, {
+      filepath = filepath,
+      line_number = line_number
+    })
+  end
+
+  return matches
+end
+
 --- @brief Given the origin:uuid tag, jump to the file with that line
 --- Jump to the source file and line number corresponding to a given `origin:uuid` tag.
 ---
@@ -68,40 +107,15 @@ M.jump_to_originuuid = function(uuid)
     error("Invalid uuid format. Expected <uuid>")
   end
 
-  -- I don't check whether rg exist. I am using home-manager with nix to build neovim setup.
-  -- Ripgrep is a dependency for my neovim install
-  local cmd = {
-    "rg",
-    "--column",
-    "--line-number",
-    "--no-heading",
-    "--color=never",
-    "-e",
-    "origin:" .. uuid,
-    "-g",
-    "*.md",
-  }
-  local ret = vim.system(cmd, { text = true }):wait()
-  if ret.code ~= 0 then
-    error(string.format("ripgrep exited with non-zero exit code: %d for %s", ret.code, vim.inspect(cmd)))
+  local orig_pattern = "origin:" .. uuid
+
+  local matches = M.get_filename_linenum_of_a_pattern(orig_pattern)
+  if #matches ~= 1 then
+    error(string.format("Pattern %s found %d matches (~=1). Please rg search and fix it", orig_pattern, #matches))
   end
 
-  local output = ret.stdout
-  if not output then
-    error(string.format("ripgrep cannot find any origin:uuid matching %s", uuid))
-  end
-  local lines = vim.split(output, "\n", { trimempty = true })
-
-  if #lines ~= 1 then
-    error(string.format("Expected exactly one result, but got %d, from ripgrep, that are %s", #lines, vim.inspect(lines)))
-  end
-
-  local line = lines[1]
-  local filepath, line_number, _ = line:match("([^:]+):(%d+):(.*)")
-
-  if not filepath or not line_number then
-    error("Failed to parse ripgrep output with input of " .. line)
-  end
+  local match = matches[1]
+  local filepath, line_number = match.filepath, match.line_number
 
   vim.cmd.edit(filepath)
   vim.cmd(string.format(':%d', line_number))
@@ -124,9 +138,16 @@ end
 --- @return string
 --- @throws string Error message if the tag format is invalid, ripgrep fails, or multiple results are found.
 M.new_originuuid = function()
-  local uuid = string.sub(vim.system({'uuidgen'}, { text = true }):wait().stdout, 1, -2)
-  local out = 'origin:' .. uuid
-  return out
+  for attempt_num = 1, 3, 1 do
+    local uuid = string.sub(vim.system({ 'uuidgen' }, { text = true }):wait().stdout, 1, -2)
+    local out = 'origin:' .. uuid
+    local matches = M.get_filename_linenum_of_a_pattern(out)
+    if #matches == 0 then
+      return out
+    end
+    print(string.format('WARN (attempt %d): New uuid %s is in conflict with another one in the system, retry', attempt_num, uuid))
+  end
+  error('Unable to generate a new UUID without a conflict for 3 times. This should never happens')
 end
 
 --- @brief Find an uuid in the current line and return the
