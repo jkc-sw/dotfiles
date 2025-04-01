@@ -58,7 +58,7 @@ M.setup = function()
     settings = {
       Lua = {
         runtime = {
-          version = 'LuaJIT',             -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+          version = 'LuaJIT',                  -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
           path = vim.split(package.path, ';'), -- Setup your lua path
         },
         diagnostics = {
@@ -99,6 +99,16 @@ M.setup = function()
 
   -- bash
   setup_each_lsp('bashls', true)
+
+  -- groovy
+  setup_each_lsp('groovyls', {
+    cmd = { 'groovy-language-server' },
+    root_dir = function(_)
+      -- fname is the filename of the buffer being attached.
+      -- We ignore it here and just return the current working directory.
+      return vim.fn.getcwd()
+    end,
+  })
 
   -- nix
   -- Need to do some special configuration
