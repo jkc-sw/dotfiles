@@ -9,6 +9,9 @@ require("blink.cmp").setup({
     trigger = {
       show_on_keyword = true
     },
+    list = {
+      selection = { preselect = false, auto_insert = true }
+    },
     documentation = {
       auto_show = true
     },
