@@ -45,6 +45,15 @@ M.setup = function()
         end
       })
 
+      vim.api.nvim_buf_set_keymap(0, 'n', '<leader>ph', '', {
+        noremap = true,
+        desc = 'TBD',
+        callback = function()
+          send_to_clipboard(M.new_search_pattern_from_shell_without_markup())
+          print('ph content sent to clipboard')
+        end
+      })
+
       vim.cmd("iabbrev ,n  <c-r>=v:lua.require('jerry.markdown').new_originuuid()<cr>")
     end
   })
@@ -169,6 +178,16 @@ end
 M.new_search_pattern_as_markdown_singleline_code_block = function()
   local uuid = M.match_uuid_in_current_line()
   local out = string.format([[`en ; nvim "lua require('jerry.markdown').jump_to_originuuid('%s')"`]], uuid)
+  return out
+end
+
+--- @brief Find an uuid in the current line and return the
+--- formatted string jumping to src without markup
+--- @return string
+--- @throws When uuid is not found
+M.new_search_pattern_from_shell_without_markup = function()
+  local uuid = M.match_uuid_in_current_line()
+  local out = string.format([[nvim "lua require('jerry.markdown').jump_to_originuuid('%s')"]], uuid)
   return out
 end
 
