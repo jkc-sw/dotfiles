@@ -1,0 +1,76 @@
+#!/bin/bash
+
+displayHelp() {
+    echo "nou - Delegate command to nix in my repo"
+    echo ''
+    echo "nou run <installable> <args>..."
+    echo "nou shell <installable>..."
+    echo "nou -h|--help|help"
+    echo ""
+    echo "Where"
+    echo "  run will map to"
+    echo '    nix run "~/repos/jerry-nixos#<installable>" -- <args>...'
+    echo "  shell will map to"
+    echo '    nix shell "~/repos/jerry-nixos#<installable>" "~/repos/jerry-nixos#<installable>" ...'
+    echo ""
+    echo "Options:"
+    echo "  -h|--help|help: to see this help"
+}
+
+
+REPO_PATH="$(realpath ~/repos/jerry-nixos)"
+
+main() {
+    local subcmd="$1"
+    shift
+
+    if ! validate_repo_exist; then
+        return "$?"
+    fi
+
+    local args=("$@")
+    case "$subcmd" in
+    'run')
+        sub_cmd_run "${args[@]}"
+        return "$?"
+        ;;
+    'shell')
+        sub_cmd_shell "${args[@]}"
+        return "$?"
+        ;;
+    '-h'|'--help'|'help')
+        displayHelp
+        return 0
+        ;;
+    *)
+        echo "ERR: unsupported cmd '$subcmd', check nou -h" >&2
+        return 1
+    esac
+}
+
+validate_repo_exist() {
+    if [[ ! -d "$REPO_PATH" ]]; then
+        echo "ERR: '$REPO_PATH' cannot be found. Please checkout repo first" >&2
+        return 1
+    fi
+    return 0
+}
+
+sub_cmd_run() {
+    local pkg="$1"
+    shift
+
+    local args=("$@")
+    nix run "${REPO_PATH}#$pkg" -- "${args[@]}"
+}
+
+sub_cmd_shell() {
+    local pkgs=("$@")
+    local args=()
+    for pkg in "${pkgs[@]}"; do
+        args+=("${REPO_PATH}#$pkg")
+    done
+    nix shell "${args[@]}"
+}
+
+main "$@"
