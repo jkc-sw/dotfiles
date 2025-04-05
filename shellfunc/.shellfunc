@@ -120,14 +120,21 @@ pomo() {
 }
 
 # Add the tmux command to start the tmux session
+rt_cb() {
+    name="$1"
+    tmux rename-window -t "${name}:1" 'dev-env-ansible'
+    tmux send-keys -t "${name}:dev-env-ansible" 'cd "$HOME/repos/dev-env-ansible"' Enter
+    tmux new-window -t "${name}:" -n "dev-env-ansible-docker"
+    tmux send-keys -t "${name}:dev-env-ansible-docker" 'cd "$HOME/repos/dev-env-ansible"' Enter
+    tmux new-window -t "${name}:" -n "dotfiles"
+    tmux send-keys -t "${name}:dotfiles" 'cd "$HOME/repos/dotfiles"' Enter
+    tmux new-window -t "${name}:" -n "adv360pro"
+    tmux send-keys -t "${name}:adv360pro" 'cd "$HOME/repos/kinesisadv360pro"' Enter
+    tmux new-window -t "${name}:" -n "jerry-nix"
+    tmux send-keys -t "${name}:jerry-nix" 'cd "$HOME/repos/jerry-nixos"' Enter
+}
 rt() (
-    if ! (tmux ls | grep -q blah); then
-        pushd "$HOME/repos/dev-env-ansible"
-        ./rr.sh tmux
-        popd
-    else
-        tmux_attach 'blah' '' "$1"
-    fi
+    tmux_attach 'blah' 'rt_cb' "$1"
 )
 
 alias ag=lazygit
