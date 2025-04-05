@@ -229,7 +229,7 @@ augroup END
 
 augroup LuaHighlight
     autocmd!
-    autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
+    autocmd TextYankPost * silent! lua require'vim.hl'.on_yank()
 augroup END
 
 augroup manyMapView
