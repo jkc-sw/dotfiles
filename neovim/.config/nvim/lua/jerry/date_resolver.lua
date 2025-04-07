@@ -36,10 +36,11 @@ function M.resolve_date_pattern(reference_time, pattern)
   ref_date_tbl.min = 0
   ref_date_tbl.sec = 0
   -- Recalculate timestamp normalized to noon
+  ---@cast ref_date_tbl osdate
   reference_time = os.time(ref_date_tbl)
   if not reference_time then
     error("Could not normalize reference time.")
-    return nil
+    return ''
   end
 
   local result_time = nil -- Store the calculated timestamp
@@ -111,25 +112,21 @@ function M.resolve_date_pattern(reference_time, pattern)
     local offset_days = 0
     local multiplier = (sign_wd == "-") and -1 or 1
 
-    if multiplier == 1 then -- Future (+) or current week (no sign)
-      -- If target day is same or earlier in the week (Sun=0), add 7 to get to next week's instance
+    if multiplier == 1 then
       if day_diff <= 0 then
         offset_days = day_diff + 7
       else
-        offset_days = day_diff -- Target day is later in the current week
+        offset_days = day_diff
       end
-      -- Add full weeks offset (N-1 because the initial calc finds the first instance)
       offset_days = offset_days + (num_weeks - 1) * 7
-    else -- Past (-)
-      -- If target day is same or later in the week (Sun=0), subtract 7 to get to previous week's instance
+    else
       if day_diff >= 0 then
         offset_days = day_diff - 7
       else
-        offset_days = day_diff -- Target day is earlier in the current week
+        offset_days = day_diff
       end
-      -- Add full weeks offset (N-1 because the initial calc finds the first instance)
-      -- Multiplier is already negative, so use -7
-      offset_days = offset_days + (num_weeks - 1) * -7
+      offset_days = day_diff
+      offset_days = offset_days + (num_weeks + 1) * -7
     end
 
     result_time = reference_time + offset_days * seconds_per_day
@@ -143,63 +140,103 @@ function M.resolve_date_pattern(reference_time, pattern)
     -- This could happen if os.time() returns nil for an invalid date table
     -- (e.g., Feb 30) or if the pattern was completely invalid.
     -- Returning nil indicates failure.
-    return nil
+    return ''
   end
 
   -- Format the final calculated timestamp
-  return os.date("%Y-%m-%d", result_time)
+  local result_timestamp = os.date("%Y-%m-%d", result_time)
+  ---@cast result_timestamp string
+  return result_timestamp
 end
 
 --- Helper function to run tests similar to the PowerShell examples.
 function M.run_tests()
-  -- Reference date: 2025-04-06 (Sunday)
-  local ref_tbl = { year = 2025, month = 4, day = 6, hour = 12 }
-  local ref_time = os.time(ref_tbl)
-  local ref_date_str = os.date("%Y-%m-%d", ref_time) -- Should be 2025-04-06
-
-  print("Reference Date: " .. ref_date_str .. " (Timestamp: " .. ref_time .. ")")
   print("------------------------------------------")
-
   local tests = {
-    -- { subject = "20240505", expected = "2024-05-05" },
-    -- { subject = "20250505", expected = "2025-05-05" },
-    -- { subject = "-0406", expected = "2024-04-06" },
-    -- { subject = "0406", expected = "2025-04-06" },
-    -- { subject = "1", expected = "2025-04-07" },
-    -- { subject = "2", expected = "2025-04-08" },
-    -- { subject = "-1", expected = "2025-04-05" },
-    -- { subject = "-2", expected = "2025-04-04" },
-    -- Weekday tests (relative to Sunday 2025-04-06)
-    { subject = "m", expected = "2025-03-31" },
-    { subject = "t", expected = "2025-04-01" },
-    { subject = "w", expected = "2025-04-02" },
-    { subject = "h", expected = "2025-04-03" },
-    { subject = "f", expected = "2025-04-04" },
-    { subject = "s", expected = "2025-04-05" },
-    { subject = "u", expected = "2025-04-06" },
-    { subject = "-u", expected = "2025-03-30" },
-    -- Weekday tests with explicit week offset
-    { subject = "-2m", expected = "2025-03-17" },
-    { subject = "-1m", expected = "2025-03-24" },
-    { subject = "-m", expected = "2025-03-31" },
-    { subject = "m", expected = "2025-03-31" },
-    { subject = "1m", expected = "2025-04-07" },
-    { subject = "2m", expected = "2025-04-14" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "20240505", expected = "2024-05-05" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "20250505", expected = "2025-05-05" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-0406", expected = "2024-04-06" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "0406", expected = "2025-04-06" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "1", expected = "2025-04-01" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "2", expected = "2025-04-02" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-1", expected = "2025-03-30" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-2", expected = "2025-03-29" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "m", expected = "2025-03-31" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "t", expected = "2025-04-01" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "w", expected = "2025-04-02" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "h", expected = "2025-04-03" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "f", expected = "2025-04-04" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "s", expected = "2025-04-05" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "u", expected = "2025-04-06" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-u", expected = "2025-03-30" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-2m", expected = "2025-03-17" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-1m", expected = "2025-03-24" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-m", expected = "2025-03-31" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "m", expected = "2025-03-31" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "1m", expected = "2025-04-07" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "2m", expected = "2025-04-14" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "20240505", expected = "2024-05-05" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "20250505", expected = "2025-05-05" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "-0406", expected = "2024-04-06" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "0406", expected = "2025-04-06" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "1", expected = "2025-04-06" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "2", expected = "2025-04-07" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "-1", expected = "2025-04-04" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "-2", expected = "2025-04-03" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "m", expected = "2025-03-31" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "t", expected = "2025-04-01" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "w", expected = "2025-04-02" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "h", expected = "2025-04-03" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "f", expected = "2025-04-04" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "s", expected = "2025-04-05" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "u", expected = "2025-04-06" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "-u", expected = "2025-03-30" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "-2m", expected = "2025-03-17" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "-1m", expected = "2025-03-24" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "-m", expected = "2025-03-31" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "m", expected = "2025-03-31" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "1m", expected = "2025-04-07" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "2m", expected = "2025-04-14" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "20240505", expected = "2024-05-05" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "20250505", expected = "2025-05-05" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "-0406", expected = "2024-04-06" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "0406", expected = "2025-04-06" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "1", expected = "2025-04-07" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "2", expected = "2025-04-08" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "-1", expected = "2025-04-05" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "-2", expected = "2025-04-04" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "m", expected = "2025-03-31" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "t", expected = "2025-04-01" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "w", expected = "2025-04-02" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "h", expected = "2025-04-03" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "f", expected = "2025-04-04" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "s", expected = "2025-04-05" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "u", expected = "2025-04-06" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "-u", expected = "2025-03-30" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "-2m", expected = "2025-03-17" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "-1m", expected = "2025-03-24" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "-m", expected = "2025-03-31" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "m", expected = "2025-03-31" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "1m", expected = "2025-04-07" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "2m", expected = "2025-04-14" },
   }
 
   local all_passed = true
   for _, test in ipairs(tests) do
+    local ref_time = os.time(test.reference)
+    local ref_date_str = os.date("%Y-%m-%d", ref_time)
     local resolved_date = M.resolve_date_pattern(ref_time, test.subject)
     local passed = resolved_date == test.expected
     if not passed then
       all_passed = false
     end
     print(string.format(
-      "Pattern: %-10s | Expected: %-10s | Resolved: %-10s | %s",
+      "Reference: %-10s | Pattern: %-10s | Expected: %-10s | Resolved: %-10s | %s",
+      ref_date_str,
       test.subject,
       test.expected,
       resolved_date or "nil",
-      passed and "PASS" or "FAIL"
+      passed and "" or "FAIL"
     ))
   end
 
@@ -209,6 +246,7 @@ function M.run_tests()
   else
     print("Some tests failed.")
   end
+  print("------------------------------------------")
 end
 
 -- To run tests from Neovim:
