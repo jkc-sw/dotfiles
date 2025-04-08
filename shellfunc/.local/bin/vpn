@@ -26,7 +26,7 @@ if ! type -p doas &>/dev/null; then
 fi
 
 expect -c "set timeout 3
-    spawn $runsudo openconnect --usergroup=portal --protocol=gp $url
+    spawn $runsudo $(which openconnect) --usergroup=portal --protocol=gp $url
     expect {
         timeout {
             send_user { Waited too long }
