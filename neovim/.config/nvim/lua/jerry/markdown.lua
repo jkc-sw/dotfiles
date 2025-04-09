@@ -166,7 +166,7 @@ end
 M.new_search_pattern_as_markdown_multiline_code_block = function()
   local uuid = M.match_uuid_in_current_line()
   local out = string.format([[```
-en ; nvim "lua require('jerry.markdown').jump_to_originuuid('%s')"
+en ; nvim -c "lua require('jerry.markdown').jump_to_originuuid('%s')"
 ```]], uuid)
   return out
 end
@@ -177,7 +177,7 @@ end
 --- @throws When uuid is not found
 M.new_search_pattern_as_markdown_singleline_code_block = function()
   local uuid = M.match_uuid_in_current_line()
-  local out = string.format([[`en ; nvim "lua require('jerry.markdown').jump_to_originuuid('%s')"`]], uuid)
+  local out = string.format([[`en ; nvim -c "lua require('jerry.markdown').jump_to_originuuid('%s')"`]], uuid)
   return out
 end
 
@@ -187,7 +187,7 @@ end
 --- @throws When uuid is not found
 M.new_search_pattern_from_shell_without_markup = function()
   local uuid = M.match_uuid_in_current_line()
-  local out = string.format([[nvim "lua require('jerry.markdown').jump_to_originuuid('%s')"]], uuid)
+  local out = string.format([[nvim -c "lua require('jerry.markdown').jump_to_originuuid('%s')"]], uuid)
   return out
 end
 
