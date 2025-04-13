@@ -10,4 +10,7 @@ require("avante").setup({
     max_completion_tokens = 16384, -- Increase this to include reasoning tokens (for reasoning models)
     reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
   },
+  behaviour = {
+    enable_claude_text_editor_tool_mode = false,
+  },
 })
