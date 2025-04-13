@@ -24,3 +24,6 @@ require('jerry.plugins-cfg.colorizer')
 -- -- Choose one
 -- require('jerry.plugins-cfg.markview')
 require('jerry.plugins-cfg.render-markdown')
+
+-- -- Choose one
+require('jerry.plugins-cfg.avante')
