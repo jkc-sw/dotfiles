@@ -4,12 +4,12 @@ require("avante").setup({
   azure = {
     endpoint = "https://openai-neovim.openai.azure.com/", -- example: "https://<your-resource-name>.openai.azure.com"
 
-    deployment = "o3-mini", -- Azure deployment name (e.g., "gpt-4o", "my-gpt-4o-deployment")
-    api_version = "2024-12-01-preview",
-
-    -- deployment = "gpt-4o", -- Azure deployment name (e.g., "gpt-4o", "my-gpt-4o-deployment")
+    -- deployment = "o3-mini", -- Azure deployment name (e.g., "gpt-4o", "my-gpt-4o-deployment")
     -- api_version = "2024-12-01-preview",
-    -- temperature = 0,
+
+    deployment = "gpt-4o", -- Azure deployment name (e.g., "gpt-4o", "my-gpt-4o-deployment")
+    api_version = "2024-12-01-preview",
+    temperature = 0,
 
     -- deployment = "gpt-4o-mini", -- Azure deployment name (e.g., "gpt-4o", "my-gpt-4o-deployment")
     -- api_version = "2024-12-01-preview",
