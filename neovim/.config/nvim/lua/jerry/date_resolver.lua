@@ -24,7 +24,7 @@ local seconds_per_day = 24 * 60 * 60
 ---
 ---@param reference_time number | nil The reference Unix timestamp (seconds since epoch). Defaults to os.time().
 ---@param pattern string The date pattern string to resolve.
----@return string | nil The resolved date as a 'YYYY-MM-DD' string, or '' if the pattern is invalid.
+---@return string The resolved date as a 'YYYY-MM-DD' string, or '' if the pattern is invalid or resolution fails.
 function M.resolve_date_pattern(reference_time, pattern)
   -- Default to current time if none provided
   reference_time = reference_time or os.time()
@@ -56,9 +56,7 @@ function M.resolve_date_pattern(reference_time, pattern)
     local tbl = {
       year = tonumber(y), month = tonumber(m), day = tonumber(d), hour = 12,
     }
-    if tbl.month < 1 or tbl.month > 12 or tbl.day < 1 or tbl.day > 31 then
-      result_time = nil
-    else
+    if tbl.month >= 1 and tbl.month <= 12 and tbl.day >= 1 and tbl.day <= 31 then
       result_time = os.time(tbl)
     end
     goto format_result
@@ -67,36 +65,27 @@ function M.resolve_date_pattern(reference_time, pattern)
   -- Pattern: [+-]MMDD (e.g., 0406, -0406)
   sign_mmdd, mm, dd = pattern:match("^([%+%-]?)(%d%d)(%d%d)$")
   if mm then
-    local year_offset = 0
+    local year_offset = (sign_mmdd == "-") and -1 or 0
     local target_mm = tonumber(mm)
     local target_dd = tonumber(dd)
 
-    if sign_mmdd == "-" then
-      year_offset = -1
-    end
+    if target_mm >= 1 and target_mm <= 12 and target_dd >= 1 and target_dd <= 31 then
+      local tbl = {
+        year = ref_date_tbl.year + year_offset,
+        month = target_mm,
+        day = target_dd,
+        hour = 12,
+      }
+      local initial_time = os.time(tbl)
 
-    local tbl = {
-      year = ref_date_tbl.year + year_offset,
-      month = target_mm,
-      day = target_dd,
-      hour = 12,
-    }
-    if tbl.month < 1 or tbl.month > 12 or tbl.day < 1 or tbl.day > 31 then
-      result_time = nil
-    else
-      result_time = os.time(tbl)
-      -- Handle potential year wrap ambiguity for MMDD without sign
-      if sign_mmdd == "" and result_time and result_time < reference_time then
+      -- Handle ambiguity for MMDD without sign: if date is in the past, assume next year
+      if sign_mmdd == "" and initial_time and initial_time < reference_time then
          tbl.year = tbl.year + 1
-         -- Re-validate potential invalid date after year increment (e.g., Feb 29)
-         -- Use a temporary table to avoid modifying tbl if os.time fails
+         -- Use a temp table to check validity without modifying tbl if os.time fails
          local temp_tbl = {year=tbl.year, month=tbl.month, day=tbl.day, hour=12}
-         local next_year_time = os.time(temp_tbl)
-         if next_year_time then
-             result_time = next_year_time
-         else
-             result_time = nil -- Date became invalid after year increment
-         end
+         result_time = os.time(temp_tbl) -- Recalculate for next year
+      else
+         result_time = initial_time
       end
     end
     goto format_result
@@ -116,71 +105,44 @@ function M.resolve_date_pattern(reference_time, pattern)
     pattern:match("^([%+%-]?)(%d*)([mtwhfsu])$")
   if day_char then
     local target_wday = day_char_to_wday[day_char]
-    if target_wday == nil then goto format_result end -- Invalid day char
+    if target_wday then -- Check if day_char was valid
+      local ref_wday = ref_date_tbl.wday -- 1=Sun, 2=Mon, ..., 7=Sat
+      local num_weeks = tonumber(num_weeks_str) or 0
+      local multiplier = (sign_wd == "-") and -1 or 1
+      local offset_days = 0
+      local day_diff = target_wday - ref_wday
 
-    local ref_wday = ref_date_tbl.wday -- 1=Sun, 2=Mon, ..., 7=Sat
-    local num_weeks = tonumber(num_weeks_str) or 0
-    local multiplier = (sign_wd == "-") and -1 or 1
-    local offset_days = 0
-    local day_diff = target_wday - ref_wday
-
-    if multiplier == 1 then -- Positive offset: Find next occurrence >= ref_date
-      if day_diff < 0 then
-        -- Target day is earlier in the week cycle (e.g., ref=Wed, target=Mon)
-        offset_days = day_diff + 7
-      else -- day_diff >= 0
-        -- Target day is today or later in the week cycle
-        offset_days = day_diff
-      end
-      -- Add the specified number of full weeks (N means N weeks *after* the next one)
-      offset_days = offset_days + (num_weeks * 7)
-
-    else -- Negative offset: Find previous occurrence <= ref_date
-      -- 1. Calculate base offset to the most recent occurrence <= ref_date
-      local base_offset_days = 0
-      if day_diff > 0 then
-        -- Target day is later in the week cycle (e.g., ref=Mon, target=Wed)
-        -- The most recent occurrence was in the previous week.
-        base_offset_days = day_diff - 7
-      else -- day_diff <= 0
-        -- Target day is today or earlier in the week cycle
-        base_offset_days = day_diff
-      end
-      -- base_offset_days now points relative to ref_time
-
-      -- 2. Determine how many weeks to subtract based on N and whether ref_wday == target_wday
-      local weeks_to_subtract = 0
-      if ref_wday == target_wday then
-        -- If ref day IS the target day, N directly means N weeks back from ref day
-        weeks_to_subtract = num_weeks
-      else
-        -- If ref day is NOT the target day, N=0 and N=1 mean the base offset date,
-        -- N=2 means base - 1 week, N=3 means base - 2 weeks, etc.
-        if num_weeks > 0 then
-           weeks_to_subtract = num_weeks - 1
+      if multiplier == 1 then -- Positive offset: Find next >= ref_date
+        offset_days = (day_diff < 0) and (day_diff + 7) or day_diff
+        offset_days = offset_days + (num_weeks * 7)
+      else -- Negative offset: Find previous <= ref_date
+        -- 1. Base offset to most recent occurrence <= ref_date
+        local base_offset_days = (day_diff > 0) and (day_diff - 7) or day_diff
+        -- 2. Weeks to subtract based on N and whether ref_wday == target_wday
+        local weeks_to_subtract = 0
+        if ref_wday == target_wday then
+          weeks_to_subtract = num_weeks
+        elseif num_weeks > 0 then
+          weeks_to_subtract = num_weeks - 1
         end
-        -- If num_weeks is 0, weeks_to_subtract remains 0.
+        offset_days = base_offset_days - (weeks_to_subtract * 7)
       end
-
-      offset_days = base_offset_days - (weeks_to_subtract * 7)
+      result_time = reference_time + offset_days * seconds_per_day
     end
-
-    result_time = reference_time + offset_days * seconds_per_day
-    goto format_result
+    -- No goto here, it's the last pattern check
   end
 
   ::format_result::
-  if result_time == nil then
+  -- Format the final result or return empty string
+  if result_time then
+    local formatted_date = os.date("%Y-%m-%d", result_time)
+    -- formatted_date is string|nil. If nil, return ''. Otherwise return the string.
+    --- @cast formatted_date string -- Tell linter to trust us here
+    return formatted_date or ''
+  else
+    -- result_time was nil (pattern invalid or os.time failed)
     return ''
   end
-
-  -- Final check: os.time can return nil if the calculated date is invalid
-  local formatted_date = os.date("%Y-%m-%d", result_time)
-  if not formatted_date then
-      return '' -- Return empty if formatting failed (likely invalid timestamp)
-  end
-  ---@cast formatted_date string
-  return formatted_date
 end
 
 
@@ -204,9 +166,9 @@ function M.run_tests()
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "s",        expected = "2025-04-05" },
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "u",        expected = "2025-04-06" },
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-u",       expected = "2025-03-30" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-2m",      expected = "2025-03-17" }, -- Ref=Mon(2), Target=Mon(2). N=2. Ref==Target -> weeks_to_subtract=N=2. Base=0. Final=0-(2*7)=-14. Mar31-14=Mar17.
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-1m",      expected = "2025-03-24" }, -- Ref=Mon(2), Target=Mon(2). N=1. Ref==Target -> weeks_to_subtract=N=1. Base=0. Final=0-(1*7)=-7. Mar31-7=Mar24.
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-m",       expected = "2025-03-31" }, -- Ref=Mon(2), Target=Mon(2). N=0. Ref==Target -> weeks_to_subtract=N=0. Base=0. Final=0-(0*7)=0. Mar31+0=Mar31.
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-2m",      expected = "2025-03-17" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-1m",      expected = "2025-03-24" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-m",       expected = "2025-03-31" },
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "m",        expected = "2025-03-31" },
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "1m",       expected = "2025-04-07" },
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "2m",       expected = "2025-04-14" },
@@ -226,9 +188,9 @@ function M.run_tests()
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "s",        expected = "2025-04-05" },
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "u",        expected = "2025-04-06" },
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-u",       expected = "2025-03-30" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-2m",      expected = "2025-03-24" }, -- Ref=Sat(7), Target=Mon(2). N=2. Ref!=Target -> weeks_to_subtract=N-1=1. Base=-5. Final=-5-(1*7)=-12. Apr5-12=Mar24.
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-1m",      expected = "2025-03-31" }, -- Ref=Sat(7), Target=Mon(2). N=1. Ref!=Target -> weeks_to_subtract=N-1=0. Base=-5. Final=-5-(0*7)=-5. Apr5-5=Mar31.
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-m",       expected = "2025-03-31" }, -- Ref=Sat(7), Target=Mon(2). N=0. Ref!=Target -> weeks_to_subtract=0. Base=-5. Final=-5-(0*7)=-5. Apr5-5=Mar31.
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-2m",      expected = "2025-03-24" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-1m",      expected = "2025-03-31" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-m",       expected = "2025-03-31" },
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "m",        expected = "2025-04-07" },
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "1m",       expected = "2025-04-14" },
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "2m",       expected = "2025-04-21" },
@@ -247,10 +209,10 @@ function M.run_tests()
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "f",        expected = "2025-04-11" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "s",        expected = "2025-04-12" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "u",        expected = "2025-04-06" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-u",       expected = "2025-04-06" }, -- Ref=Sun(1), Target=Sun(1). N=0. Ref==Target -> weeks_to_subtract=N=0. Base=0. Final=0-(0*7)=0. Apr6+0=Apr6.
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-2m",      expected = "2025-03-24" }, -- Ref=Sun(1), Target=Mon(2). N=2. Ref!=Target -> weeks_to_subtract=N-1=1. Base=-6. Final=-6-(1*7)=-13. Apr6-13=Mar24.
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-1m",      expected = "2025-03-31" }, -- Ref=Sun(1), Target=Mon(2). N=1. Ref!=Target -> weeks_to_subtract=N-1=0. Base=-6. Final=-6-(0*7)=-6. Apr6-6=Mar31.
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-m",       expected = "2025-03-31" }, -- Ref=Sun(1), Target=Mon(2). N=0. Ref!=Target -> weeks_to_subtract=0. Base=-6. Final=-6-(0*7)=-6. Apr6-6=Mar31.
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-u",       expected = "2025-04-06" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-2m",      expected = "2025-03-24" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-1m",      expected = "2025-03-31" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-m",       expected = "2025-03-31" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "m",        expected = "2025-04-07" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "1m",       expected = "2025-04-14" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "2m",       expected = "2025-04-21" },
@@ -263,7 +225,7 @@ function M.run_tests()
     if not ref_time then
       table.insert(msgs, string.format("[%02d] Reference: INVALID    | Pattern: %-10s | FAILED (Invalid Ref Date)", i, test.subject))
       all_passed = false
-      goto continue_loop
+      goto continue_loop -- Using goto just within the test runner is fine
     end
     local ref_date_str = os.date("%Y-%m-%d", ref_time)
     local resolved_date = M.resolve_date_pattern(ref_time, test.subject)
@@ -277,7 +239,7 @@ function M.run_tests()
       ref_date_str,
       test.subject,
       test.expected,
-      resolved_date or "nil",
+      resolved_date or "nil", -- Use 'nil' here for display if somehow it happens
       passed and "" or "FAIL"
     ))
     ::continue_loop::
