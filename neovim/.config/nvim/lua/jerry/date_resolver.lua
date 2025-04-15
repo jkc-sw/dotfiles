@@ -89,9 +89,11 @@ function M.resolve_date_pattern(reference_time, pattern)
       if sign_mmdd == "" and result_time and result_time < reference_time then
          tbl.year = tbl.year + 1
          -- Re-validate potential invalid date after year increment (e.g., Feb 29)
-         local temp_tbl_check = os.date("*t", os.time(tbl)) ---@cast temp_tbl_check osdate
-         if temp_tbl_check.year == tbl.year and temp_tbl_check.month == tbl.month and temp_tbl_check.day == tbl.day then
-             result_time = os.time(tbl)
+         -- Use a temporary table to avoid modifying tbl if os.time fails
+         local temp_tbl = {year=tbl.year, month=tbl.month, day=tbl.day, hour=12}
+         local next_year_time = os.time(temp_tbl)
+         if next_year_time then
+             result_time = next_year_time
          else
              result_time = nil -- Date became invalid after year increment
          end
@@ -133,8 +135,8 @@ function M.resolve_date_pattern(reference_time, pattern)
       -- Add the specified number of full weeks (N means N weeks *after* the next one)
       offset_days = offset_days + (num_weeks * 7)
 
-    else -- Negative offset: Find previous occurrence <= ref_date based on tests
-      -- 1. Find the offset to the most recent occurrence <= ref_date
+    else -- Negative offset: Find previous occurrence <= ref_date
+      -- 1. Calculate base offset to the most recent occurrence <= ref_date
       local base_offset_days = 0
       if day_diff > 0 then
         -- Target day is later in the week cycle (e.g., ref=Mon, target=Wed)
@@ -144,13 +146,22 @@ function M.resolve_date_pattern(reference_time, pattern)
         -- Target day is today or earlier in the week cycle
         base_offset_days = day_diff
       end
-      -- base_offset_days now points to the most recent occurrence <= ref_time
+      -- base_offset_days now points relative to ref_time
 
-      -- 2. Subtract (N-1) weeks if N > 0, based on test case interpretation
+      -- 2. Determine how many weeks to subtract based on N and whether ref_wday == target_wday
       local weeks_to_subtract = 0
-      if num_weeks > 0 then
-        weeks_to_subtract = num_weeks - 1
+      if ref_wday == target_wday then
+        -- If ref day IS the target day, N directly means N weeks back from ref day
+        weeks_to_subtract = num_weeks
+      else
+        -- If ref day is NOT the target day, N=0 and N=1 mean the base offset date,
+        -- N=2 means base - 1 week, N=3 means base - 2 weeks, etc.
+        if num_weeks > 0 then
+           weeks_to_subtract = num_weeks - 1
+        end
+        -- If num_weeks is 0, weeks_to_subtract remains 0.
       end
+
       offset_days = base_offset_days - (weeks_to_subtract * 7)
     end
 
@@ -164,8 +175,6 @@ function M.resolve_date_pattern(reference_time, pattern)
   end
 
   -- Final check: os.time can return nil if the calculated date is invalid
-  -- (e.g., trying to go back from Mar 1 to Feb 30). Although less likely
-  -- with offset logic, it's safer to check.
   local formatted_date = os.date("%Y-%m-%d", result_time)
   if not formatted_date then
       return '' -- Return empty if formatting failed (likely invalid timestamp)
@@ -187,20 +196,20 @@ function M.run_tests()
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "2",        expected = "2025-04-02" },
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-1",       expected = "2025-03-30" },
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-2",       expected = "2025-03-29" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "m",        expected = "2025-03-31" }, -- Ref=Mon, target=Mon -> Today
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "t",        expected = "2025-04-01" }, -- Ref=Mon, target=Tue -> Tomorrow
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "m",        expected = "2025-03-31" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "t",        expected = "2025-04-01" },
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "w",        expected = "2025-04-02" },
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "h",        expected = "2025-04-03" },
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "f",        expected = "2025-04-04" },
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "s",        expected = "2025-04-05" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "u",        expected = "2025-04-06" }, -- Ref=Mon, target=Sun -> Next Sun
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-u",       expected = "2025-03-30" }, -- Ref=Mon, target=Sun -> Prev Sun (most recent)
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-2m",      expected = "2025-03-17" }, -- Ref=Mon, target=Mon -> PrevPrev Mon (most recent=Mar31 -> -1 week = Mar24 -> -1 week = Mar17) -- Wait, expected is Mar 17. N=2 -> N-1=1 week back from most recent. Most recent=Mar31. 1 week back = Mar 24. Expected Mar 17? Let's re-read tests. Ah, -2m expected Mar 17. My previous trace was wrong. Most recent Mon<=Mar31 is Mar31. N=2. N-1=1. Mar31 - 1 week = Mar 24. Still not Mar 17. What if N means N weeks back *total*? Base offset=0. N=2. 0 - (2*7) = -14. Mar31-14=Mar17. YES.
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-1m",      expected = "2025-03-24" }, -- Ref=Mon, target=Mon -> Prev Mon. Most recent=Mar31. N=1. Base offset=0. 0 - (1*7) = -7. Mar31-7=Mar24. YES.
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-m",       expected = "2025-03-31" }, -- Ref=Mon, target=Mon -> Today (Most recent). N=0. Base offset=0. 0 - (0*7) = 0. Mar31-0=Mar31. YES.
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "m",        expected = "2025-03-31" }, -- Ref=Mon, target=Mon -> Today (Next occurrence is today)
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "1m",       expected = "2025-04-07" }, -- Ref=Mon, target=Mon -> Next Mon
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "2m",       expected = "2025-04-14" }, -- Ref=Mon, target=Mon -> NextNext Mon
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "u",        expected = "2025-04-06" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-u",       expected = "2025-03-30" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-2m",      expected = "2025-03-17" }, -- Ref=Mon(2), Target=Mon(2). N=2. Ref==Target -> weeks_to_subtract=N=2. Base=0. Final=0-(2*7)=-14. Mar31-14=Mar17.
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-1m",      expected = "2025-03-24" }, -- Ref=Mon(2), Target=Mon(2). N=1. Ref==Target -> weeks_to_subtract=N=1. Base=0. Final=0-(1*7)=-7. Mar31-7=Mar24.
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-m",       expected = "2025-03-31" }, -- Ref=Mon(2), Target=Mon(2). N=0. Ref==Target -> weeks_to_subtract=N=0. Base=0. Final=0-(0*7)=0. Mar31+0=Mar31.
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "m",        expected = "2025-03-31" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "1m",       expected = "2025-04-07" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "2m",       expected = "2025-04-14" },
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "20240505", expected = "2024-05-05" },
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "20250505", expected = "2025-05-05" },
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-0406",    expected = "2024-04-06" },
@@ -209,33 +218,20 @@ function M.run_tests()
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "2",        expected = "2025-04-07" },
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-1",       expected = "2025-04-04" },
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-2",       expected = "2025-04-03" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "m",        expected = "2025-04-07" }, -- Ref=Sat, target=Mon -> Next Mon
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "t",        expected = "2025-04-08" }, -- Ref=Sat, target=Tue -> Next Tue
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "m",        expected = "2025-04-07" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "t",        expected = "2025-04-08" },
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "w",        expected = "2025-04-09" },
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "h",        expected = "2025-04-10" },
     { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "f",        expected = "2025-04-11" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "s",        expected = "2025-04-05" }, -- Ref=Sat, target=Sat -> Today
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "u",        expected = "2025-04-06" }, -- Ref=Sat, target=Sun -> Tomorrow
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-u",       expected = "2025-03-30" }, -- Ref=Sat(7), target=Sun(1). N=0. Diff=1-7=-6. Base=-6. Final=-6-(0*7)=-6. Apr5-6=Mar30. YES.
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-2m",      expected = "2025-03-24" }, -- Ref=Sat(7), target=Mon(2). N=2. Diff=2-7=-5. Base=-5. Final=-5-(2*7)=-19. Apr5-19=Mar17. Expected Mar 24? DAMN IT.
-
-    -- Let's reconsider the failing tests AGAIN.
-    -- [39] Ref=Sat, Apr 5. Pattern="-2m". Expected=Mar 24.
-    -- [40] Ref=Sat, Apr 5. Pattern="-1m". Expected=Mar 31.
-    -- [61] Ref=Sun, Apr 6. Pattern="-2m". Expected=Mar 24.
-    -- [62] Ref=Sun, Apr 6. Pattern="-1m". Expected=Mar 31.
-
-    -- It MUST be:
-    -- 1. Find base_offset to most recent day <= ref date.
-    -- 2. Final offset = base_offset - (N-1)*7 if N>0, else base_offset.
-
-    -- Let's re-implement THAT logic one more time.
-
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-1m",      expected = "2025-03-31" }, -- Ref=Sat(7), target=Mon(2). N=1. Diff=-5. Base=-5. N>0, N-1=0. Final=-5-(0*7)=-5. Apr5-5=Mar31. YES.
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-m",       expected = "2025-03-31" }, -- Ref=Sat(7), target=Mon(2). N=0. Diff=-5. Base=-5. N=0. Final=Base=-5. Apr5-5=Mar31. YES.
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "m",        expected = "2025-04-07" }, -- Ref=Sat, target=Mon -> Next Mon
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "1m",       expected = "2025-04-14" }, -- Ref=Sat, target=Mon -> NextNext Mon
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "2m",       expected = "2025-04-21" }, -- Ref=Sat, target=Mon -> Mon after NextNext
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "s",        expected = "2025-04-05" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "u",        expected = "2025-04-06" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-u",       expected = "2025-03-30" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-2m",      expected = "2025-03-24" }, -- Ref=Sat(7), Target=Mon(2). N=2. Ref!=Target -> weeks_to_subtract=N-1=1. Base=-5. Final=-5-(1*7)=-12. Apr5-12=Mar24.
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-1m",      expected = "2025-03-31" }, -- Ref=Sat(7), Target=Mon(2). N=1. Ref!=Target -> weeks_to_subtract=N-1=0. Base=-5. Final=-5-(0*7)=-5. Apr5-5=Mar31.
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-m",       expected = "2025-03-31" }, -- Ref=Sat(7), Target=Mon(2). N=0. Ref!=Target -> weeks_to_subtract=0. Base=-5. Final=-5-(0*7)=-5. Apr5-5=Mar31.
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "m",        expected = "2025-04-07" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "1m",       expected = "2025-04-14" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "2m",       expected = "2025-04-21" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "20240505", expected = "2024-05-05" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "20250505", expected = "2025-05-05" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-0406",    expected = "2024-04-06" },
@@ -244,20 +240,20 @@ function M.run_tests()
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "2",        expected = "2025-04-08" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-1",       expected = "2025-04-05" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-2",       expected = "2025-04-04" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "m",        expected = "2025-04-07" }, -- Ref=Sun, target=Mon -> Tomorrow
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "m",        expected = "2025-04-07" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "t",        expected = "2025-04-08" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "w",        expected = "2025-04-09" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "h",        expected = "2025-04-10" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "f",        expected = "2025-04-11" },
     { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "s",        expected = "2025-04-12" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "u",        expected = "2025-04-06" }, -- Ref=Sun, target=Sun -> Today
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-u",       expected = "2025-04-06" }, -- Ref=Sun(1), target=Sun(1). N=0. Diff=0. Base=0. N=0. Final=0. Apr6+0=Apr6. YES.
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-2m",      expected = "2025-03-24" }, -- Ref=Sun(1), target=Mon(2). N=2. Diff=1. Base=1-7=-6. N>0, N-1=1. Final=-6-(1*7)=-13. Apr6-13=Mar24. YES.
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-1m",      expected = "2025-03-31" }, -- Ref=Sun(1), target=Mon(2). N=1. Diff=1. Base=-6. N>0, N-1=0. Final=-6-(0*7)=-6. Apr6-6=Mar31. YES.
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-m",       expected = "2025-03-31" }, -- Ref=Sun(1), target=Mon(2). N=0. Diff=1. Base=-6. N=0. Final=Base=-6. Apr6-6=Mar31. YES.
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "m",        expected = "2025-04-07" }, -- Ref=Sun, target=Mon -> Next Mon
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "1m",       expected = "2025-04-14" }, -- Ref=Sun, target=Mon -> NextNext Mon
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "2m",       expected = "2025-04-21" }, -- Ref=Sun, target=Mon -> Mon after NextNext
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "u",        expected = "2025-04-06" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-u",       expected = "2025-04-06" }, -- Ref=Sun(1), Target=Sun(1). N=0. Ref==Target -> weeks_to_subtract=N=0. Base=0. Final=0-(0*7)=0. Apr6+0=Apr6.
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-2m",      expected = "2025-03-24" }, -- Ref=Sun(1), Target=Mon(2). N=2. Ref!=Target -> weeks_to_subtract=N-1=1. Base=-6. Final=-6-(1*7)=-13. Apr6-13=Mar24.
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-1m",      expected = "2025-03-31" }, -- Ref=Sun(1), Target=Mon(2). N=1. Ref!=Target -> weeks_to_subtract=N-1=0. Base=-6. Final=-6-(0*7)=-6. Apr6-6=Mar31.
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-m",       expected = "2025-03-31" }, -- Ref=Sun(1), Target=Mon(2). N=0. Ref!=Target -> weeks_to_subtract=0. Base=-6. Final=-6-(0*7)=-6. Apr6-6=Mar31.
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "m",        expected = "2025-04-07" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "1m",       expected = "2025-04-14" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "2m",       expected = "2025-04-21" },
   }
 
   local all_passed = true
@@ -298,15 +294,14 @@ function M.run_tests()
   local formatted = table.concat(msgs, "\n")
   print(formatted)
   -- Optional: Write to file
-  -- local f = io.open('out.txt', 'w')
-  -- if f then
-  --   f:write(formatted)
-  --   f:close()
-  -- else
-  --   print("Error: Could not open out.txt for writing.")
-  -- end
+  local f = io.open('out.txt', 'w')
+  if f then
+    f:write(formatted)
+    f:close()
+  else
+    print("Error: Could not open out.txt for writing.")
+  end
 end
 
 return M
-
 
