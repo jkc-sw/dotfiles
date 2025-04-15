@@ -155,73 +155,74 @@ function M.run_tests()
   local tests = {
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "20240505", expected = "2024-05-05" },
     { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "20250505", expected = "2025-05-05" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-0406", expected = "2024-04-06" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "0406", expected = "2025-04-06" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "1", expected = "2025-04-01" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "2", expected = "2025-04-02" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-1", expected = "2025-03-30" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-2", expected = "2025-03-29" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "m", expected = "2025-03-31" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "t", expected = "2025-04-01" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "w", expected = "2025-04-02" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "h", expected = "2025-04-03" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "f", expected = "2025-04-04" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "s", expected = "2025-04-05" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "u", expected = "2025-04-06" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-u", expected = "2025-03-30" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-2m", expected = "2025-03-17" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-1m", expected = "2025-03-24" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-m", expected = "2025-03-31" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "m", expected = "2025-03-31" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "1m", expected = "2025-04-07" },
-    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "2m", expected = "2025-04-14" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "20240505", expected = "2024-05-05" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "20250505", expected = "2025-05-05" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "-0406", expected = "2024-04-06" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "0406", expected = "2025-04-06" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "1", expected = "2025-04-06" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "2", expected = "2025-04-07" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "-1", expected = "2025-04-04" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "-2", expected = "2025-04-03" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "m", expected = "2025-03-31" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "t", expected = "2025-04-01" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "w", expected = "2025-04-02" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "h", expected = "2025-04-03" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "f", expected = "2025-04-04" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "s", expected = "2025-04-05" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "u", expected = "2025-04-06" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "-u", expected = "2025-03-30" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "-2m", expected = "2025-03-17" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "-1m", expected = "2025-03-24" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "-m", expected = "2025-03-31" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "m", expected = "2025-03-31" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "1m", expected = "2025-04-07" },
-    { reference = { year = 2025, month = 4, day = 5, hour = 12 }, subject = "2m", expected = "2025-04-14" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "20240505", expected = "2024-05-05" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "20250505", expected = "2025-05-05" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "-0406", expected = "2024-04-06" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "0406", expected = "2025-04-06" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "1", expected = "2025-04-07" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "2", expected = "2025-04-08" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "-1", expected = "2025-04-05" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "-2", expected = "2025-04-04" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "m", expected = "2025-03-31" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "t", expected = "2025-04-01" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "w", expected = "2025-04-02" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "h", expected = "2025-04-03" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "f", expected = "2025-04-04" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "s", expected = "2025-04-05" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "u", expected = "2025-04-06" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "-u", expected = "2025-03-30" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "-2m", expected = "2025-03-17" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "-1m", expected = "2025-03-24" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "-m", expected = "2025-03-31" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "m", expected = "2025-03-31" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "1m", expected = "2025-04-07" },
-    { reference = { year = 2025, month = 4, day = 6, hour = 12 }, subject = "2m", expected = "2025-04-14" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-0406",    expected = "2024-04-06" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "0406",     expected = "2025-04-06" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "1",        expected = "2025-04-01" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "2",        expected = "2025-04-02" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-1",       expected = "2025-03-30" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-2",       expected = "2025-03-29" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "m",        expected = "2025-03-31" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "t",        expected = "2025-04-01" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "w",        expected = "2025-04-02" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "h",        expected = "2025-04-03" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "f",        expected = "2025-04-04" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "s",        expected = "2025-04-05" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "u",        expected = "2025-04-06" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-u",       expected = "2025-03-30" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-2m",      expected = "2025-03-17" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-1m",      expected = "2025-03-24" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "-m",       expected = "2025-03-31" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "m",        expected = "2025-03-31" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "1m",       expected = "2025-04-07" },
+    { reference = { year = 2025, month = 3, day = 31, hour = 12 }, subject = "2m",       expected = "2025-04-14" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "20240505", expected = "2024-05-05" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "20250505", expected = "2025-05-05" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-0406",    expected = "2024-04-06" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "0406",     expected = "2025-04-06" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "1",        expected = "2025-04-06" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "2",        expected = "2025-04-07" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-1",       expected = "2025-04-04" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-2",       expected = "2025-04-03" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "m",        expected = "2025-03-31" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "t",        expected = "2025-04-01" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "w",        expected = "2025-04-02" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "h",        expected = "2025-04-03" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "f",        expected = "2025-04-04" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "s",        expected = "2025-04-05" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "u",        expected = "2025-04-06" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-u",       expected = "2025-03-30" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-2m",      expected = "2025-03-17" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-1m",      expected = "2025-03-24" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "-m",       expected = "2025-03-31" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "m",        expected = "2025-03-31" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "1m",       expected = "2025-04-07" },
+    { reference = { year = 2025, month = 4, day = 5, hour = 12 },  subject = "2m",       expected = "2025-04-14" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "20240505", expected = "2024-05-05" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "20250505", expected = "2025-05-05" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-0406",    expected = "2024-04-06" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "0406",     expected = "2025-04-06" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "1",        expected = "2025-04-07" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "2",        expected = "2025-04-08" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-1",       expected = "2025-04-05" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-2",       expected = "2025-04-04" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "m",        expected = "2025-03-31" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "t",        expected = "2025-04-01" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "w",        expected = "2025-04-02" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "h",        expected = "2025-04-03" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "f",        expected = "2025-04-04" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "s",        expected = "2025-04-05" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "u",        expected = "2025-04-06" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-u",       expected = "2025-03-30" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-2m",      expected = "2025-03-17" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-1m",      expected = "2025-03-24" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "-m",       expected = "2025-03-31" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "m",        expected = "2025-03-31" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "1m",       expected = "2025-04-07" },
+    { reference = { year = 2025, month = 4, day = 6, hour = 12 },  subject = "2m",       expected = "2025-04-14" },
   }
 
   local all_passed = true
+  local msgs = {}
   for _, test in ipairs(tests) do
     local ref_time = os.time(test.reference)
     local ref_date_str = os.date("%Y-%m-%d", ref_time)
@@ -230,7 +231,7 @@ function M.run_tests()
     if not passed then
       all_passed = false
     end
-    print(string.format(
+    table.insert(msgs, string.format(
       "Reference: %-10s | Pattern: %-10s | Expected: %-10s | Resolved: %-10s | %s",
       ref_date_str,
       test.subject,
@@ -240,17 +241,26 @@ function M.run_tests()
     ))
   end
 
-  print("------------------------------------------")
+  table.insert(msgs, "------------------------------------------")
   if all_passed then
-    print("All tests passed (based on implemented logic).")
+    table.insert(msgs, "All tests passed (based on implemented logic).")
   else
-    print("Some tests failed.")
+    table.insert(msgs, "Some tests failed.")
   end
-  print("------------------------------------------")
+  table.insert(msgs, "------------------------------------------")
+
+  local formatted = table.concat(msgs, "\n")
+  print(formatted)
+  local f = io.open('out.txt', 'w')
+  if not f then
+    error('cannot open file out.txt to write the output')
+  end
+  f:write(formatted)
+  f:flush()
+  f:close()
 end
 
 -- To run tests from Neovim:
 -- :lua require('date_resolver').run_tests()
 
 return M
-
