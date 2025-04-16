@@ -22,6 +22,18 @@ require("blink.cmp").setup({
           { 'label', 'label_description', gap = 1 },
           { 'source_name' },
         }
+        -- -- colorful-menu config. I probably don't need it
+        -- columns = { { "kind_icon" }, { "label", gap = 1 } },
+        -- components = {
+        --   label = {
+        --     text = function(ctx)
+        --       return require("colorful-menu").blink_components_text(ctx)
+        --     end,
+        --     highlight = function(ctx)
+        --       return require("colorful-menu").blink_components_highlight(ctx)
+        --     end,
+        --   },
+        -- },
       }
     }
   },
