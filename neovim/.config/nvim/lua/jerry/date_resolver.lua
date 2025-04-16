@@ -256,7 +256,7 @@ function M.run_tests()
   local formatted = table.concat(msgs, "\n")
   print(formatted)
   -- Optional: Write to file
-  local f = io.open('out.txt', 'w')
+  local f = io.open('./result', 'w')
   if f then
     f:write(formatted)
     f:close()
