@@ -16,6 +16,7 @@ require('jerry.plugins-cfg.telescope')
 require('jerry.plugins-cfg.colorizer')
 -- require('jerry.plugins-cfg.markview')
 require('jerry.plugins-cfg.render-markdown')
+require('jerry.plugins-cfg.codecompanion')
 
 require('jerry.markdown').setup()
 require('jerry.lsp.config').setup()
