@@ -198,11 +198,13 @@ end
 M.new_search_pattern_from_inside_vim = function()
   local uuid = M.match_uuid_in_current_line()
   local heading = M.find_nearest_heading_above_current_line()
-  local out = string.format([[%s
+  local out = string.format([[
+%s
 
 ```vim
 lua require('jerry.markdown').jump_to_originuuid('%s')
-```]], heading, uuid)
+```
+]], heading, uuid)
   return out
 end
 
