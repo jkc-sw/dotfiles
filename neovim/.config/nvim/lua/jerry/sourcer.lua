@@ -15,15 +15,9 @@ echom 'Sourced'
 SOURCE_THESE_VIMS_END
 --]]
 
--- @brief Get a function te search the entire file for a matching pattern closest to the cursor and source using sourcer
--- @param sourcer (function(x) -> nil) - A function to source the block of text
---        function(x) -> nil
---        Arguments:
---          x (str) - Block of text to source
--- @param excluders ({(function() -> bool)...}) - A table of functions to skip under some conditions
---        function() -> bool
---        Returns:
---          bool - True to skip this source, False to continue the rest of the function
+---@brief Get a function te search the entire file for a matching pattern closest to the cursor and source using sourcer
+---@param sourcer fun(x: string): nil - A function to source the block of text
+---@param excluders (fun(): boolean)[] - A table of functions to skip under some conditions
 local function new_sourcer(sourcer, excluders)
   -- @brief Search the entire file for a matching pattern closest to the cursor and source that as vimscript
   -- @param startpat (str) - The pattern used for searching the start of the block
@@ -142,7 +136,9 @@ end
 -- @param x (str) - block of text, \n as line ending
 M.eval_lua = function (x)
   local f = loadstring(x)
-  f()
+  if f then
+    f()
+  end
 end
 
 -- @brief An excluder to skip init.vim and init.lua
