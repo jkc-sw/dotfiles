@@ -139,6 +139,9 @@ rt() (
 
 alias ag=lazygit
 alias ai=yazi
+alias ta=tmux_attach
+alias un='nou run'
+alias he='nou shell'
 
 note_cb() {
     local name="$1"
