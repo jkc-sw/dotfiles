@@ -195,8 +195,9 @@ function! WrapLinkAndMarkdownTitle(browser, label)
     if strlen(nlabel) < 1
         let nlabel = link
     endif
-    let txt = '## ' . nlabel . "\n\n"
-    let txt = txt . WrapLink(browser, nlabel, link)
+    let txt = '## ' . nlabel
+    let txt = txt . "\n\n" . luaeval("require('jerry.markdown').new_originuuid()")
+    let txt = txt . "\n\n" . WrapLink(browser, nlabel, link)
     return txt
 endfunction
 
@@ -292,6 +293,7 @@ function! AskLabelForPictureNameWithTitle(label)
     call inputrestore()
     let body = AskLabelForPictureName(nlabel)
     let txt = '## ' . nlabel
+    let txt = txt . "\n\n" . luaeval("require('jerry.markdown').new_originuuid()")
     let txt = txt . "\n\n" . body
     return txt
 endfunction
