@@ -196,7 +196,7 @@ M.setup = function()
   -- Sonarlint
   require('sonarlint').setup({
     server = {
-      cmd = { 'sonarlint-ls', '-stdio' },
+      cmd = { 'sonarlint-ls' },
       -- All settings are optional
       -- settings = {
       --   -- The default for sonarlint is {}, this is just an example
