@@ -121,7 +121,7 @@ pomo() {
 
 # Add the tmux command to start the tmux session
 rt_cb() {
-    name="$1"
+    local name="$1"
     tmux rename-window -t "${name}:1" 'dev-env-ansible'
     tmux send-keys -t "${name}:dev-env-ansible" 'cd "$HOME/repos/dev-env-ansible"' Enter
     tmux new-window -t "${name}:" -n "dev-env-ansible-docker"
@@ -144,10 +144,14 @@ alias un='nou run'
 alias he='nou shell'
 
 note_cb() {
-    local name="$1"
     local jdir="$HOME/repos/journal"
     cd "$jdir" || return 1
     tmux rename-window -t "$name:1" note
+
+    local name="$1"
+    tmux rename-window -t "${name}:1" 'journal'
+    tmux send-keys -t "${name}:journal" 'cd "$HOME/repos/journal"' Enter
+    tmux send-keys -t "${name}:journal" 'nv' Enter
 }
 note() {
     local jdir="$HOME/repos/journal"
