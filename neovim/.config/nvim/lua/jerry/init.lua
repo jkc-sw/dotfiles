@@ -1,4 +1,9 @@
+
+require('jerry.global-options')
+require('jerry.global-autocommands')
 require('jerry.global-funcs')
+require('jerry.markdown').setup()
+require('jerry.lsp.config').setup()
 
 local work_dir = vim.uv.os_homedir() .. '/.config/nvim'
 if vim.uv.fs_stat(work_dir) then
@@ -14,15 +19,7 @@ require('jerry.plugins-cfg.nvim-treesitter')
 require('jerry.plugins-cfg.nvim_context_vt')
 require('jerry.plugins-cfg.telescope')
 require('jerry.plugins-cfg.colorizer')
+
+-- -- Choose one
 -- require('jerry.plugins-cfg.markview')
 require('jerry.plugins-cfg.render-markdown')
-
-require('jerry.markdown').setup()
-require('jerry.lsp.config').setup()
-
-vim.filetype.add({
-  extensions = {
-    inc = 'bitbake',
-    keymap = 'keymap',
-  }
-})
