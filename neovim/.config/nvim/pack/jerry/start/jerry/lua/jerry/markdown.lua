@@ -60,6 +60,27 @@ M.setup = function()
 end
 
 
+---@brief Push a position to the tag stack.
+---@param opts? { bufnr?: integer, row?: integer, col?: integer, tagname?: string }
+M.push_to_tagstack = function(opts)
+  opts = opts or {}
+  local bufnr = opts.bufnr or vim.fn.bufnr('%')
+  local row = opts.row or vim.fn.line('.')
+  local col = opts.col or vim.fn.col('.')
+  local tagname = opts.tagname or vim.fn.expand('%:t')
+
+  local tag_entry = {
+    tagname = tagname,
+    from = { bufnr, row, col, 0 }
+  }
+
+  local tagstack = vim.fn.gettagstack()
+  tagstack.items = tagstack.items or {}
+  table.insert(tagstack.items, tag_entry)
+  tagstack.curidx = #tagstack.items
+  vim.fn.settagstack(vim.fn.winnr(), tagstack)
+end
+
 --- @brief Given a pattern, find the line number and file name it has
 --- @param pattern string
 --- @return {filepath: string, line_number: integer}[]
@@ -125,6 +146,8 @@ M.jump_to_originuuid = function(uuid)
 
   local match = matches[1]
   local filepath, line_number = match.filepath, match.line_number
+
+  M.push_to_tagstack()
 
   vim.cmd.edit(filepath)
   vim.cmd(string.format(':%d', line_number))
