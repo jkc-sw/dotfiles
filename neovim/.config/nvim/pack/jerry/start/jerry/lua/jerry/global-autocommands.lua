@@ -91,8 +91,8 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TabEnter" }, {
     pattern = "*",
     callback = function()
         vim.cmd [[
-            iabbrev tit SOURCE_THESE_VIMS_START<cr><cr>echom 'Sourced'<cr>SOURCE_THESE_VIMS_END<Up><Up>
-            iabbrev tyt SOURCE_THESE_LUAS_START<cr><cr>print('Sourced')<cr>SOURCE_THESE_LUAS_END<Up><Up>
+            iabbrev tit SOURCE_THESE_VIMS_START<cr><cr>echom 'Sourced'<cr>SOURCE_THESE_VIMS_END
+            iabbrev tyt SOURCE_THESE_LUAS_START<cr><cr>print('Sourced')<cr>SOURCE_THESE_LUAS_END
         ]]
     end,
 })
