@@ -54,79 +54,24 @@ M.setup = function()
         end
       })
 
-      vim.api.nvim_buf_set_keymap(0, 'n', '<c-n>', '', {
-        noremap = true,
-        desc = 'TBD',
-        callback = function()
-          M.goto_next_item_tagstack()
-        end
-      })
-
       vim.cmd("iabbrev ,n  <c-r>=v:lua.require('jerry.markdown').new_originuuid()<cr>")
     end
   })
 end
 
----@brief Jump to the next item in the tagstack
-M.goto_next_item_tagstack = function()
-  local tagstack = vim.fn.gettagstack()
+---@brief Push current position to the tag stack and add to the jump list
+M.push_to_tagstack = function()
+  local win = vim.api.nvim_get_current_win()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local from = vim.fn.getpos('.')
+  from[1] = bufnr
+  local tagname = opts.tagname or vim.fn.expand('<cword>')
 
-  local empty_tagstack = #tagstack.items == 0
-  if empty_tagstack then
-    -- print('WARN: empty tagstack, position unchanged')
-    return
-  end
+  -- Save position in jumplist
+  vim.cmd("normal! m'")
 
-  local at_last_item_in_stack = tagstack.curidx >= #tagstack.items
-  if at_last_item_in_stack then
-    -- print('WARN: at the last element in the tagstack, position unchanged')
-    return
-  end
-
-  local idx_next_element = tagstack.curidx + 1
-  ---@type table<integer, integer, integer, integer>
-  local next_location = tagstack.items[idx_next_element].from
-  local bufnr = next_location[1]
-  local lnum = next_location[2]
-  local cnum = next_location[3]
-
-  -- Switch to the buffer
-  vim.api.nvim_set_current_buf(bufnr)
-  vim.api.nvim_win_set_cursor(0, {lnum, cnum})
-
-  -- Need to adjust the stack to indicate that we moved
-  tagstack.curidx = idx_next_element
-  vim.fn.settagstack(vim.fn.winnr(), tagstack)
-end
-
----@brief Push a position to the tag stack.
----@param opts? { bufnr?: integer, row?: integer, col?: integer, tagname?: string }
-M.push_to_tagstack = function(opts)
-  opts = opts or {}
-  local bufnr = opts.bufnr or vim.fn.bufnr('%')
-  local row = opts.row or vim.fn.line('.')
-  local col = opts.col or vim.fn.col('.')
-  local tagname = opts.tagname or vim.fn.expand('%:t')
-
-  local tag_entry = {
-    tagname = tagname,
-    from = { bufnr, row, col, 0 }
-  }
-
-  local tagstack = vim.fn.gettagstack()
-  tagstack.items = tagstack.items or {}
-
-  local truncate_stack = #tagstack.items > 1 and tagstack.curidx < #tagstack.items
-  if truncate_stack then
-    local idx_truncate_start = tagstack.curidx + 1
-    for idx = #tagstack.items, idx_truncate_start, -1 do
-      table.remove(tagstack.items, idx)
-    end
-  end
-
-  table.insert(tagstack.items, tag_entry)
-  tagstack.curidx = #tagstack.items
-  vim.fn.settagstack(vim.fn.winnr(), tagstack)
+  local tagstack = { { tagname = tagname, from = from } }
+  vim.fn.settagstack(vim.fn.win_getid(win), { items = tagstack }, 't')
 end
 
 --- @brief Given a pattern, find the line number and file name it has
