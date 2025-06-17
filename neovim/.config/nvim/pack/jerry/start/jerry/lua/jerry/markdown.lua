@@ -65,7 +65,7 @@ M.push_to_tagstack = function()
   local bufnr = vim.api.nvim_get_current_buf()
   local from = vim.fn.getpos('.')
   from[1] = bufnr
-  local tagname = opts.tagname or vim.fn.expand('<cword>')
+  local tagname = vim.fn.expand('<cword>')
 
   -- Save position in jumplist
   vim.cmd("normal! m'")
