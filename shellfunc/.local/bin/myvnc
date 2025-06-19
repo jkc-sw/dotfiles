@@ -10,6 +10,7 @@ Start VNC Server for Headless Server
 Dependencies:
   - vncserver
   - startup file in ~/.vnc/xstartup
+  - xfce4
 
 Installation:
   Copy this file to \$HOME/.local/bin folder
@@ -18,11 +19,14 @@ Usages:
   Check the current running session
   $ myvnc
 
-  Start the server with default param, 1920x1080 with 24 depth
+  Start a server with default param, 1920x1080 with 24 depth
   $ myvnc -r
 
-  Create server with other size and depth
+  Create a server with other size and depth
   $ myvnc -r -s 1920x1080 -d 24
+
+  Create a server with another desktop environment
+  $ TVNC_WM=gnome myvnc -r -s 1920x1080 -d 24
 
   Kill a running server at a specific port, :1, then, where first : is omitted
   $ myvnc -k 1
@@ -43,11 +47,12 @@ EOF
 #===============================================================================
 main() {
     # Default options
-    depth=24
-    res=1920x1080
-    killport=:1
-    dokill=false
-    new=false
+    local depth=24
+    local res=1920x1080
+    local killport=:1
+    local dokill=false
+    local new=false
+    export TVNC_WM="${TVNC_WM:=xfce}"
 
     # check dependencies
     if ! command -v vncserver >/dev/null 2>&1; then
