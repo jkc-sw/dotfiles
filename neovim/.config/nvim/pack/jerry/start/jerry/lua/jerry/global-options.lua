@@ -96,9 +96,6 @@ map("n", "<leader>t,", "<cmd>call system('tmux load-buffer -', expand('<cWORD>')
 map("n", "<leader>tu", "<cmd>call system('tmux load-buffer -', jerry#common#GetBlockSelection()..'\\r') | silent execute '!tmux paste-buffer -t :.+1' | exec \"normal! '}\" | exec ':'..(search('[^ \\t]', 'bceW') + 1)<CR>", opts)
 map("n", "<leader>ta", "<cmd>call system('tmux load-buffer -', jerry#common#GetBlockSelection()..'\\r') | silent execute '!tmux paste-buffer -t :.-1' | exec \"normal! '}\" | exec ':'..(search('[^ \\t]', 'bceW') + 1)<CR>", opts)
 
-map("n", "<leader>te", "<cmd>call system('tmux load-buffer -', substitute(getline(line('.')), '^[ \\t]*', '', 'g')..'\\r') | silent execute '!tmux paste-buffer -t :.+1'<CR>", opts)
-map("n", "<leader>to", "<cmd>call system('tmux load-buffer -', substitute(getline(line('.')), '^[ \\t]*', '', 'g')..'\\r') | silent execute '!tmux paste-buffer -t :.-1'<CR>", opts)
-
 map("v", "<leader>te", ":<C-u>call system('tmux load-buffer -', jerry#common#GetVisualSelection()..'\\r') | silent execute '!tmux paste-buffer -t :.+1'<CR>", opts)
 map("v", "<leader>to", ":<C-u>call system('tmux load-buffer -', jerry#common#GetVisualSelection()..'\\r') | silent execute '!tmux paste-buffer -t :.-1'<CR>", opts)
 
