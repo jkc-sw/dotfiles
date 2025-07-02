@@ -18,6 +18,8 @@ M.setup = function()
     callback = function(ev)
       vim.keymap.set("n", "<leader>te", function() M.tmux_send_current_line_to_a_pane(':.+1') end)
       vim.keymap.set("n", "<leader>to", function() M.tmux_send_current_line_to_a_pane(':.-1') end)
+      vim.keymap.set("n", "<leader>tu", function() M.tmux_send_current_text_block_to_a_pane(':.+1') end)
+      vim.keymap.set("n", "<leader>ta", function() M.tmux_send_current_text_block_to_a_pane(':.-1') end)
     end
   })
 end
@@ -28,6 +30,14 @@ function M.tmux_send_current_line_to_a_pane(pane)
   local line = vim.api.nvim_get_current_line()
   local replacedLine = string.gsub(line, '^[ \t]*', '')
   local _ = vim.system({'tmux', 'load-buffer', '-'}, { stdin = replacedLine .. '\r', text = true }):wait()
+  local _ = vim.system({'tmux', 'paste-buffer', '-t', pane}, { text = true }):wait()
+end
+
+--- @brief Send the current block of text from the buffer to another tmux pane
+--- @param pane string the pane identifier
+function M.tmux_send_current_text_block_to_a_pane(pane)
+  local lines = vim.fn['jerry#common#GetBlockSelection']()
+  local _ = vim.system({'tmux', 'load-buffer', '-'}, { stdin = lines .. '\r', text = true }):wait()
   local _ = vim.system({'tmux', 'paste-buffer', '-t', pane}, { text = true }):wait()
 end
 

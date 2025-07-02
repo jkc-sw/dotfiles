@@ -93,12 +93,6 @@ map("n", "<leader>tp", "<cmd>lua require('jerry.marker').mark_these('MARK_THIS_P
 map("n", "<leader>t.", "<cmd>call system('tmux load-buffer -', expand('<cWORD>')..'\\r') | silent execute '!tmux paste-buffer -t :.+1'<CR>", opts)
 map("n", "<leader>t,", "<cmd>call system('tmux load-buffer -', expand('<cWORD>')..'\\r') | silent execute '!tmux paste-buffer -t :.-1'<CR>", opts)
 
-map("n", "<leader>tu", "<cmd>call system('tmux load-buffer -', jerry#common#GetBlockSelection()..'\\r') | silent execute '!tmux paste-buffer -t :.+1' | exec \"normal! '}\" | exec ':'..(search('[^ \\t]', 'bceW') + 1)<CR>", opts)
-map("n", "<leader>ta", "<cmd>call system('tmux load-buffer -', jerry#common#GetBlockSelection()..'\\r') | silent execute '!tmux paste-buffer -t :.-1' | exec \"normal! '}\" | exec ':'..(search('[^ \\t]', 'bceW') + 1)<CR>", opts)
-
-map("v", "<leader>te", ":<C-u>call system('tmux load-buffer -', jerry#common#GetVisualSelection()..'\\r') | silent execute '!tmux paste-buffer -t :.+1'<CR>", opts)
-map("v", "<leader>to", ":<C-u>call system('tmux load-buffer -', jerry#common#GetVisualSelection()..'\\r') | silent execute '!tmux paste-buffer -t :.-1'<CR>", opts)
-
 map("n", "<C-p>", "<cmd>call jerry#common#FileFuzzySearch()<CR>", opts)
 map("n", "<leader>po", "<cmd>lua require('telescope.builtin').oldfiles()<CR>", opts)
 map("n", "<leader>/", "<cmd>call jerry#common#LinesFuzzySearch()<CR>", opts)
