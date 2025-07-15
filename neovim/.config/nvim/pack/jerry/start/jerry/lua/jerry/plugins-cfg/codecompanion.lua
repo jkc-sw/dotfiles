@@ -10,17 +10,17 @@ require("codecompanion").setup({
         -- https://codecompanion.olimorris.dev/getting-started.html
         -- https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/adapters/azure_openai.lua
         env = {
-          endpoint = "https://openai-neovim.openai.azure.com/",
-          api_key = 'cmd:pass mks/services/openai/key1',
-          api_version = "2024-12-01-preview",
+          endpoint = "https://azureaipowersolutioncgllm.cognitiveservices.azure.com",
+          api_key = 'cmd:pass mks/services/openai-it/key1',
+          api_version = "2025-01-01-preview",
         },
         schema = {
           model = {
             default = "gpt-4o",
             choices = {
               "gpt-4o",
-              ["o3-mini"] = { opts = { can_reason = true } },
-              "gpt-4o-mini",
+              -- ["o3-mini"] = { opts = { can_reason = true } },
+              -- "gpt-4o-mini",
             }
           },
         },
