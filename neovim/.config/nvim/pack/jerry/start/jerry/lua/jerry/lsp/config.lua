@@ -218,7 +218,7 @@ M.setup = function()
     })
   else
     setup_each_lsp('powershell_es', {
-      cmd = { 'powershell_es', '-Stdio' }
+      cmd = { 'powershell-editor-services', '-Stdio' }
     })
   end
 
