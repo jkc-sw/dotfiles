@@ -1,4 +1,5 @@
 require("codecompanion").setup({
+  log_level = "DEBUG",
   display = {
     action_palette = {
       provider = 'telescope'
