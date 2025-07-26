@@ -3,7 +3,7 @@ require("avante").setup({
   provider = "azure",
   providers = {
     azure = {
-      api_key_name = {'pass', 'mks/services/openai-it/key1'},
+      api_key_name = {'pas', 'mks/services/openai-it/key1'},
 
       endpoint = "https://azureaipowersolutioncgllm.cognitiveservices.azure.com", -- example: "https://<your-resource-name>.openai.azure.com"
       deployment = "gpt-4o", -- Azure deployment name (e.g., "gpt-4o", "my-gpt-4o-deployment")

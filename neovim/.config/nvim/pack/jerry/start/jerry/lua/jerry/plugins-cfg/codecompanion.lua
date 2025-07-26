@@ -12,7 +12,7 @@ require("codecompanion").setup({
         -- https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/adapters/azure_openai.lua
         env = {
           endpoint = "https://azureaipowersolutioncgllm.cognitiveservices.azure.com",
-          api_key = 'cmd:pass mks/services/openai-it/key1',
+          api_key = 'cmd:pas mks/services/openai-it/key1',
           api_version = "2025-01-01-preview",
         },
         schema = {
