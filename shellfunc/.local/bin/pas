@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+
+:<<'EOF'
+SOURCE_THESE_VIMS_START
+let @h="yoecho \"\<c-r>\" = \$\<c-r>\"\"\<esc>j"
+let @t="yoecho \"\<c-r>\" = \${\<c-r>\"[*]}\"\<esc>j"
+echom 'Sourced'
+SOURCE_THESE_VIMS_END
+EOF
+
+displayHelp() {
+    echo "pas - Custom wrapper to handle gnu pass based on my systems"
+    echo ''
+    echo "pas -h|--help|help"
+    echo "pas -c|--clipboard ..."
+    echo "pas ..."
+    echo ""
+    echo "Where"
+    echo "  ... means all the arguments that gnu pass takes"
+    echo ""
+    echo "Options:"
+    echo "  -h|--help|help"
+    echo "      See this help"
+    echo ""
+    echo "  -c|--clipboard"
+    echo "      Send the output to the clipboard program"
+    echo "      \$PAS_CLIPBOARD defined as env var. Default is toclip"
+}
+
+main() {
+
+    export PAS_CLIPBOARD="${PAS_CLIPBOARD:-toclip}"
+
+    # if [[ -z "$PASSWORD_STORE_DIR" ]]; then
+    #     echo 'ERR: PASSWORD_STORE_DIR is empty' >&2
+    #     exit 1
+    # fi
+
+    local args=("$@")
+    local sendToClipboard=false
+    local argInd=0
+    local argLen=${#args[@]}
+    local otherArgs=()
+    while [[ $argInd -lt $argLen ]]; do
+        case "${args[$argInd]}" in
+        '-h'|'--help'|'help')
+            displayHelp
+            exit 0
+            ;;
+        '-c'|'--clipboard')
+            sendToClipboard=true
+            ;;
+        *)
+            # store local port number
+            otherArgs+=("${args[$argInd]}")
+            ;;
+        esac
+        # increment index
+        argInd=$((argInd + 1))
+    done
+
+    if [[ -f "$(command -v pass 2>/dev/null)" ]]; then
+        case "${#otherArgs[@]}" in
+        0)
+            pass
+            ;;
+        *)
+            if [[ "$sendToClipboard" == 'true' ]]; then
+                "$PAS_CLIPBOARD" "$(pass "${otherArgs[@]}")"
+            else
+                pass "${otherArgs[@]}"
+            fi
+        esac
+    else
+        case "${#otherArgs[@]}" in
+        0)
+            pass_over_ssh
+            ;;
+        *)
+            if [[ "$sendToClipboard" == 'true' ]]; then
+                "$PAS_CLIPBOARD" "$(pass_over_ssh "${otherArgs[@]}")"
+            else
+                pass_over_ssh "${otherArgs[@]}"
+            fi
+        esac
+    fi
+}
+
+pass_over_ssh() {
+    local args=("$@")
+    # Suppress warning about using single quote
+    # shellcheck disable=2016
+    local cmd='true ; export PASSWORD_STORE_DIR="$HOME/repos/mypasswordstore" ; pass'
+    ssh "chenkua@$ASUS_IP" bash -c "$cmd ${args[*]}"
+}
+
+main "$@"
