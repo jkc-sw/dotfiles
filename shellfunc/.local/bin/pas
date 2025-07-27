@@ -59,30 +59,17 @@ main() {
         argInd=$((argInd + 1))
     done
 
-    if [[ -f "$(command -v pass 2>/dev/null)" ]]; then
-        case "${#otherArgs[@]}" in
-        0)
-            pass
-            ;;
-        *)
-            if [[ "$sendToClipboard" == 'true' ]]; then
-                "$PAS_CLIPBOARD" "$(pass "${otherArgs[@]}")"
-            else
-                pass "${otherArgs[@]}"
-            fi
-        esac
+    if command -v pass &>/dev/null; then
+        pass_command="pass"
     else
-        case "${#otherArgs[@]}" in
-        0)
-            pass_over_ssh
-            ;;
-        *)
-            if [[ "$sendToClipboard" == 'true' ]]; then
-                "$PAS_CLIPBOARD" "$(pass_over_ssh "${otherArgs[@]}")"
-            else
-                pass_over_ssh "${otherArgs[@]}"
-            fi
-        esac
+        pass_command="pass_over_ssh"
+    fi
+
+    if [[ "${#otherArgs[@]}" -eq 0 ]]; then
+        $pass_command
+    else
+        output="$($pass_command "${otherArgs[@]}")"
+        [[ "$sendToClipboard" == 'true' ]] && "$PAS_CLIPBOARD" "$output" || echo "$output"
     fi
 }
 
