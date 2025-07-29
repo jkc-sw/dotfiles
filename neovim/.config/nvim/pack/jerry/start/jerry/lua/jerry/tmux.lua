@@ -16,10 +16,15 @@ M.setup = function()
     group = augroup_id,
     desc = 'TBD',
     callback = function(ev)
-      vim.keymap.set("n", "<leader>te", function() M.tmux_send_current_line_to_a_pane(':.+1') end)
-      vim.keymap.set("n", "<leader>to", function() M.tmux_send_current_line_to_a_pane(':.-1') end)
-      vim.keymap.set("n", "<leader>tu", function() M.tmux_send_current_text_block_to_a_pane(':.+1') end)
-      vim.keymap.set("n", "<leader>ta", function() M.tmux_send_current_text_block_to_a_pane(':.-1') end)
+      local map = vim.keymap.set
+      local opts = { noremap = true, silent = true }
+
+      map("n", "<leader>te", function() M.tmux_send_current_line_to_a_pane(':.+1') end, opts)
+      map("v", "<leader>te", ":<C-U>lua require('jerry.tmux').tmux_send_current_visual_block_to_a_pane(':.+1')<CR>", opts)
+      map("n", "<leader>to", function() M.tmux_send_current_line_to_a_pane(':.-1') end, opts)
+      map("v", "<leader>to", ":<C-U>lua require('jerry.tmux').tmux_send_current_visual_block_to_a_pane(':.-1')<CR>", opts)
+      map("n", "<leader>tu", function() M.tmux_send_current_text_block_to_a_pane(':.+1') end, opts)
+      map("n", "<leader>ta", function() M.tmux_send_current_text_block_to_a_pane(':.-1') end, opts)
     end
   })
 end
@@ -38,6 +43,14 @@ end
 function M.tmux_send_current_text_block_to_a_pane(pane)
   local lines = vim.fn['jerry#common#GetBlockSelection']()
   local _ = vim.system({'tmux', 'load-buffer', '-'}, { stdin = lines .. '\r', text = true }):wait()
+  local _ = vim.system({'tmux', 'paste-buffer', '-t', pane}, { text = true }):wait()
+end
+
+--- @brief Send the current visual block of text from the buffer to another tmux pane
+--- @param pane string the pane identifier
+function M.tmux_send_current_visual_block_to_a_pane(pane)
+  local lines = vim.fn['jerry#common#GetVisualSelection']()
+  local result = vim.system({'tmux', 'load-buffer', '-'}, { stdin = lines .. '\r', text = true }):wait()
   local _ = vim.system({'tmux', 'paste-buffer', '-t', pane}, { text = true }):wait()
 end
 
