@@ -22,7 +22,7 @@ except ImportError:
     COLORS_AVAILABLE = False
     # Fallback color definitions
     class Fore:
-        RED = GREEN = YELLOW = BLUE = CYAN = ""
+        RED = GREEN = YELLOW = BLUE = CYAN = MAGENTA = ""
     class Style:
         RESET_ALL = ""
 
@@ -64,6 +64,7 @@ class FolderStats:
 class MigrationStats:
     """Overall migration statistics"""
     folder_stats: List[FolderStats] = field(default_factory=list)
+    deleted_items: int = 0
 
     @property
     def total_items(self) -> int:
@@ -87,6 +88,15 @@ class BitwardenFolder:
     """Represents a Bitwarden folder"""
     id: str
     name: str
+
+
+@dataclass
+class OnePasswordItem:
+    """Represents a 1Password item"""
+    id: str
+    title: str
+    vault: str
+    tags: List[str] = field(default_factory=list)
 
 
 class ColorLogger:
@@ -125,6 +135,14 @@ class ColorLogger:
         logger.error(message)
 
     @staticmethod
+    def delete(message: str) -> None:
+        if COLORS_AVAILABLE:
+            print(f"{Fore.MAGENTA}[DELETE]{Style.RESET_ALL} {message}")
+        else:
+            print(f"[DELETE] {message}")
+        logger.info(message)
+
+    @staticmethod
     def folder_header(folder_name: str) -> None:
         if COLORS_AVAILABLE:
             print(f"\n{Fore.CYAN}{'='*60}")
@@ -133,6 +151,17 @@ class ColorLogger:
         else:
             print(f"\n{'='*60}")
             print(f"PROCESSING FOLDER: {folder_name}")
+            print(f"{'='*60}")
+
+    @staticmethod
+    def delete_header() -> None:
+        if COLORS_AVAILABLE:
+            print(f"\n{Fore.MAGENTA}{'='*60}")
+            print(f"DELETING EXISTING ITEMS")
+            print(f"{'='*60}{Style.RESET_ALL}")
+        else:
+            print(f"\n{'='*60}")
+            print(f"DELETING EXISTING ITEMS")
             print(f"{'='*60}")
 
 
@@ -273,8 +302,39 @@ class OnePasswordCLI:
             return ["Private", "Employee", "Shared"]
 
     @staticmethod
-    def create_item(item_data: Dict[str, Any], vault: str = "Employee") -> str:
-        """Create an item in 1Password"""
+    def list_items_by_tag(tag: str, vault: str = "Employee") -> List[OnePasswordItem]:
+        """List items with a specific tag"""
+        try:
+            command = ['op', 'item', 'list', f'--vault={vault}', f'--tags={tag}', '--format=json']
+            output = OnePasswordCLI.run_command(command)
+
+            if not output.strip():
+                return []
+
+            items_data = json.loads(output)
+            items = []
+
+            for item_data in items_data:
+                items.append(OnePasswordItem(
+                    id=item_data.get('id', ''),
+                    title=item_data.get('title', 'Untitled'),
+                    vault=item_data.get('vault', {}).get('name', vault),
+                    tags=item_data.get('tags', [])
+                ))
+
+            return items
+        except (CLIError, json.JSONDecodeError) as e:
+            raise CLIError(f"Failed to list items by tag '{tag}': {e}")
+
+    @staticmethod
+    def delete_item(item_id: str, vault: str = "Employee") -> None:
+        """Delete an item by ID"""
+        command = ['op', 'item', 'delete', item_id, f'--vault={vault}']
+        OnePasswordCLI.run_command(command)
+
+    @staticmethod
+    def create_item(item_data: Dict[str, Any], vault: str = "Employee", tags: Optional[List[str]] = None) -> str:
+        """Create an item in 1Password with optional tags"""
         command = ['op', 'item', 'create', f'--vault={vault}']
 
         # Add category
@@ -284,6 +344,10 @@ class OnePasswordCLI:
         # Add title
         if 'title' in item_data:
             command.extend(['--title', item_data['title']])
+
+        # Add tags
+        if tags:
+            command.extend(['--tags', ','.join(tags)])
 
         # Add notes
         if 'notes' in item_data and item_data['notes']:
@@ -446,12 +510,15 @@ class ItemConverter:
 
 
 class MultiFolderMigrator:
-    """Main class for handling multi-folder vault migration"""
+    """Main class for handling multi-folder vault migration with tagging and deletion support"""
 
-    def __init__(self, folder_names: List[str], dry_run: bool = False, vault_name: str = "Employee"):
+    def __init__(self, folder_names: List[str], dry_run: bool = False, vault_name: str = "Employee",
+                 tag: Optional[str] = None, delete_existing: bool = False):
         self.folder_names = folder_names
         self.dry_run = dry_run
         self.vault_name = vault_name
+        self.tag = tag
+        self.delete_existing = delete_existing
         self.stats = MigrationStats()
         self.bw_cli = BitwardenCLI()
         self.op_cli = OnePasswordCLI()
@@ -486,6 +553,17 @@ class MultiFolderMigrator:
             self.log.error("Bitwarden CLI is not unlocked. Please run: bw unlock")
             sys.exit(1)
         self.log.success("Bitwarden CLI authenticated and unlocked")
+
+    def validate_arguments(self) -> None:
+        """Validate command line arguments"""
+        if self.delete_existing and not self.tag:
+            self.log.error("--delete flag requires --tag to be specified")
+            sys.exit(1)
+
+        if self.tag:
+            # Validate tag format (basic validation)
+            if not self.tag.replace('-', '').replace('_', '').replace(' ', '').isalnum():
+                self.log.warning(f"Tag '{self.tag}' contains special characters that might cause issues")
 
     def list_available_folders(self) -> None:
         """List all available folders in Bitwarden"""
@@ -534,6 +612,55 @@ class MultiFolderMigrator:
             self.log.warning(f"Could not validate vault (will attempt to use anyway): {e}")
             return True  # Continue anyway as vault might exist
 
+    def delete_existing_items(self) -> None:
+        """Delete existing items with the specified tag"""
+        if not self.tag:
+            return
+
+        self.log.delete_header()
+        self.log.info(f"Searching for items with tag '{self.tag}' in vault '{self.vault_name}'...")
+
+        try:
+            existing_items = self.op_cli.list_items_by_tag(self.tag, self.vault_name)
+
+            if not existing_items:
+                self.log.info(f"No items found with tag '{self.tag}'")
+                return
+
+            self.log.warning(f"Found {len(existing_items)} items with tag '{self.tag}'")
+
+            if not self.dry_run:
+                # Confirm deletion
+                self.log.warning("The following items will be PERMANENTLY DELETED:")
+                for item in existing_items:
+                    self.log.warning(f"  • {item.title}")
+
+                response = input(f"\nDELETE {len(existing_items)} items? (y/N): ").strip().lower()
+                if response not in ['y', 'yes']:
+                    self.log.info("Deletion cancelled by user")
+                    sys.exit(0)
+
+            # Delete items
+            for item in existing_items:
+                if self.dry_run:
+                    self.log.delete(f"[DRY RUN] Would delete: {item.title}")
+                    self.stats.deleted_items += 1
+                else:
+                    try:
+                        self.op_cli.delete_item(item.id, self.vault_name)
+                        self.log.delete(f"Deleted: {item.title}")
+                        self.stats.deleted_items += 1
+                    except CLIError as e:
+                        self.log.error(f"Failed to delete '{item.title}': {e}")
+
+            if self.stats.deleted_items > 0:
+                action = "Would delete" if self.dry_run else "Deleted"
+                self.log.success(f"{action} {self.stats.deleted_items} items with tag '{self.tag}'")
+
+        except CLIError as e:
+            self.log.error(f"Failed to delete existing items: {e}")
+            sys.exit(1)
+
     def migrate_folder(self, folder: BitwardenFolder) -> FolderStats:
         """Migrate items from a single folder"""
         folder_stats = FolderStats(folder_name=folder.name)
@@ -561,12 +688,16 @@ class MultiFolderMigrator:
                     op_item = self.converter.convert_item(item)
 
                     if self.dry_run:
-                        self.log.info(f"[DRY RUN] Would create: {item_name}")
+                        tag_info = f" with tag '{self.tag}'" if self.tag else ""
+                        self.log.info(f"[DRY RUN] Would create: {item_name}{tag_info}")
                         folder_stats.successful += 1
                     else:
-                        # Create item in 1Password
-                        self.op_cli.create_item(op_item, self.vault_name)
-                        self.log.success(f"Created item: {item_name}")
+                        # Create item in 1Password with tags
+                        tags = [self.tag] if self.tag else None
+                        self.op_cli.create_item(op_item, self.vault_name, tags)
+
+                        tag_info = f" with tag '{self.tag}'" if self.tag else ""
+                        self.log.success(f"Created item: {item_name}{tag_info}")
                         folder_stats.successful += 1
 
                 except CLIError as e:
@@ -617,6 +748,10 @@ class MultiFolderMigrator:
 
         print(f"Target vault: {self.vault_name}")
         print(f"Folders processed: {len(self.stats.folder_stats)}")
+        if self.tag:
+            print(f"Tag applied: {self.tag}")
+        if self.delete_existing:
+            print(f"Items deleted: {self.stats.deleted_items}")
         print()
 
         # Per-folder breakdown
@@ -637,7 +772,10 @@ class MultiFolderMigrator:
         # Overall summary
         print("Overall totals:")
         print("-" * 50)
-        print(f"Total items: {self.stats.total_items}")
+        if self.delete_existing and self.stats.deleted_items > 0:
+            delete_action = "Would delete" if self.dry_run else "Deleted"
+            print(f"{delete_action} items: {self.stats.deleted_items}")
+        print(f"Total items migrated: {self.stats.total_items}")
         print(f"Total successful: {self.stats.total_successful}")
         print(f"Total failed: {self.stats.total_failed}")
 
@@ -654,11 +792,16 @@ class MultiFolderMigrator:
         print("="*80)
 
         if self.dry_run:
-            self.log.warning("Running in DRY RUN mode - no items will be created")
+            self.log.warning("Running in DRY RUN mode - no items will be created or deleted")
 
         self.log.info(f"Source folders: {', '.join(self.folder_names)}")
         self.log.info(f"Target vault: {self.vault_name}")
+        if self.tag:
+            self.log.info(f"Tag to apply: {self.tag}")
+        if self.delete_existing:
+            self.log.warning("Delete mode enabled - existing items with tag will be removed")
 
+        self.validate_arguments()
         self.check_dependencies()
         self.check_authentication()
 
@@ -672,10 +815,22 @@ class MultiFolderMigrator:
         # Confirm before proceeding
         if not self.dry_run:
             print()
-            self.log.warning("This script will migrate ALL items from the following folders:")
-            for folder_name in self.folder_names:
-                self.log.warning(f"  • {folder_name}")
-            self.log.warning(f"All items will be created in the '{self.vault_name}' vault in 1Password.")
+            if self.delete_existing:
+                self.log.warning("This script will:")
+                self.log.warning(f"1. DELETE all existing items with tag '{self.tag}' in vault '{self.vault_name}'")
+                self.log.warning("2. Migrate ALL items from the following folders:")
+                for folder_name in self.folder_names:
+                    self.log.warning(f"   • {folder_name}")
+                if self.tag:
+                    self.log.warning(f"3. Apply tag '{self.tag}' to all migrated items")
+            else:
+                self.log.warning("This script will migrate ALL items from the following folders:")
+                for folder_name in self.folder_names:
+                    self.log.warning(f"  • {folder_name}")
+                self.log.warning(f"All items will be created in the '{self.vault_name}' vault in 1Password.")
+                if self.tag:
+                    self.log.warning(f"Tag '{self.tag}' will be applied to all migrated items.")
+
             self.log.warning("Make sure you have backups of both vaults before proceeding.")
 
             response = input("\nDo you want to continue? (y/N): ").strip().lower()
@@ -683,6 +838,11 @@ class MultiFolderMigrator:
                 self.log.info("Migration cancelled by user")
                 return
 
+        # Delete existing items if requested
+        if self.delete_existing:
+            self.delete_existing_items()
+
+        # Migrate folders
         self.migrate_all_folders()
         self.print_summary()
 
@@ -695,16 +855,24 @@ class MultiFolderMigrator:
 def main():
     """Main entry point"""
     parser = argparse.ArgumentParser(
-        description="Migrate items from multiple Bitwarden folders to 1Password employee vault",
+        description="Migrate items from multiple Bitwarden folders to 1Password employee vault with tagging and deletion support",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python bw_multi_folder_migration.py --folders "Work" "Development"        # Migrate multiple folders
-  python bw_multi_folder_migration.py --folders "Work" --dry-run            # Test run
-  python bw_multi_folder_migration.py --folders "Dev" "QA" "Prod"           # Migrate three folders
-  python bw_multi_folder_migration.py --folder "Work"                       # Single folder (backward compatibility)
-  python bw_multi_folder_migration.py --list-folders                        # List available folders
-  python bw_multi_folder_migration.py --folders "Team" --vault "Shared"     # Use different target vault
+  # Basic migration with tagging
+  python bw_multi_folder_migration.py --folders "Work" "Development" --tag "bitwarden-sync"
+
+  # Re-sync (delete existing tagged items and migrate fresh)
+  python bw_multi_folder_migration.py --folders "Work" --tag "work-sync" --delete
+
+  # Test run with deletion
+  python bw_multi_folder_migration.py --folders "Work" --tag "test" --delete --dry-run
+
+  # Multiple folders with custom vault
+  python bw_multi_folder_migration.py --folders "Dev" "QA" "Prod" --tag "environments" --vault "Shared"
+
+  # List available folders
+  python bw_multi_folder_migration.py --list-folders
         """
     )
 
@@ -722,6 +890,17 @@ Examples:
     )
 
     parser.add_argument(
+        '--tag',
+        help='Tag to apply to migrated items in 1Password (recommended for re-sync scenarios)'
+    )
+
+    parser.add_argument(
+        '--delete',
+        action='store_true',
+        help='Delete existing items with the specified tag before migration (requires --tag)'
+    )
+
+    parser.add_argument(
         '--list-folders',
         action='store_true',
         help='List all available folders in Bitwarden and exit'
@@ -730,7 +909,7 @@ Examples:
     parser.add_argument(
         '--dry-run',
         action='store_true',
-        help='Test run without actually creating items in 1Password'
+        help='Test run without actually creating or deleting items in 1Password'
     )
 
     parser.add_argument(
@@ -781,7 +960,9 @@ Examples:
     migrator = MultiFolderMigrator(
         folder_names=folder_names,
         dry_run=args.dry_run,
-        vault_name=args.vault
+        vault_name=args.vault,
+        tag=args.tag,
+        delete_existing=args.delete
     )
 
     try:
