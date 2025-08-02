@@ -40,8 +40,14 @@ require("blink.cmp").setup({
   signature = { enabled = true },
   sources = {
     -- default = { "lsp", "path", "snippets", "buffer" },
-    default = { "avante", "lsp", "path", "snippets", "buffer" },
+    default = { "copilot", "avante", "lsp", "path", "snippets", "buffer" },
     providers = {
+        copilot = {
+          name = "copilot",
+          module = "blink-copilot",
+          score_offset = 100,
+          async = true,
+        },
         avante = {
             module = 'blink-cmp-avante',
             name = 'Avante',
