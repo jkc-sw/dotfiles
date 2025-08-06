@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 if p4 login -s &>/dev/null; then
 	exit 1
 fi
@@ -8,34 +10,7 @@ lockfile=/tmp/p4in.lock
 if ! mkdir "$lockfile" &>/dev/null; then
     exit 0
 fi
-trap "rm -rf '$lockfile'" EXIT TERM KILL INT
+trap "rm -rf '$lockfile'" EXIT TERM INT
 
-pass="$(pass perforce/perforce | tr -d '\n')"
-pass="${pass//\[/\\[}"
-pass="${pass//\]/\\]}"
-
-if [[ -z "$pass" ]]; then
-    echo "Cannot find system in pass, add it" >&2
-    exit 1
-fi
-
-expect -c "
-set timeout 3
-spawn p4 login
-expect {
-    \"failed\" {
-        send_user \"VPN not connected\"
-        exit 1
-    } timeout {
-        send_user \"Waited too long\"
-        exit 1
-    }
-    \"password:\"
-}
-send \"$pass\r\"
-expect {
-    timeout { send_user \"bad\"; exit 1; }
-    \"*logged in.*\"
-}
-"
+p4 login
 p4 login -s
