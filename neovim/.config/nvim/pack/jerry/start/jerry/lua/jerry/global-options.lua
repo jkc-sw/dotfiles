@@ -90,9 +90,6 @@ map("n", "<leader>ty", "<cmd>lua require('jerry.sourcer').lua_sourcer('SOURCE_TH
 map("n", "<leader>ti", "<cmd>lua require('jerry.sourcer').vim_sourcer('SOURCE_THESE_VIMS_START', 'SOURCE_THESE_VIMS_END')<CR>", opts)
 map("n", "<leader>tp", "<cmd>lua require('jerry.marker').mark_these('MARK_THIS_PLACE')<CR>", opts)
 
-map("n", "<leader>t.", "<cmd>call system('tmux load-buffer -', expand('<cWORD>')..'\\r') | silent execute '!tmux paste-buffer -t :.+1'<CR>", opts)
-map("n", "<leader>t,", "<cmd>call system('tmux load-buffer -', expand('<cWORD>')..'\\r') | silent execute '!tmux paste-buffer -t :.-1'<CR>", opts)
-
 map("n", "<C-p>", "<cmd>call jerry#common#FileFuzzySearch()<CR>", opts)
 map("n", "<leader>po", "<cmd>lua require('telescope.builtin').oldfiles()<CR>", opts)
 map("n", "<leader>/", "<cmd>call jerry#common#LinesFuzzySearch()<CR>", opts)

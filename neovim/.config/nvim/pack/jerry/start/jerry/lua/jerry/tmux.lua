@@ -25,8 +25,25 @@ M.setup = function()
       map("v", "<leader>to", ":<C-U>lua require('jerry.tmux').tmux_send_current_visual_block_to_a_pane(':.-1')<CR>", opts)
       map("n", "<leader>tu", function() M.tmux_send_current_text_block_to_a_pane(':.+1') end, opts)
       map("n", "<leader>ta", function() M.tmux_send_current_text_block_to_a_pane(':.-1') end, opts)
+      map("n", "<leader>t.", function() M.tmux_send_cword_under_cursor_to_a_pane(':.+1') end, opts)
+      map("n", "<leader>t,", function() M.tmux_send_cword_under_cursor_to_a_pane(':.-1') end, opts)
     end
   })
+end
+
+--- @brief Wrapper function to send text to a tmux pane
+--- @param text string the text to send
+--- @param pane string the pane identifier
+local function send_to_tmux_pane(text, pane)
+  local _ = vim.system({'tmux', 'load-buffer', '-'}, { stdin = text .. '\r', text = true }):wait()
+  local _ = vim.system({'tmux', 'paste-buffer', '-t', pane}, { text = true }):wait()
+end
+
+--- @brief Send the current cword from the buffer to another tmux pane
+--- @param pane string the pane identifier
+function M.tmux_send_cword_under_cursor_to_a_pane(pane)
+  local text = vim.fn.expand('<cWORD>')
+  send_to_tmux_pane(text, pane)
 end
 
 --- @brief Send the current line of text from the buffer to another tmux pane
@@ -34,24 +51,21 @@ end
 function M.tmux_send_current_line_to_a_pane(pane)
   local line = vim.api.nvim_get_current_line()
   local replacedLine = string.gsub(line, '^[ \t]*', '')
-  local _ = vim.system({'tmux', 'load-buffer', '-'}, { stdin = replacedLine .. '\r', text = true }):wait()
-  local _ = vim.system({'tmux', 'paste-buffer', '-t', pane}, { text = true }):wait()
+  send_to_tmux_pane(replacedLine, pane)
 end
 
 --- @brief Send the current block of text from the buffer to another tmux pane
 --- @param pane string the pane identifier
 function M.tmux_send_current_text_block_to_a_pane(pane)
   local lines = vim.fn['jerry#common#GetBlockSelection']()
-  local _ = vim.system({'tmux', 'load-buffer', '-'}, { stdin = lines .. '\r', text = true }):wait()
-  local _ = vim.system({'tmux', 'paste-buffer', '-t', pane}, { text = true }):wait()
+  send_to_tmux_pane(lines, pane)
 end
 
 --- @brief Send the current visual block of text from the buffer to another tmux pane
 --- @param pane string the pane identifier
 function M.tmux_send_current_visual_block_to_a_pane(pane)
   local lines = vim.fn['jerry#common#GetVisualSelection']()
-  local result = vim.system({'tmux', 'load-buffer', '-'}, { stdin = lines .. '\r', text = true }):wait()
-  local _ = vim.system({'tmux', 'paste-buffer', '-t', pane}, { text = true }):wait()
+  send_to_tmux_pane(lines, pane)
 end
 
 return M
