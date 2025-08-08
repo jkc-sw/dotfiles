@@ -2,57 +2,58 @@
 vim.g.mapleader = " "
 
 -- Native settings
--- vim.cmd("syntax on") -- Disabled as per your comment
 -- vim.cmd("filetype plugin on")
-vim.o.hidden = true
-vim.o.hlsearch = false
-vim.opt.path:append("**")
-vim.opt.clipboard:append("unnamed")
-vim.o.errorbells = false
-vim.o.tabstop = 4
-vim.o.softtabstop = 4
-vim.o.shiftwidth = 4
-vim.o.expandtab = true
-vim.o.smartindent = true
-vim.o.autoindent = true
-vim.o.mouse = "nv"
+-- vim.cmd("syntax on") -- Disabled as per your comment
+-- vim.o.completeopt = "menuone,noinsert,noselect"
 -- vim.o.number = true
 -- vim.o.relativenumber = true
-vim.o.signcolumn = "no"
-vim.o.wrap = false
-vim.o.smartcase = true
-vim.o.ignorecase = true
-vim.o.swapfile = false
-vim.o.backup = false
-vim.o.undodir = vim.fn.expand("~/.vim/undodir")
-vim.o.undofile = true
-vim.o.incsearch = true
-vim.o.inccommand = "split"
-vim.o.wildmenu = true
-vim.o.cmdheight = 1
-vim.o.updatetime = 50
-vim.o.list = true
-vim.o.shortmess = vim.o.shortmess .. "c"
-vim.o.showmode = false
-vim.o.shiftround = true
-vim.o.background = "dark"
-vim.o.splitbelow = true
-vim.o.splitright = true
-vim.o.termguicolors = true
-vim.o.guicursor = "i-ci-ve:block-blinkwait175-blinkoff150-blinkon175"
--- vim.o.completeopt = "menuone,noinsert,noselect"
+vim.g.loaded_clipboard_provider = 1
 vim.g.netrw_banner = 0
 vim.g.netrw_browse_split = 4
 vim.g.netrw_winsize = 25
-vim.o.foldenable = false
-vim.o.scrolloff = 5
-vim.o.cursorline = true
 vim.g.vimsyn_embed = "l"
-vim.g.loaded_clipboard_provider = 1
-vim.o.grepprg = "rg --line-number --color=never"
-vim.o.regexpengine = 1
-vim.opt.diffopt:append("iwhiteeol")
+vim.o.autoindent = true
+vim.o.background = "dark"
+vim.o.backup = false
+vim.o.cmdheight = 1
+vim.o.cursorline = true
+vim.o.errorbells = false
+vim.o.expandtab = true
 vim.o.fixendofline = false
+vim.o.foldenable = false
+vim.o.grepprg = "rg --line-number --color=never"
+vim.o.guicursor = "i-ci-ve:block-blinkwait175-blinkoff150-blinkon175"
+vim.o.hidden = true
+vim.o.hlsearch = false
+vim.o.ignorecase = true
+vim.o.inccommand = "split"
+vim.o.incsearch = true
+vim.o.list = true
+vim.opt.laststatus = 3 -- Recommended by avante.nvim
+vim.o.mouse = "nv"
+vim.o.regexpengine = 1
+vim.o.scrolloff = 5
+vim.o.shiftround = true
+vim.o.shiftwidth = 4
+vim.o.shortmess = vim.o.shortmess .. "c"
+vim.o.showmode = false
+vim.o.signcolumn = "no"
+vim.o.smartcase = true
+vim.o.smartindent = true
+vim.o.softtabstop = 4
+vim.o.splitbelow = true
+vim.o.splitright = true
+vim.o.swapfile = false
+vim.o.tabstop = 4
+vim.o.termguicolors = true
+vim.o.undodir = vim.fn.expand("~/.vim/undodir")
+vim.o.undofile = true
+vim.o.updatetime = 50
+vim.o.wildmenu = true
+vim.o.wrap = false
+vim.opt.clipboard:append("unnamed")
+vim.opt.diffopt:append("iwhiteeol")
+vim.opt.path:append("**")
 
 vim.g.gruvbox_material_background = "hard"
 vim.g.gruvbox_material_foreground = "material"
