@@ -78,7 +78,7 @@ pass_over_ssh() {
     # Suppress warning about using single quote
     # shellcheck disable=2016
     local cmd='true ; export PASSWORD_STORE_DIR="$HOME/repos/mypasswordstore" ; pass'
-    ssh "chenkua@$ASUS_IP" bash -c "$cmd ${args[*]}"
+    ssh "$ASUS_USER@$ASUS_IP" bash -c "$cmd ${args[*]}"
 }
 
 main "$@"
