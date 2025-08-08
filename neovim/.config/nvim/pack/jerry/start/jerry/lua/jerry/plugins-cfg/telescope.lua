@@ -36,6 +36,9 @@ require('telescope').setup({
       override_file_sorter = true,    -- override the file sorter
       case_mode = "smart_case",       -- or "ignore_case" or "respect_case"
       -- the default case_mode is "smart_case"
+    },
+    ["ui-select"] = {
+      require("telescope.themes").get_dropdown{}
     }
     -- fzy_native = {
     --   override_generic_sorter = false,
@@ -46,3 +49,6 @@ require('telescope').setup({
 
 -- require('telescope').load_extension('fzy_native')
 require('telescope').load_extension('fzf')
+-- To get ui-select loaded and working with telescope, you need to call
+-- load_extension, somewhere after setup function:
+require("telescope").load_extension("ui-select")
