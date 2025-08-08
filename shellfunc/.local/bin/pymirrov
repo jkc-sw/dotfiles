@@ -681,6 +681,13 @@ class MultiFolderMigrator:
             # Process each item
             for i, item in enumerate(items, 1):
                 item_name = item.get('name', 'Untitled')
+
+                # Filter items by prefix 'pymirror-test:'
+                if not item_name.startswith('pymirror-test:'):
+                    self.log.info(f"Skipping item {i}/{folder_stats.total_items}: {item_name} (does not match prefix)")
+                    folder_stats.skipped += 1
+                    continue
+
                 self.log.info(f"Processing item {i}/{folder_stats.total_items}: {item_name}")
 
                 try:
