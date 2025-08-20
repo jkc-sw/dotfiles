@@ -8,6 +8,7 @@ fi
 
 lockfile=/tmp/p4in.lock
 if ! mkdir "$lockfile" &>/dev/null; then
+    echo "WARN: Cannot acquire $lockfile lock"
     exit 0
 fi
 trap "rm -rf '$lockfile'" EXIT TERM INT
