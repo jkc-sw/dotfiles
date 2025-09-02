@@ -12,15 +12,15 @@ require("codecompanion").setup({
         -- https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/adapters/azure_openai.lua
         env = {
 
-          -- -- gpt-5-mini
-          -- api_key = 'cmd:pas mks/services/openai-it/key2',
-          -- endpoint = "https://azureaipowersolutioncgllm-eastus2.openai.azure.com",
-          -- api_version = "2025-04-01-preview",
-
-          -- o4-mini
+          -- gpt-5-mini
           api_key = 'cmd:pas mks/services/openai-it/key2',
           endpoint = "https://azureaipowersolutioncgllm-eastus2.openai.azure.com",
-          api_version = "2025-01-01-preview",
+          api_version = "2025-04-01-preview",
+
+          -- -- o4-mini
+          -- api_key = 'cmd:pas mks/services/openai-it/key2',
+          -- endpoint = "https://azureaipowersolutioncgllm-eastus2.openai.azure.com",
+          -- api_version = "2025-01-01-preview",
 
           -- -- gpt-4o
           -- api_key = 'cmd:pas mks/services/openai-it/key1',
