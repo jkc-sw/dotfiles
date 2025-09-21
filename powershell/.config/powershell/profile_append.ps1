@@ -18,10 +18,11 @@ function sdev() {
     #region conda initialize
     # !! Contents within this block are managed by 'conda init' !!
     $CondaExe = 'conda'
-    if (-not (Get-Command conda -ErrorAction SilentlyContinue)) {
+    $CondaInfo = Get-Command conda -ErrorAction SilentlyContinue
+    if (-not ($CondaInfo) -or ($CondaInfo.CommandType -eq 'Application')) {
         $CondaExe = "~/miniconda3/bin/conda"
+        (& $CondaExe "shell.powershell" "hook") | Out-String | Where-Object {$_} | Invoke-Expression
     }
-    (& $CondaExe "shell.powershell" "hook") | Out-String | Invoke-Expression
     # (& "~/miniconda3/bin/conda" "shell.powershell" "hook") | Out-String | Invoke-Expression
     #endregion
 }
