@@ -1,5 +1,4 @@
 local M = {}
-local lspconfig = require 'lspconfig'
 local vim = vim
 
 local capabilities = require('blink.cmp').get_lsp_capabilities()
@@ -36,7 +35,8 @@ local function setup_each_lsp(target, opt)
     capabilities = capabilities,
   }, opt)
 
-  lspconfig[target].setup(opt)
+  vim.lsp.config(target, opt)
+  vim.lsp.enable(target)
 end
 
 --- @brief setup all the lsp
