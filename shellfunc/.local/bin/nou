@@ -2,8 +2,8 @@
 
 :<<'EOF'
 SOURCE_THESE_VIMS_START
-let @h="yoecho \"\<c-r>\" = \$\<c-r>\"\"\<esc>j"
-let @t="yoecho \"\<c-r>\" = \${\<c-r>\"[*]}\"\<esc>j"
+let @h="yoechoerr \"\<c-r>\" = \$\<c-r>\"\"\<esc>j"
+let @t="yoechoverbose \"\<c-r>\" = \${\<c-r>\"[*]}\"\<esc>j"
 echom 'Sourced'
 SOURCE_THESE_VIMS_END
 EOF
@@ -11,24 +11,38 @@ EOF
 displayHelp() {
     echo "nou - Delegate command to nix in my repo"
     echo ''
-    echo "nou run [options... --] <installable> <args>..."
-    echo "nou shell [options... --] <installable>..."
+    echo "nou run [nix_options... --] <installable> <args>..."
+    echo "nou shell [nix_options... --] <installable>... [--command COMMAND]"
     echo "nou -h|--help|help"
     echo ""
     echo "Where"
     echo "  run will map to"
-    echo '    nix run "~/repos/jerry-nixos#<installable>" -- <args>...'
-    echo '    nix run <options> "~/repos/jerry-nixos#<installable>" -- <args>...'
+    echo '    nix run "$REPO_PATH#<installable>" -- <args>...'
+    echo '    nix run <options> "$REPO_PATH#<installable>" -- <args>...'
     echo "  shell will map to"
-    echo '    nix shell "~/repos/jerry-nixos#<installable>" "~/repos/jerry-nixos#<installable>" ...'
-    echo '    nix shell <options> "~/repos/jerry-nixos#<installable>" "~/repos/jerry-nixos#<installable>" ...'
+    echo '    nix shell "$REPO_PATH#<installable>" "$REPO_PATH#<installable>" ...'
+    echo '    nix shell <options> "$REPO_PATH#<installable>" "$REPO_PATH#<installable>" ...'
+    echo '    nix shell "$REPO_PATH#<installable>" --command <cmd> <args>...'
     echo ""
     echo "Options:"
     echo "  -h|--help|help: to see this help"
+    echo ""
+    echo "Environmental Variables:"
+    echo "  NOU_VERBOSE: 'true' to print verbose debug info. Default is 'false'"
 }
 
 
 REPO_PATH="$(realpath ~/repos/jerry-nixos)"
+VERBOSE="${NOU_VERBOSE:-false}"
+
+echoerr() {
+    echo "ERR: $*" >&2
+}
+echoverbose() {
+    if [ "$VERBOSE" = true ]; then
+        echo "DEBUG: $*" >&2
+    fi
+}
 
 main() {
     local subcmd="$1"
@@ -54,14 +68,14 @@ main() {
         return 0
         ;;
     *)
-        echo "ERR: unsupported cmd '$subcmd', check nou -h" >&2
+        echoerr "unsupported cmd '$subcmd', check nou -h"
         return 1
     esac
 }
 
 validate_repo_exist() {
     if [[ ! -d "$REPO_PATH" ]]; then
-        echo "ERR: '$REPO_PATH' cannot be found. Please checkout repo first" >&2
+        echoerr "'$REPO_PATH' cannot be found. Please checkout repo first"
         return 1
     fi
     return 0
@@ -69,6 +83,8 @@ validate_repo_exist() {
 
 sub_cmd_run() {
     local args=("$@")
+    echoverbose 'Running nou run subroutine'
+    echoverbose "args: ${args[*]}"
     local nixArgs=()
     local otherArgs=()
     # separate between nix args and other args
@@ -90,6 +106,7 @@ sub_cmd_run() {
         # increment index
         argInd=$((argInd + 1))
     done
+    echoverbose "nixArgs: ${nixArgs[*]}"
 
     local pkg="${otherArgs[0]}"
     local pkgArgs=("${otherArgs[@]:1}")
@@ -102,13 +119,19 @@ sub_cmd_run() {
         runArgs+=('--')
         runArgs+=("${pkgArgs[@]}")
     fi
+
+    echoverbose "runArgs: ${runArgs[*]}"
     nix "${runArgs[@]}"
 }
 
 sub_cmd_shell() {
+    echoverbose 'Running nou shell subroutine'
+    echoverbose "args: ${args[*]}"
     local args=("$@")
+
     local nixArgs=()
     local otherArgs=()
+    local iteratedArgs=()
     # separate between nix args and other args
     local argInd=0
     local argLen=${#args[@]}
@@ -116,25 +139,64 @@ sub_cmd_shell() {
         # use a case statement to iterate each command
         case "${args[$argInd]}" in
         '--')
-            nixArgs=("${otherArgs[@]}")
-            otherArgs=()
+            nixArgs=("${iteratedArgs[@]}")
+            iteratedArgs=()
             ;;
         *)
             # store local port number
-            otherArgs+=("${args[$argInd]}")
+            iteratedArgs+=("${args[$argInd]}")
             ;;
         esac
         # increment index
         argInd=$((argInd + 1))
     done
+    echoverbose "nixArgs: ${nixArgs[*]}"
+    local otherArgs=("${iteratedArgs[@]}")
+    iteratedArgs=()
+    echoverbose "otherArgs: ${otherArgs[*]}"
+
+    local installables=()
+    # separate between installables and --command
+    local argInd=0
+    local argLen=${#otherArgs[@]}
+    while [[ $argInd -lt $argLen ]]; do
+        # use a case statement to iterate each command
+        case "${otherArgs[$argInd]}" in
+        '--command')
+            installables=("${iteratedArgs[@]}")
+            iteratedArgs=()
+            ;;
+        *)
+            # store local port number
+            iteratedArgs+=("${otherArgs[$argInd]}")
+            ;;
+        esac
+        # increment index
+        argInd=$((argInd + 1))
+    done
+    echoverbose "iteratedArgs: ${iteratedArgs[*]}"
+    local cmds=("${iteratedArgs[@]}")
+    if [[ "${#installables[@]}" -eq 0 ]]; then
+        installables=("${iteratedArgs[@]}")
+        cmds=()
+    fi
+    iteratedArgs=()
+    echoverbose "installables: ${installables[*]}"
+    echoverbose "cmds: ${cmds[*]}"
 
     local runArgs=('shell')
     if [[ "${#nixArgs[@]}" -gt 0 ]]; then
         runArgs+=("${nixArgs[@]}")
     fi
-    for pkg in "${otherArgs[@]}"; do
+    for pkg in "${installables[@]}"; do
         runArgs+=("${REPO_PATH}#$pkg")
     done
+    if [[ "${#cmds[@]}" -gt 0 ]]; then
+        runArgs+=('--command')
+        runArgs+=("${cmds[@]}")
+    fi
+
+    echoverbose "runArgs: ${runArgs[*]}"
     nix "${runArgs[@]}"
 }
 
