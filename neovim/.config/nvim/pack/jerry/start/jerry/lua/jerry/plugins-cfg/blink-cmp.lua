@@ -1,6 +1,7 @@
 require("blink.cmp").setup({
   keymap = {
-    preset = "default"
+    preset = "default",
+    ['<Tab>'] = false,  -- conflict with CopilotChat
   },
   appearance = {
     nerd_font_variant = "mono"
