@@ -154,6 +154,27 @@ if which fzf-git-worktrees-widget &>/dev/null; then
     bindkey -M viins '^E' fzf-git-worktrees-widget
 fi
 
+# Quickly selecting jj bookmark using fzf
+# ref: https://github.com/junegunn/fzf/blob/master/shell/key-bindings.zsh
+__fzf_jj_bookmark_select() {
+    setopt localoptions pipefail no_aliases 2> /dev/null
+    local item
+    jj bookmark list -T 'name ++ "\n"' | uniq | fzf --layout=reverse
+    local ret=$?
+    echo
+    return $ret
+}
+fzf_jj_bookmark_select_widget() {
+    LBUFFER="${LBUFFER}$(__fzf_jj_bookmark_select)"
+    local ret=$?
+    zle reset-prompt
+    return $ret
+}
+zle     -N            fzf_jj_bookmark_select_widget
+bindkey -M emacs '^H' fzf_jj_bookmark_select_widget
+bindkey -M vicmd '^H' fzf_jj_bookmark_select_widget
+bindkey -M viins '^H' fzf_jj_bookmark_select_widget
+
 # # To bring back this behavior
 # autoload -Uz bracketed-paste-magic
 # zle -N bracketed-paste bracketed-paste-magic
