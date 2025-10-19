@@ -139,6 +139,7 @@ rt() (
 
 alias ag=lazygit
 alias ai=yazi
+alias j=jj
 alias ta=tmux_attach
 alias un='nou run'
 alias he='nou shell'
