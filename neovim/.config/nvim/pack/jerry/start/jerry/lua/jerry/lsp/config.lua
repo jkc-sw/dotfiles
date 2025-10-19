@@ -168,6 +168,8 @@ M.setup = function()
   -- ts_ls
   setup_each_lsp('ts_ls', true)
 
+  setup_each_lsp('copilot', true)
+
   -- -- haskell -- Cannot get it to work, not sure how to handle the import/setup the haskell project for xmonad
   -- setup_each_lsp('hls', true)
 
