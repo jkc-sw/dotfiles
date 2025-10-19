@@ -1,14 +1,53 @@
-#!/bin/bash
 
 # Declare function to add path
-# https://unix.stackexchange.com/questions/14895/duplicate-entries-in-path-a-problem
-# Answer from: Gilles
-# answered Jun 13 '11 at 8:34
+# GPT5 did most of the work. I patched its minor erors
 addThisPath() {
-    case ":$PATH:" in
-    *":$1:"*) :;; # already there
-    *) PATH="$PATH:$1";; # or PATH="$1:$PATH"
-    esac
+  local new="$1"
+  [[ -z "$new" ]] && return
+
+  # Compute the tail after the nix store hash segment
+  # e.g. /nix/store/abcd-source/shellfunc/.local/bin -> shellfunc/.local/bin
+  local namepart="${new#*/nix/store/*-*/}"
+
+  # If PATH already has the exact new entry, do nothing
+  case ":$PATH:" in
+    *":$new:"*) return ;;
+  esac
+
+  local segments=()
+  if [ -n "${ZSH_VERSION-}" ]; then
+    # zsh: split PATH by ":" using parameter flag s
+    segments=("${(@s/:/)PATH}")
+  else
+    # bash and other POSIX shells
+    IFS=":" read -r -a segments <<<"$PATH"
+  fi
+
+  # If there's a segment whose tail equals namepart, replace that segment with new
+  # Walk PATH segments to find a match
+  local IFS=":" segs=() replaced=0 seg
+  for seg in "${segments[@]}"; do
+    if [[ "$seg" == */nix/store/*-*/"$namepart" ]]; then
+      # Replace the first matching segment
+      if (( replaced == 0 )); then
+        segs+=("$new")
+        replaced=1
+      else
+        # If multiple matches exist, drop duplicates
+        # Skip additional matches
+        continue
+      fi
+    else
+      segs+=("$seg")
+    fi
+  done
+
+  if (( replaced )); then
+    PATH="$(IFS=":"; echo "${segs[*]}")"
+  else
+    # No matching tail found; append new
+    PATH="$PATH:$new"
+  fi
 }
 
 BOLD_TEXT='\e[1m'
@@ -564,3 +603,5 @@ _init_gpg_pass() {
     # Add a key
     pass insert --echo somepassword
 }
+
+# vim:et ts=4 sts=4 sw=4 filetype=zsh
