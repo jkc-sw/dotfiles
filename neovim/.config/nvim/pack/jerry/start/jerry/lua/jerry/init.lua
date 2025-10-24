@@ -20,7 +20,8 @@ require('jerry.plugins-cfg.nvim-treesitter')
 require('jerry.plugins-cfg.nvim_context_vt')
 require('jerry.plugins-cfg.telescope')
 require('jerry.plugins-cfg.colorizer')
-require('jerry.plugins-cfg.sidekick')
+-- This is getting annoying when not signed in to copilot
+-- require('jerry.plugins-cfg.sidekick')
 
 -- -- Choose one
 -- require('jerry.plugins-cfg.markview')
