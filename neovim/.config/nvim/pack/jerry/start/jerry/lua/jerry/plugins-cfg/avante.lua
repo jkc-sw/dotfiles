@@ -6,8 +6,19 @@ require("avante").setup({
 
       api_key_name = {'pas', 'mks/services/openai-it/key2'},
       endpoint = "https://azureaipowersolutioncgllm-eastus2.openai.azure.com", -- example: "https://<your-resource-name>.openai.azure.com"
-      deployment = "gpt-5-mini", -- Azure deployment name (e.g., "gpt-4o", "my-gpt-4o-deployment")
-      api_version = "2025-04-01-preview",
+
+      -- deployment = "gpt-5-pro", -- Azure deployment name (e.g., "gpt-4o", "my-gpt-4o-deployment")
+      -- api_version = "2024-12-01-preview",
+
+      deployment = "gpt-5", -- Azure deployment name (e.g., "gpt-4o", "my-gpt-4o-deployment")
+      api_version = "2025-01-01-preview",
+
+      -- -- Doesn't work
+      -- deployment = "gpt-5-codex", -- Azure deployment name (e.g., "gpt-4o", "my-gpt-4o-deployment")
+      -- api_version = "2025-04-01-preview",
+
+      -- deployment = "gpt-5-mini", -- Azure deployment name (e.g., "gpt-4o", "my-gpt-4o-deployment")
+      -- api_version = "2025-04-01-preview",
 
       -- api_key_name = {'pas', 'mks/services/openai-it/key2'},
       -- endpoint = "https://azureaipowersolutioncgllm-eastus2.openai.azure.com", -- example: "https://<your-resource-name>.openai.azure.com"
