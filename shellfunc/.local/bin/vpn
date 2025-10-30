@@ -3,12 +3,12 @@
 # echo "ERR: VPN is disabled until further noticed"
 # exit 1
 
-pass="$(pass vpn/vpn | tr -d '\n')"
+pass="$(pass mks/services/vpn/vpn | tr -d '\n')"
 pass="${pass//\[/\\[}"
 pass="${pass//\]/\\]}"
 
-username="$(pass vpn/vpn-user | tr -d '\n')"
-url="$(pass vpn/vpn-url | tr -d '\n')"
+username="$(pass mks/services/vpn/vpn-user | tr -d '\n')"
+url="$(pass mks/services/vpn/vpn-url | tr -d '\n')"
 
 if [[ -z "$pass" ]]; then
     echo "Cannot find system in pass, add it" >&2
