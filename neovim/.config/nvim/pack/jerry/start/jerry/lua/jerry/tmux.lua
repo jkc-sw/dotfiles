@@ -59,6 +59,7 @@ end
 function M.tmux_send_current_text_block_to_a_pane(pane)
   local lines = vim.fn['jerry#common#GetBlockSelection']()
   send_to_tmux_pane(lines, pane)
+  vim.cmd("normal! '}")
 end
 
 --- @brief Send the current visual block of text from the buffer to another tmux pane
