@@ -224,28 +224,29 @@ M.setup = function()
     })
   end
 
-  -- Sonarlint
-  require('sonarlint').setup({
-    server = {
-      cmd = { 'sonarlint-ls', '-stdio' },
-      -- All settings are optional
-      -- settings = {
-      --   -- The default for sonarlint is {}, this is just an example
-      --   sonarlint = {
-      --     rules = {
-      --       ['typescript:S101'] = { level = 'on', parameters = { format = '^[A-Z][a-zA-Z0-9]*$' } },
-      --       ['typescript:S103'] = { level = 'on', parameters = { maximumLineLength = 180 } },
-      --       ['typescript:S106'] = { level = 'on' },
-      --       ['typescript:S107'] = { level = 'on', parameters = { maximumFunctionParameters = 7 } }
-      --     }
-      --   }
-      -- }
-    },
-    filetypes = {
-      'python',
-      'cpp',
-    }
-  })
+  -- -- nix cannot build this due to error: hash mismatch in fixed-output derivation '/nix/store/9nrsl64naizx8kbmgi2a7i2n01lgwz68-maven-deps-sonarlint-ls-3.25.0.76263.drv':
+  -- -- Sonarlint
+  -- require('sonarlint').setup({
+  --   server = {
+  --     cmd = { 'sonarlint-ls', '-stdio' },
+  --     -- All settings are optional
+  --     -- settings = {
+  --     --   -- The default for sonarlint is {}, this is just an example
+  --     --   sonarlint = {
+  --     --     rules = {
+  --     --       ['typescript:S101'] = { level = 'on', parameters = { format = '^[A-Z][a-zA-Z0-9]*$' } },
+  --     --       ['typescript:S103'] = { level = 'on', parameters = { maximumLineLength = 180 } },
+  --     --       ['typescript:S106'] = { level = 'on' },
+  --     --       ['typescript:S107'] = { level = 'on', parameters = { maximumFunctionParameters = 7 } }
+  --     --     }
+  --     --   }
+  --     -- }
+  --   },
+  --   filetypes = {
+  --     'python',
+  --     'cpp',
+  --   }
+  -- })
 end
 
 return M
