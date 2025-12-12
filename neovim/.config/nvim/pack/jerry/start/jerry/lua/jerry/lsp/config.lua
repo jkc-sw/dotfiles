@@ -191,22 +191,17 @@ M.setup = function()
     }
   })
 
-  if vim.fn.executable('pylsp') == 1 then
-    setup_each_lsp('pylsp', {
-      single_file_support = false,
-      root_dir = function(client)
-        _ = client
-        return vim.fn.getcwd()
-      end,
-      settings = {
-        pylsp = { plugins = { pycodestyle = { maxLineLength = 300 } } }
-      }
-    })
-  else
-    if vim.fn.executable('pyright') == 1 then
-      setup_each_lsp('pyright', true)
-    end
-  end
+  setup_each_lsp('pylsp', {
+    single_file_support = false,
+    root_dir = function(client)
+      _ = client
+      return vim.fn.getcwd()
+    end,
+    settings = {
+      pylsp = { plugins = { pycodestyle = { maxLineLength = 300 } } }
+    }
+  })
+  setup_each_lsp('pyright', true)
 
   -- -- verilog & systemverilog
   -- setup_each_lsp('svls', true)
