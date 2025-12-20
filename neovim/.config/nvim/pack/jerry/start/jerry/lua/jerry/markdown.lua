@@ -18,6 +18,14 @@ M.setup = function()
     desc = 'TBD',
     pattern = { "*.md" },
     callback = function(ev)
+      -- yank the lines between the nearest surrounding ``` fences (exclusive)
+      vim.keymap.set(
+        'n',
+        '<leader>ne',
+        [[<cmd>?^```?+1,/^```/-1 y<CR>]],
+        { noremap = true, silent = true }
+      )
+
       vim.api.nvim_buf_set_keymap(0, 'n', '<leader>pt', '', {
         noremap = true,
         desc = 'TBD',
