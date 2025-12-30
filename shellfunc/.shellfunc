@@ -168,7 +168,7 @@ rt_cb() {
     tmux new-window -t "${name}:" -n "dotfiles"
     tmux send-keys -t "${name}:dotfiles" 'cd "$HOME/repos/dotfiles"' Enter
     tmux new-window -t "${name}:" -n "adv360pro"
-    tmux send-keys -t "${name}:adv360pro" 'cd "$HOME/repos/kinesisadv360pro"' Enter
+    tmux send-keys -t "${name}:adv360pro" 'cd "$HOME/repos/Adv360-Pro-ZMK"' Enter
     tmux new-window -t "${name}:" -n "jerry-nix"
     tmux send-keys -t "${name}:jerry-nix" 'cd "$HOME/repos/jerry-nixos"' Enter
 }
