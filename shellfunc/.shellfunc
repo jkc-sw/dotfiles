@@ -233,7 +233,7 @@ tmux_attach() {
     client_session="$(tmux display-message -p '#{client_session}')"
 
     # When the session doesn't exist, create it
-    if [[ "$(tmux ls -F '#{session_name}')" != *"$name"* ]]; then
+    if [[ -z "$(tmux ls -F '#{session_name}' -f "#{==:#{session_name},$name}")" ]]; then
         tmux new-session -s "$name" -d
 
         # if there is callback, run it
