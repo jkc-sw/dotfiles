@@ -28,7 +28,8 @@ require('jerry.plugins-cfg.colorizer')
 require('jerry.plugins-cfg.render-markdown')
 
 -- Choose one or more
-require('jerry.plugins-cfg.avante')
+-- Commented out to save storage space
+-- require('jerry.plugins-cfg.avante')
 require('jerry.plugins-cfg.codecompanion')
 require('jerry.plugins-cfg.copilot')
 require('jerry.plugins-cfg.copilotchat')
