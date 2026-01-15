@@ -91,7 +91,7 @@ fi
 alias help=run-help
 
 # in 10ms, 1 is 10ms
-KEYTIMEOUT=1
+KEYTIMEOUT=20
 
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=100000
