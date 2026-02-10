@@ -109,6 +109,9 @@ export LANG=en_US.UTF-8
 # To have xmonad and matlab play nicely
 export _JAVA_AWT_WM_NONREPARENTING=1
 
+# set uv to trust the system cert
+export UV_NATIVE_TLS=true
+
 # To be save
 alias rm='rm -I'
 
