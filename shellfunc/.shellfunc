@@ -112,6 +112,11 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 # set uv to trust the system cert
 export UV_NATIVE_TLS=true
 
+# Prefer sw gl over VNC
+export QT_QUICK_BACKEND=software
+export QT_XCB_GL_INTEGRATION=none
+export LIBGL_ALWAYS_SOFTWARE=1
+
 # To be save
 alias rm='rm -I'
 
