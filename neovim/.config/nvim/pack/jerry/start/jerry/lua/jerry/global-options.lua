@@ -145,6 +145,8 @@ map("n", ";", ":", opts)
 map("n", ":", ";", opts)
 map("v", ";", ":", opts)
 map("v", ":", ";", opts)
+map("n", "<c-j>", "<cmd>cnext<cr>", opts)
+map("n", "<c-k>", "<cmd>cprev<cr>", opts)
 
 -- let g:clip_supplier = ['toclip']
 vim.g.clip_supplier = { "toclip" }
