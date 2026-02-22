@@ -233,9 +233,10 @@ tmux_attach() {
         name="$name-$label"
     fi
 
+    # When user invoke this without any argument, we just list active sessions and quit
     if [[ -z "$name" ]]; then
-        echowarning "Nothing to be done"
-        return 1
+        tmux ls
+        return 0
     fi
 
     local client_session
