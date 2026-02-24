@@ -18,6 +18,10 @@ M.setup = function()
     desc = 'TBD',
     pattern = { "*.md" },
     callback = function(ev)
+      -- vim.keymap.set('n', '<leader>ht', '<cmd>MDHeadersCurrent<CR>', { silent = true })
+      vim.keymap.set('n', '<leader>ht', '<cmd>MDHeadersTelescope<CR>', { silent = true })
+      vim.keymap.set('n', '<leader>hq', '<cmd>MDHeadersQuickfix<CR>', { silent = true })
+
       -- yank the lines between the nearest surrounding ``` fences (exclusive)
       vim.keymap.set(
         'n',
