@@ -233,7 +233,11 @@ tmux_attach() {
     fi
 
     if [[ -z "$name" ]]; then
-        echowarning "Nothing to be done"
+        echo 'Please select the available tmux session to attach' >&2
+        name=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0 --height=40% --reverse)
+    fi
+    if [[ -z "$name" ]]; then
+        echowarning "No session was selected. Bye."
         return 1
     fi
 
