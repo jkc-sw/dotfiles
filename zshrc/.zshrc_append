@@ -123,6 +123,16 @@ setopt HIST_SAVE_NO_DUPS
 # EOF
 # unset zle_bracketed_paste
 
+#===============================================================================
+# Tab completion for functions
+#===============================================================================
+_tmux_attach_zsh_autocomplete() {
+  local -a sessions
+  # Get session names, handling the case where tmux server is not running
+  sessions=(${(f)"$(command tmux list-sessions -F "#{session_name}" 2>/dev/null)"})
+  _describe 'tmux session' sessions
+}
+compdef _tmux_attach_zsh_autocomplete tmux_attach
 
 #===============================================================================
 # Custom fzf definitions
