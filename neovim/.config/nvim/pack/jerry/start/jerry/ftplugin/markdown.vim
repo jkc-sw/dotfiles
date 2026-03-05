@@ -361,7 +361,7 @@ augroup markdownFenceHighlight
     autocmd BufEnter,BufWinEnter,TabEnter *.md nnoremap <leader>.b gg/^-<space>/<cr>}O<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p Break ')<cr><esc>A
     autocmd BufEnter,BufWinEnter,TabEnter *.md nnoremap <leader>,u "ryygg/^-<space>/<cr>}"rP0d4Wi<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p ')<cr><esc>A<space>
     autocmd BufEnter,BufWinEnter,TabEnter *.md let @c="V/^## \<cr>k\"Ld"
-    autocmd BufEnter,BufWinEnter,TabEnter *.md set wrap spell
+    autocmd BufEnter,BufWinEnter,TabEnter *.md set wrap spell linebreak
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ats <c-r>=GetDateOffset('', '')<cr>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev `3 <c-r>=CodeBlock()<cr><Up><End>
     autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev cnk <c-r>=WrapLinkWithBrowser('', 'Crucible')<cr>
