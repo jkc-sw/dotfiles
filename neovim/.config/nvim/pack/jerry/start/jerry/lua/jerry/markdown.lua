@@ -18,6 +18,13 @@ M.setup = function()
     desc = 'TBD',
     pattern = { "*.md" },
     callback = function(ev)
+      -- This small block will automatically soft warp a long line in a list. Visual only
+      -- https://t3.chat/share/y8c0bx42dw
+      vim.opt.breakindent = true
+      -- 'list:-1' tells Vim to align soft-wrapped lines
+      -- with the start of the text after the list marker
+      vim.opt.breakindentopt = "list:-1"
+
       -- yank the lines between the nearest surrounding ``` fences (exclusive)
       vim.keymap.set(
         'n',
