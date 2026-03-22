@@ -179,6 +179,8 @@ rt_cb() {
     tmux send-keys -t "${name}:adv360pro" 'cd "$HOME/repos/Adv360-Pro-ZMK"' Enter
     tmux new-window -t "${name}:" -n "jerry-nix"
     tmux send-keys -t "${name}:jerry-nix" 'cd "$HOME/repos/jerry-nixos"' Enter
+    tmux new-window -t "${name}:" -n "nix-cache"
+    tmux send-keys -t "${name}:nix-cache" 'cd "$HOME/repos/jerry-nixos"' Enter
 }
 rt() (
     tmux_attach 'blah' 'rt_cb' "$1"
