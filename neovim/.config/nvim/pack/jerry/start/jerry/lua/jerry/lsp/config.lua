@@ -163,7 +163,23 @@ M.setup = function()
   setup_each_lsp('texlab', true)
 
   -- yaml
-  setup_each_lsp('yamlls', true)
+  setup_each_lsp('yamlls', {
+    settings = {
+      redhat = {
+        telemetry = {
+          enabled = false
+        }
+      },
+      yaml = {
+        format = {
+          enable = true
+        },
+        validate = true,
+        hover = true,
+        completion = true,
+      }
+    }
+  })
 
   -- ts_ls
   setup_each_lsp('ts_ls', true)
