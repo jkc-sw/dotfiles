@@ -20,10 +20,7 @@ logpath="$HOME/Downloads/mksvpnlog.txt"
 starttime=$(date)
 echo "Start time is $starttime" | tee -a "$logpath"
 
-runsudo=doas
-if ! type -p doas &>/dev/null; then
-    runsudo=sudo
-fi
+runsudo=sudo
 
 expect -c "set timeout 3
     spawn $runsudo $(which openconnect) --usergroup=portal --protocol=gp $url
