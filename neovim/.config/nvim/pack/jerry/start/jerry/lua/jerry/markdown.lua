@@ -70,6 +70,29 @@ M.setup = function()
       })
 
       vim.cmd("iabbrev ,n  <c-r>=v:lua.require('jerry.markdown').new_originuuid()<cr>")
+
+      vim.keymap.set("v", "<leader>tf", function()
+        local s = vim.fn.getpos("'<")[2]
+        local e = vim.fn.getpos("'>")[2]
+        M.replace_range(s, e)
+      end, { desc = "Format selection as markdown table" })
+
+      vim.keymap.set("n", "<leader>tf", function()
+        local buf   = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+        local total = #buf
+        local row   = vim.api.nvim_win_get_cursor(0)[1]
+
+        if not M.is_table_line(buf[row]) then
+          vim.notify("Cursor is not inside a table", vim.log.levels.WARN)
+          return
+        end
+
+        local s, e = row, row
+        while s > 1      and M.is_table_line(buf[s - 1]) do s = s - 1 end
+        while e < total   and M.is_table_line(buf[e + 1]) do e = e + 1 end
+
+        M.replace_range(s, e)
+      end, { desc = "Format markdown table under cursor" })
     end
   })
 end
@@ -162,7 +185,7 @@ M.jump_to_originuuid = function(uuid)
 end
 
 --- @brief Matches a specific pattern in the current line and returns it.
---- @return The matched pattern if found.
+--- @return string The matched pattern if found.
 --- @error Throws an error if the pattern is not found.
 M.match_uuid_in_current_line = function()
   local line = vim.api.nvim_get_current_line()
@@ -249,6 +272,39 @@ M.find_nearest_heading_above_current_line = function()
     error("Cannot find the heading backward from the current line")
   end
   return heading
+end
+
+--- Checks whether a single line belongs to a Markdown table.
+---
+---@param line string The line of text to inspect.
+---@return boolean `true` if the line contains a pipe character (`|`).
+M.is_table_line = function(line)
+  return line:find("|") ~= nil
+end
+
+--- Formats an array of Markdown table lines by aligning every column.
+---
+--- Pipes the input through `tr -s ' '` (collapse whitespace) followed
+--- by `column -t -s '|' -o '|'` (align columns on `|` delimiters).
+---
+---@param lines string[] Array of raw table lines.
+---@return string[] formatted The same table with every column padded
+---         so that pipes are vertically aligned.
+M.fmt_table = function(lines)
+  local stdin = table.concat(lines, "\n")
+  local out = vim.fn.systemlist("tr -s ' ' | column -t -s '|' -o '|'", stdin)
+  return out
+end
+
+--- Replaces a 1-indexed inclusive line range in the current buffer
+--- with the result of formatting those lines as a Markdown table.
+---
+---@param s_row integer First line of the range (1-indexed, inclusive).
+---@param e_row integer Last line of the range (1-indexed, inclusive).
+M.replace_range = function(s_row, e_row)
+  local lines = vim.api.nvim_buf_get_lines(0, s_row - 1, e_row, false)
+  local formatted = M.fmt_table(lines)
+  vim.api.nvim_buf_set_lines(0, s_row - 1, e_row, false, formatted)
 end
 
 return M
