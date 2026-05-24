@@ -9,92 +9,75 @@ SOURCE_THESE_VIMS_END
 local M = {}
 local send_to_clipboard = require('jerry.clipboard').send_to_clipboard
 
---- @brief Setup all the autocommand
---- @throws TBD
-M.setup = function()
-  local augroup_id = vim.api.nvim_create_augroup("jerry_markdown", {})
-  vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TabEnter" }, {
-    group = augroup_id,
-    desc = 'TBD',
-    pattern = { "*.md" },
-    callback = function(ev)
-      -- This small block will automatically soft warp a long line in a list. Visual only
-      -- https://t3.chat/share/y8c0bx42dw
-      vim.opt.breakindent = true
-      -- 'list:-1' tells Vim to align soft-wrapped lines
-      -- with the start of the text after the list marker
-      vim.opt.breakindentopt = "list:-1"
+--- @brief Setup markdown-specific options, keymaps, and abbreviations for the current buffer.
+M.setup_buffer = function()
+  if vim.b.jerry_markdown_setup_done then
+    return
+  end
+  vim.b.jerry_markdown_setup_done = true
 
-      -- yank the lines between the nearest surrounding ``` fences (exclusive)
-      vim.keymap.set(
-        'n',
-        '<leader>ne',
-        [[<cmd>?^```?+1,/^```/-1 y<CR>]],
-        { noremap = true, silent = true }
-      )
+  -- This small block will automatically soft wrap a long line in a list. Visual only.
+  -- https://t3.chat/share/y8c0bx42dw
+  vim.opt_local.breakindent = true
+  -- 'list:-1' tells Vim to align soft-wrapped lines with the list text.
+  vim.opt_local.breakindentopt = "list:-1"
 
-      vim.api.nvim_buf_set_keymap(0, 'n', '<leader>pt', '', {
-        noremap = true,
-        desc = 'TBD',
-        callback = function()
-          send_to_clipboard(M.new_search_pattern_as_markdown_multiline_code_block())
-          print('pt content sent to clipboard')
-        end
-      })
+  -- yank the lines between the nearest surrounding ``` fences (exclusive)
+  vim.keymap.set(
+    'n',
+    '<leader>ne',
+    [[<cmd>?^```?+1,/^```/-1 y<CR>]],
+    { buffer = 0, noremap = true, silent = true }
+  )
 
-      vim.api.nvim_buf_set_keymap(0, 'n', '<leader>pn', '', {
-        noremap = true,
-        desc = 'TBD',
-        callback = function()
-          send_to_clipboard(M.new_search_pattern_as_markdown_singleline_code_block())
-          print('pn content sent to clipboard')
-        end
-      })
+  vim.keymap.set('n', '<leader>pt', function()
+    send_to_clipboard(M.new_search_pattern_as_markdown_multiline_code_block())
+    print('pt content sent to clipboard')
+  end, { buffer = 0, desc = 'Copy multiline jump snippet' })
 
-      vim.api.nvim_buf_set_keymap(0, 'n', '<leader>pf', '', {
-        noremap = true,
-        desc = 'TBD',
-        callback = function()
-          send_to_clipboard(M.new_search_pattern_from_inside_vim())
-          print('pf content sent to clipboard')
-        end
-      })
+  vim.keymap.set('n', '<leader>pn', function()
+    send_to_clipboard(M.new_search_pattern_as_markdown_singleline_code_block())
+    print('pn content sent to clipboard')
+  end, { buffer = 0, desc = 'Copy single-line jump snippet' })
 
-      vim.api.nvim_buf_set_keymap(0, 'n', '<leader>ph', '', {
-        noremap = true,
-        desc = 'TBD',
-        callback = function()
-          send_to_clipboard(M.new_search_pattern_from_shell_without_markup())
-          print('ph content sent to clipboard')
-        end
-      })
+  vim.keymap.set('n', '<leader>pf', function()
+    send_to_clipboard(M.new_search_pattern_from_inside_vim())
+    print('pf content sent to clipboard')
+  end, { buffer = 0, desc = 'Copy Vim jump snippet' })
 
-      vim.cmd("iabbrev ,n  <c-r>=v:lua.require('jerry.markdown').new_originuuid()<cr>")
+  vim.keymap.set('n', '<leader>ph', function()
+    send_to_clipboard(M.new_search_pattern_from_shell_without_markup())
+    print('ph content sent to clipboard')
+  end, { buffer = 0, desc = 'Copy shell jump snippet' })
 
-      vim.keymap.set("v", "<leader>tf", function()
-        local s = vim.fn.getpos("'<")[2]
-        local e = vim.fn.getpos("'>")[2]
-        M.replace_range(s, e)
-      end, { desc = "Format selection as markdown table" })
+  vim.cmd([[inoreabbrev <buffer> ,n <c-r>=v:lua.require('jerry.markdown').new_originuuid()<cr>]])
 
-      vim.keymap.set("n", "<leader>tf", function()
-        local buf   = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-        local total = #buf
-        local row   = vim.api.nvim_win_get_cursor(0)[1]
+  vim.keymap.set("v", "<leader>tf", function()
+    local s = vim.fn.getpos("'<")[2]
+    local e = vim.fn.getpos("'>")[2]
+    M.replace_range(s, e)
+  end, { buffer = 0, desc = "Format selection as markdown table" })
 
-        if not M.is_table_line(buf[row]) then
-          vim.notify("Cursor is not inside a table", vim.log.levels.WARN)
-          return
-        end
+  vim.keymap.set("n", "<leader>tf", function()
+    local buf = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    local total = #buf
+    local row = vim.api.nvim_win_get_cursor(0)[1]
 
-        local s, e = row, row
-        while s > 1      and M.is_table_line(buf[s - 1]) do s = s - 1 end
-        while e < total   and M.is_table_line(buf[e + 1]) do e = e + 1 end
-
-        M.replace_range(s, e)
-      end, { desc = "Format markdown table under cursor" })
+    if not M.is_table_line(buf[row]) then
+      vim.notify("Cursor is not inside a table", vim.log.levels.WARN)
+      return
     end
-  })
+
+    local s, e = row, row
+    while s > 1 and M.is_table_line(buf[s - 1]) do
+      s = s - 1
+    end
+    while e < total and M.is_table_line(buf[e + 1]) do
+      e = e + 1
+    end
+
+    M.replace_range(s, e)
+  end, { buffer = 0, desc = "Format markdown table under cursor" })
 end
 
 ---@brief Push current position to the tag stack and add to the jump list

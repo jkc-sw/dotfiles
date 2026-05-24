@@ -1,6 +1,10 @@
+if exists('b:jerry_markdown_ftplugin_loaded')
+    finish
+endif
+let b:jerry_markdown_ftplugin_loaded = 1
 
-nnoremap <leader>th     <cmd>  call search('^## \d\{4}-\d\{2}-\d\{2}', 'bW') <cr>
-nnoremap <leader>tn     <cmd>  call search('^## \d\{4}-\d\{2}-\d\{2}', 'W') <cr>
+nnoremap <buffer> <leader>th <cmd>call search('^## \d\{4}-\d\{2}-\d\{2}', 'bW')<cr>
+nnoremap <buffer> <leader>tn <cmd>call search('^## \d\{4}-\d\{2}-\d\{2}', 'W')<cr>
 
 
 " A function to copy the stuff
@@ -53,7 +57,7 @@ func! TakeMeHereVim()
     return out
 endfunc
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " @brief Return a formatted text that contains markdown link and powershell
 "        script
 "        If the label is not given, then it will call Start-Process with link
@@ -62,95 +66,18 @@ endfunc
 " @param label (str) - label to put in between [] in markdown
 " @param link (str) - link to put in between () in md and argument for exe
 " @return str - Formatted text
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! WrapLink(exe, label, link)
-    if strlen(a:link) < 1
-        return ''
-    endif
-    let link = trim(a:link)
-    let link = trim(link, '"')
-    let link = v:lua.string.gsub(link, "1~$", "")
-    let alabel = a:label
-    let alabel = v:lua.string.gsub(alabel, "1~$", "")
-    let txt = 'Use below to handle this: ' . alabel . "\n"
-    " let txt = txt . "\n"
-    let txt = txt . "```ps1\n"
-    let csp1 = "Start-Process \"" . a:exe . "\" -ArgumentList '\"" . link . "\"'\n"
-    if strlen(a:exe) < 1
-        let csp1 = "Start-Process \"" . link . "\"\n"
-        let csp1 = csp1 . "tnpreview \"" . link . "\"\n"
-    endif
-    let csp2 = "cpnew \"" . link . "\"\n"
-    let txt = txt . csp1
-    let txt = txt . csp2
-    let txt = txt . "```"
-    " Make all the backslash forwardslash
-    let txt = v:lua.string.gsub(txt, '\', '/')
-    return txt
+    return luaeval("require('jerry.markdown_links').wrap_link(_A[1], _A[2], _A[3])", [a:exe, a:label, a:link])
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" @brief Return a formatted text that contains markdown link and powershell
-"        script
-" @param label (str) - label to put in between [] in markdown. Empty will use
-"                      link
-" @return str - Formatted text
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! WrapLinkUsingMarkdown(label)
-    call inputsave()
-    if strlen(a:label) < 1
-        let nlabel = input('Label:', a:label)
-        let nlabel = v:lua.string.gsub(nlabel, "1~$", "")
-    else
-        let nlabel = a:label
-    endif
-    let link = input('Url:')
-    call inputrestore()
-    if strlen(link) < 1
-        return ''
-    endif
-    if strlen(nlabel) < 1
-        let nlabel = link
-    endif
-    let txt = '[' . nlabel . '](' . link . ')'
-    return txt
+function! s:PromptBrowserLink(browser, label)
+    return luaeval("require('jerry.markdown_links').prompt_browser_link_sync(_A[1], _A[2])", [a:browser, a:label])
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" @brief Return a formatted text that contains markdown link and powershell
-"        script
-" @param browser (str) - The path to the broswer
-" @param label (str) - label to put in between [] in markdown. Empty will use
-"                      link
-" @return str - Formatted text
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! WrapLinkWithBrowser(browser, label)
-    let browser = a:browser
-    call inputsave()
-    if strlen(a:label) < 1
-        let nlabel = input('Label:', a:label)
-        let nlabel = v:lua.string.gsub(nlabel, "1~$", "")
-    else
-        let nlabel = a:label
-    endif
-    let link = input('Url:')
-    call inputrestore()
-    if strlen(nlabel) < 1
-        let nlabel = link
-        " " Special code that will search backward for header and put it here,
-        " " max 5 lines
-        " for ii in [-1, -2, -3, -4, -5]
-        "     " If empty, next
-        "     " Stop the search if it is neither empty or starts with #
-        "     if v:string.search
-        " endfor
-    endif
-    return WrapLink(browser, nlabel, link)
-endfunction
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " @brief Return a string that contains the output of jf
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! AskUserForJiraTagReturnJfOutput(prefix)
     call inputsave()
     let jtag = input('Jira tag:')
@@ -180,46 +107,10 @@ function! AskUserForJiraTagReturnJfOutput(prefix)
     return jfoutput
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" @brief Return a formatted text that contains markdown link and powershell
-"        script and the markdown title
-" @return str - Formatted text
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! WrapLinkAndMarkdownTitle(browser, label)
-    let browser = a:browser
-    call inputsave()
-    let nlabel = input('Label:', a:label)
-    let nlabel = v:lua.string.gsub(nlabel, "1~$", "")
-    let link = input('Url:')
-    call inputrestore()
-    if strlen(nlabel) < 1
-        let nlabel = link
-    endif
-    let txt = '## ' . nlabel
-    let txt = txt . "\n\n" . luaeval("require('jerry.markdown').new_originuuid()")
-    let txt = txt . "\n\n" . WrapLink(browser, nlabel, link)
-    return txt
-endfunction
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" @brief Return a formatted text that contains markdown link and powershell
-"        script, In edge
-" @param label (str) - label to put in between [] in markdown, Optional
-" @return str - Formatted text
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! AskLabelLinkWithEdge(...)
-    let browser = 'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
-    let label = ''
-    if a:0 == 1
-        let label = a:1
-    endif
-    return WrapLinkWithBrowser(browser, label)
-endfunction
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " @brief Create a tripple backticks blocks
 " @return str - Formatted text
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! CodeBlock()
     call inputsave()
     let lang = input('Lang:')
@@ -246,11 +137,6 @@ func! CodeBlockEnablePasteMode(enable)
     endif
 endfun
 
-augroup CodeBlockEnterExitInsertMode
-    autocmd!
-    autocmd! InsertLeave *.md call CodeBlockEnablePasteMode(v:false)
-augroup END
-
 function! GetDateOffset(dayoffset, prefix)
     let offset = a:dayoffset
     if empty(offset)
@@ -273,19 +159,19 @@ function! GetDateOffsetNoDay(...)
     return strftime('%Y-%m-%d', localtime() + offset*60*60*24)
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " @brief Search and replace the bad sharepoint url failing to be stored onto
 "        the pdf form
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! SearchAndReplaceInvalidSharePointLink()
     call execute('%s/\((http.*\)\/:\([^:/ ]\):\//\1\/%3A\2%3A\//', "silent!")
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " @brief Return the filename to be saved with title
 " @param label (str) - label to put in between [] in markdown, Optional
 " @return str - Formatted text
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! AskLabelForPictureNameWithTitle(label)
     call inputsave()
     let nlabel = input('Label:', a:label)
@@ -298,11 +184,11 @@ function! AskLabelForPictureNameWithTitle(label)
     return txt
 endfunction
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " @brief Return the filename to be saved
 " @param label (str) - label to put in between [] in markdown, Optional
 " @return str - Formatted text
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! AskLabelForPictureName(label)
     call inputsave()
     let nlabel = a:label
@@ -346,47 +232,40 @@ function! AskLabelForPictureName(label)
     endif
 
     let txt = WrapLink('', nlabel, link)
-    let lk = WrapLinkWithBrowser('', nlabel)
+    let lk = s:PromptBrowserLink('', nlabel)
     if strlen(lk) > 0
         let txt = lk . "\n\n" . txt
     endif
     return txt
 endfunction
 
+setlocal wrap spell linebreak
+
+nnoremap <buffer> <leader>.u gg/^-<space>/<cr>}O<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p ')<cr>
+nnoremap <buffer> <leader>.b gg/^-<space>/<cr>}O<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p Break ')<cr><esc>A
+nnoremap <buffer> <leader>,u "ryygg/^-<space>/<cr>}"rP0d4Wi<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p ')<cr><esc>A<space>
+let @c="V/^## \<cr>k\"Ld"
+
+inoreabbrev <buffer> ats <c-r>=GetDateOffset('', '')<cr>
+inoreabbrev <buffer> `3 <c-r>=CodeBlock()<cr><Up><End>
+inoreabbrev <buffer> pck <c-r>=AskLabelForPictureName('')<cr>
+inoreabbrev <buffer> ,p  <c-r>=AskLabelForPictureNameWithTitle('')<cr>
+inoreabbrev <buffer> ,t  <c-r>=GetDateOffset('0', '## ')<cr>
+inoreabbrev <buffer> ,h  <c-r>=GetDateOffset('', '## ')<cr>
+inoreabbrev <buffer> .u  <c-r>=strftime('- %m/%d/%Y %H:%M:%S %p')<cr>
+inoreabbrev <buffer> .b  <c-r>=strftime('- %m/%d/%Y %H:%M:%S %p Break')<cr>
+inoreabbrev <buffer> .n  +
+inoreabbrev <buffer> jff <c-r>=AskUserForJiraTagReturnJfOutput('')<cr>
+inoreabbrev <buffer> jf  <c-r>=AskUserForJiraTagReturnJfOutput('Work on')<cr>
+
+lua require('jerry.markdown').setup_buffer()
+lua require('jerry.markdown_links').setup_buffer()
+
 augroup markdownFenceHighlight
-    autocmd!
-    autocmd BufWritePre                   *.md call SearchAndReplaceInvalidSharePointLink()
-    autocmd BufWritePre                   *.md silent! %s/Ã‚Â’/'/g
-    autocmd BufEnter,BufWinEnter,TabEnter *.md nnoremap <leader>.u gg/^-<space>/<cr>}O<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p ')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md nnoremap <leader>.b gg/^-<space>/<cr>}O<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p Break ')<cr><esc>A
-    autocmd BufEnter,BufWinEnter,TabEnter *.md nnoremap <leader>,u "ryygg/^-<space>/<cr>}"rP0d4Wi<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p ')<cr><esc>A<space>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md let @c="V/^## \<cr>k\"Ld"
-    autocmd BufEnter,BufWinEnter,TabEnter *.md set wrap spell linebreak
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ats <c-r>=GetDateOffset('', '')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev `3 <c-r>=CodeBlock()<cr><Up><End>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev cnk <c-r>=WrapLinkWithBrowser('', 'Crucible')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev enk <c-r>=AskLabelLinkWithEdge('Open in Edge')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev gnk <c-r>=WrapLinkWithBrowser('', 'Github')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ink <c-r>=WrapLinkWithBrowser('', 'Link')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev mnk <c-r>=WrapLinkAndMarkdownTitle('', '')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev pck <c-r>=AskLabelForPictureName('')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,p  <c-r>=AskLabelForPictureNameWithTitle('')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev nk  <c-r>=WrapLinkWithBrowser('', '')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev nj  <c-r>=WrapLinkUsingMarkdown('')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev onk <c-r>=WrapLinkWithBrowser('', 'Open in Default App')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev pnk <c-r>=WrapLinkWithBrowser('', 'Project')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev rnk <c-r>=WrapLinkWithBrowser('', 'Reference')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev sck <c-r>=WrapLinkWithBrowser('', 'Slack')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev spt <c-r>=WrapLinkWithBrowser('', 'SharePoint')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev tnk <c-r>=WrapLinkWithBrowser('', 'Topic')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ynk <c-r>=WrapLinkWithBrowser('', 'Youtube')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,t  <c-r>=GetDateOffset('0', '## ')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev ,h  <c-r>=GetDateOffset('', '## ')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .u  <c-r>=strftime('- %m/%d/%Y %H:%M:%S %p')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .b  <c-r>=strftime('- %m/%d/%Y %H:%M:%S %p Break')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev .n  +
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev jff <c-r>=AskUserForJiraTagReturnJfOutput('')<cr>
-    autocmd BufEnter,BufWinEnter,TabEnter *.md iabbrev jf  <c-r>=AskUserForJiraTagReturnJfOutput('Work on')<cr>
+    autocmd! * <buffer>
+    autocmd BufWritePre <buffer> call SearchAndReplaceInvalidSharePointLink()
+    autocmd BufWritePre <buffer> silent! %s/Ã‚Â’/'/g
+    autocmd InsertLeave <buffer> call CodeBlockEnablePasteMode(v:false)
 augroup END
 
 " vim:et ts=4 sts=4 sw=4

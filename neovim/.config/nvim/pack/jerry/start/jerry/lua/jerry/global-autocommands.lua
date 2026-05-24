@@ -1,3 +1,22 @@
+local markdown_fenced_languages = { 'python', 'ps1', 'cpp', 'bash', 'vim', 'matlab' }
+
+local function ensure_markdown_fenced_languages()
+    local current = vim.g.markdown_fenced_languages
+    if type(current) ~= 'table' then
+        current = {}
+    end
+
+    for _, lang in ipairs(markdown_fenced_languages) do
+        if not vim.tbl_contains(current, lang) then
+            table.insert(current, lang)
+        end
+    end
+
+    vim.g.markdown_fenced_languages = current
+end
+
+ensure_markdown_fenced_languages()
+
 -- Clipboard autocmd
 local toClipBoard = vim.api.nvim_create_augroup("toClipBoard", { clear = true })
 if #vim.g.clip_supplier > 0 then
@@ -68,8 +87,6 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TabEnter" }, {
             iabbrev ###t ### <c-r>=strftime('%Y-%m-%d %A')<cr>
             iabbrev ####T #### <c-r>=strftime('%Y-%m-%d %A')<cr>
             iabbrev ####t #### <c-r>=strftime('%Y-%m-%d %A')<cr>
-            let g:markdown_fenced_languages += ['python', 'ps1', 'cpp', 'bash', 'vim', 'matlab']
-            silent! exec 'edit'
         ]]
     end,
 })

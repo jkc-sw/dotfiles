@@ -3,7 +3,6 @@ require('jerry.global-options')
 require('jerry.global-autocommands')
 require('jerry.global-funcs')
 require('jerry.tmux').setup()
-require('jerry.markdown').setup()
 require('jerry.lsp.config').setup()
 
 local work_dir = vim.uv.os_homedir() .. '/.config/nvim'
