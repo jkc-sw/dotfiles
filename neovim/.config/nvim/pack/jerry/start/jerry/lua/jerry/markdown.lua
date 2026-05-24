@@ -8,6 +8,59 @@ SOURCE_THESE_VIMS_END
 
 local M = {}
 local send_to_clipboard = require('jerry.clipboard').send_to_clipboard
+local markdown_links = require('jerry.markdown_links')
+local markdown_buffer_group = vim.api.nvim_create_augroup('jerry_markdown_ftplugin', { clear = false })
+
+local function strip_terminal_suffix(txt)
+  if txt == nil then
+    return nil
+  end
+
+  return txt:gsub('1~$', '')
+end
+
+local function prompt_input(prompt, default)
+  vim.fn.inputsave()
+  local ok, value = pcall(vim.fn.input, prompt, default or '')
+  vim.fn.inputrestore()
+  if not ok then
+    error(value)
+  end
+
+  return strip_terminal_suffix(value)
+end
+
+local function format_current_file_for_journal_jump()
+  local out = vim.fn.expand('%')
+  out = out:gsub('"', '\\"')
+  out = out:gsub('\\', '/')
+  out = out:gsub('.*/[jJ]ournal/', './')
+  return out
+end
+
+local function escape_shell_search_line(line)
+  local out = line:gsub('\\', '\\\\')
+  out = out:gsub('"', '\\`"')
+  out = out:gsub('%.', '\\.')
+  out = out:gsub('%*', '\\\\*')
+  out = out:gsub('/', '\\/')
+  out = out:gsub('%[', '\\[')
+  return out
+end
+
+local function escape_vim_search_line(line)
+  local out = line:gsub('"', '\\"')
+  out = out:gsub('%*', '\\\\*')
+  return out
+end
+
+local function define_insert_abbrev(lhs, rhs)
+  vim.cmd(string.format('inoreabbrev <buffer> %s %s', lhs, rhs))
+end
+
+local function define_insert_eval_abbrev(lhs, expr, suffix)
+  define_insert_abbrev(lhs, string.format('<c-r>=%s<cr>%s', expr, suffix or ''))
+end
 
 --- @brief Setup markdown-specific options, keymaps, and abbreviations for the current buffer.
 M.setup_buffer = function()
@@ -16,11 +69,23 @@ M.setup_buffer = function()
   end
   vim.b.jerry_markdown_setup_done = true
 
+  vim.opt_local.wrap = true
+  vim.opt_local.spell = true
+  vim.opt_local.linebreak = true
+
   -- This small block will automatically soft wrap a long line in a list. Visual only.
   -- https://t3.chat/share/y8c0bx42dw
   vim.opt_local.breakindent = true
   -- 'list:-1' tells Vim to align soft-wrapped lines with the list text.
   vim.opt_local.breakindentopt = "list:-1"
+
+  vim.keymap.set('n', '<leader>th', function()
+    vim.fn.search('^## \\d\\{4}-\\d\\{2}-\\d\\{2}', 'bW')
+  end, { buffer = 0, desc = 'Jump to previous journal heading' })
+
+  vim.keymap.set('n', '<leader>tn', function()
+    vim.fn.search('^## \\d\\{4}-\\d\\{2}-\\d\\{2}', 'W')
+  end, { buffer = 0, desc = 'Jump to next journal heading' })
 
   -- yank the lines between the nearest surrounding ``` fences (exclusive)
   vim.keymap.set(
@@ -50,7 +115,24 @@ M.setup_buffer = function()
     print('ph content sent to clipboard')
   end, { buffer = 0, desc = 'Copy shell jump snippet' })
 
-  vim.cmd([[inoreabbrev <buffer> ,n <c-r>=v:lua.require('jerry.markdown').new_originuuid()<cr>]])
+  vim.keymap.set('n', '<leader>.u', [[gg/^-<space>/<CR>}O<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p ')<CR>]], { buffer = 0 })
+  vim.keymap.set('n', '<leader>.b', [[gg/^-<space>/<CR>}O<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p Break ')<CR><Esc>A]], { buffer = 0 })
+  vim.keymap.set('n', '<leader>,u', [["ryygg/^-<space>/<CR>}"rP0d4Wi<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p ')<CR><Esc>A ]], { buffer = 0 })
+
+  vim.fn.setreg('c', vim.api.nvim_replace_termcodes([[V/^## \<CR>k"Ld]], true, false, true))
+
+  define_insert_eval_abbrev(',n', [[v:lua.require('jerry.markdown').new_originuuid()]])
+  define_insert_eval_abbrev('ats', [[v:lua.require('jerry.markdown').get_date_offset('', '')]])
+  define_insert_eval_abbrev('`3', [[v:lua.require('jerry.markdown').code_block()]], '<Up><End>')
+  define_insert_eval_abbrev('pck', [[v:lua.require('jerry.markdown').ask_label_for_picture_name('')]])
+  define_insert_eval_abbrev(',p', [[v:lua.require('jerry.markdown').ask_label_for_picture_name_with_title('')]])
+  define_insert_eval_abbrev(',t', [[v:lua.require('jerry.markdown').get_date_offset('0', '## ')]])
+  define_insert_eval_abbrev(',h', [[v:lua.require('jerry.markdown').get_date_offset('', '## ')]])
+  define_insert_abbrev('.u', [[<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p')<cr>]])
+  define_insert_abbrev('.b', [[<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p Break')<cr>]])
+  define_insert_abbrev('.n', '+')
+  define_insert_eval_abbrev('jff', [[v:lua.require('jerry.markdown').ask_user_for_jira_tag_return_jf_output('')]])
+  define_insert_eval_abbrev('jf', [[v:lua.require('jerry.markdown').ask_user_for_jira_tag_return_jf_output('Work on')]])
 
   vim.keymap.set("v", "<leader>tf", function()
     local s = vim.fn.getpos("'<")[2]
@@ -78,6 +160,56 @@ M.setup_buffer = function()
 
     M.replace_range(s, e)
   end, { buffer = 0, desc = "Format markdown table under cursor" })
+
+  vim.api.nvim_create_autocmd('BufWritePre', {
+    group = markdown_buffer_group,
+    buffer = 0,
+    callback = function()
+      M.search_and_replace_invalid_sharepoint_link()
+      vim.cmd([[silent! %s/Ã‚Â’/'/g]])
+    end,
+  })
+
+  vim.api.nvim_create_autocmd('InsertLeave', {
+    group = markdown_buffer_group,
+    buffer = 0,
+    callback = function()
+      M.code_block_enable_paste_mode(false)
+    end,
+  })
+end
+
+M.take_me_here_shell = function(one_liner)
+  local current_line = escape_shell_search_line(vim.api.nvim_get_current_line())
+  local filepath = format_current_file_for_journal_jump()
+  local out = string.format([[```ps1
+en ; nvim "%s" -c "/^%s/"
+```
+]], filepath, current_line)
+  if one_liner then
+    out = string.format('`en ; nvim "%s" -c "/^%s/"`', filepath, current_line)
+  end
+
+  vim.api.nvim_echo({ { 'TakeMeHereShell copys: ' .. out } }, false, {})
+  return out
+end
+
+M.take_me_here_vim = function()
+  local current_line = escape_vim_search_line(vim.api.nvim_get_current_line())
+  local filepath = format_current_file_for_journal_jump()
+  local out = ''
+
+  if current_line:match('^## ') then
+    out = '\n' .. current_line .. '\n\n'
+  end
+
+  out = out .. string.format([[```vim
+execute "e ".fnameescape("%s") | call search("^%s")
+```
+]], filepath, current_line)
+
+  vim.api.nvim_echo({ { 'TakeMeHereVim copys: ' .. out } }, false, {})
+  return out
 end
 
 ---@brief Push current position to the tag stack and add to the jump list
@@ -128,7 +260,7 @@ M.get_filename_linenum_of_a_pattern = function(pattern)
     local filepath, line_number, _ = line:match("([^:]+):(%d+):(.*)")
     table.insert(matches, {
       filepath = filepath,
-      line_number = line_number
+      line_number = tonumber(line_number),
     })
   end
 
@@ -250,7 +382,11 @@ end
 --- @throws When pattern is not found
 M.find_nearest_heading_above_current_line = function()
   local matched_line_nr = vim.fn.search('^## .*$', "bnW")
-  local heading = vim.api.nvim_buf_get_lines(0, matched_line_nr - 1, matched_line_nr, true)[1]
+  if matched_line_nr == 0 then
+    error("Cannot find the heading backward from the current line")
+  end
+
+  local heading = vim.api.nvim_buf_get_lines(0, matched_line_nr - 1, matched_line_nr, false)[1]
   if not heading then
     error("Cannot find the heading backward from the current line")
   end
@@ -288,6 +424,132 @@ M.replace_range = function(s_row, e_row)
   local lines = vim.api.nvim_buf_get_lines(0, s_row - 1, e_row, false)
   local formatted = M.fmt_table(lines)
   vim.api.nvim_buf_set_lines(0, s_row - 1, e_row, false, formatted)
+end
+
+M.ask_user_for_jira_tag_return_jf_output = function(prefix)
+  local jtag = prompt_input('Jira tag:', '')
+  if jtag == nil or jtag == '' then
+    vim.api.nvim_err_writeln('No jira tag is entered')
+    return ''
+  end
+
+  local jfoutput
+  if vim.fn.has('win32') == 1 then
+    jfoutput = vim.fn.system({
+      'pwsh.exe',
+      '-NoProfile',
+      '-Command',
+      "Import-Module MyModules00 ; jf '" .. jtag .. "' -Passthru",
+    })
+  else
+    local ip = vim.env.BOXX_IP
+    if ip == nil then
+      error('AskUserForJiraTagReturnJfOutput needs to access env var BOXX_IP, but it is not found')
+    end
+
+    local user = vim.env.BOXX_USER
+    if user == nil then
+      error('AskUserForJiraTagReturnJfOutput needs to access env var BOXX_USER, but it is not found')
+    end
+
+    local ret = vim.system({ 'jfssh', jtag }, { text = true, stderr = false }):wait()
+    jfoutput = ret.stdout or ''
+  end
+
+  jfoutput = vim.trim(jfoutput)
+  if prefix ~= nil and prefix ~= '' then
+    return prefix .. ' ' .. jfoutput
+  end
+
+  return jfoutput
+end
+
+M.code_block = function()
+  local lang = prompt_input('Lang:', '')
+  M.code_block_enable_paste_mode(true)
+  return '```' .. lang .. '\n```'
+end
+
+M.code_block_enable_paste_mode = function(enable)
+  if vim.g.code_block_enable_paste_mode == nil then
+    vim.g.code_block_enable_paste_mode = false
+  end
+
+  if enable then
+    vim.o.paste = true
+    vim.g.code_block_enable_paste_mode = true
+    return
+  end
+
+  if vim.g.code_block_enable_paste_mode then
+    vim.o.paste = false
+    vim.bo.expandtab = true
+    vim.g.code_block_enable_paste_mode = false
+  end
+end
+
+M.get_date_offset = function(dayoffset, prefix)
+  local offset = dayoffset
+  if offset == nil or offset == '' then
+    offset = prompt_input('Day of offset:', '')
+  end
+
+  local seconds = (tonumber(offset) or 0) * 60 * 60 * 24
+  return (prefix or '') .. vim.fn.strftime('%Y-%m-%d %A', vim.fn.localtime() + seconds)
+end
+
+M.get_date_offset_no_day = function(offset)
+  local day_offset = offset
+  if day_offset == nil or day_offset == '' then
+    day_offset = prompt_input('Day of offset:', '')
+  end
+
+  local seconds = (tonumber(day_offset) or 0) * 60 * 60 * 24
+  return vim.fn.strftime('%Y-%m-%d', vim.fn.localtime() + seconds)
+end
+
+M.search_and_replace_invalid_sharepoint_link = function()
+  vim.cmd([[silent! %s/\((http.*\)\/:\([^:/ ]\):\//\1\/%3A\2%3A\//]])
+end
+
+M.ask_label_for_picture_name_with_title = function(label)
+  local clean_label = prompt_input('Label:', label or '')
+  local body = M.ask_label_for_picture_name(clean_label)
+  return '## ' .. clean_label .. '\n\n' .. M.new_originuuid() .. '\n\n' .. body
+end
+
+M.ask_label_for_picture_name = function(label)
+  local clean_label = label or ''
+  if clean_label == '' then
+    clean_label = prompt_input('Label:', clean_label)
+  end
+
+  clean_label = strip_terminal_suffix(clean_label) or ''
+  local default_pic_name = clean_label:lower():gsub(' ', '-')
+  default_pic_name = default_pic_name:gsub("'", '')
+  default_pic_name = default_pic_name:gsub('[!@#$%%^&,:*()%-=%[%]/\\ ?|]+', '-')
+
+  local pic_name = prompt_input('Filename:', default_pic_name .. '.')
+  local note_parent_folder_name = vim.fn.fnamemodify(vim.fn.expand('%:p'), ':h:t')
+  local note_type_dash_index = note_parent_folder_name:find('-', 1, true)
+  if note_type_dash_index == nil then
+    error("Folder name'" .. note_parent_folder_name .. "' derived from '" .. vim.fn.expand('%:p') .. "' is not supported. No - is found")
+  end
+
+  local folder_name = note_parent_folder_name:sub(1, note_type_dash_index - 1)
+  local pic_path_prefix = folder_name .. '/' .. M.get_date_offset_no_day(0) .. '-'
+  local link = (pic_path_prefix .. pic_name):gsub('/', '\\')
+  if clean_label == '' then
+    clean_label = link
+  end
+
+  local txt = markdown_links.wrap_link('', clean_label, link)
+  local browser_link = markdown_links.prompt_browser_link_sync('', clean_label)
+  if #browser_link > 0 then
+    txt = browser_link .. "\n\n" .. txt
+  end
+
+  return txt
 end
 
 return M
