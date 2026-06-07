@@ -10,6 +10,7 @@ local M = {}
 local send_to_clipboard = require('jerry.clipboard').send_to_clipboard
 local markdown_links = require('jerry.markdown_links')
 local markdown_buffer_group = vim.api.nvim_create_augroup('jerry_markdown_ftplugin', { clear = false })
+local ask_label_for_picture_name_impl
 
 local placeholder_ns = vim.api.nvim_create_namespace('jerry_markdown')
 local placeholder_seq = 0
@@ -153,14 +154,6 @@ local function prompt_with_placeholder(prompt_func)
   return placeholder
 end
 
-local function define_insert_abbrev(lhs, rhs)
-  vim.cmd(string.format('inoreabbrev <buffer> %s %s', lhs, rhs))
-end
-
-local function define_insert_eval_abbrev(lhs, expr, suffix)
-  define_insert_abbrev(lhs, string.format('<c-r>=%s<cr>%s', expr, suffix or ''))
-end
-
 --- @brief Setup markdown-specific options, keymaps, and abbreviations for the current buffer.
 M.setup_buffer = function()
   if vim.b.jerry_markdown_setup_done then
@@ -219,19 +212,6 @@ M.setup_buffer = function()
   vim.keymap.set('n', '<leader>,u', [["ryygg/^-<space>/<CR>}"rP0d4Wi<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p ')<CR><Esc>A ]], { buffer = 0 })
 
   vim.fn.setreg('c', vim.api.nvim_replace_termcodes([[V/^## \<CR>k"Ld]], true, false, true))
-
-  define_insert_eval_abbrev(',n', [[v:lua.require('jerry.markdown').new_originuuid()]])
-  define_insert_eval_abbrev('ats', [[v:lua.require('jerry.markdown').get_date_offset('', '')]])
-  define_insert_eval_abbrev('`3', [[v:lua.require('jerry.markdown').code_block()]], '<Up><End>')
-  define_insert_eval_abbrev('pck', [[v:lua.require('jerry.markdown').ask_label_for_picture_name('')]])
-  define_insert_eval_abbrev(',p', [[v:lua.require('jerry.markdown').ask_label_for_picture_name_with_title('')]])
-  define_insert_eval_abbrev(',t', [[v:lua.require('jerry.markdown').get_date_offset('0', '## ')]])
-  define_insert_eval_abbrev(',h', [[v:lua.require('jerry.markdown').get_date_offset('', '## ')]])
-  define_insert_abbrev('.u', [[<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p')<cr>]])
-  define_insert_abbrev('.b', [[<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p Break')<cr>]])
-  define_insert_abbrev('.n', '+')
-  define_insert_eval_abbrev('jff', [[v:lua.require('jerry.markdown').ask_user_for_jira_tag_return_jf_output('')]])
-  define_insert_eval_abbrev('jf', [[v:lua.require('jerry.markdown').ask_user_for_jira_tag_return_jf_output('Work on')]])
 
   vim.keymap.set("v", "<leader>tf", function()
     local s = vim.fn.getpos("'<")[2]
@@ -644,14 +624,14 @@ M.ask_label_for_picture_name_with_title = function(label)
         clean_label = ''
       end
 
-      M.ask_label_for_picture_name_impl(clean_label, function(body)
+      ask_label_for_picture_name_impl(clean_label, function(body)
         cb('## ' .. clean_label .. '\n\n' .. M.new_originuuid() .. '\n\n' .. body)
       end)
     end)
   end)
 end
 
-local function ask_label_for_picture_name_impl(label, cb)
+ask_label_for_picture_name_impl = function(label, cb)
   local clean_label = label or ''
 
   local function process_label(lbl)
@@ -694,14 +674,15 @@ local function ask_label_for_picture_name_impl(label, cb)
       end
 
       local txt = markdown_links.wrap_link('', clean_label, link)
-      local browser_link = markdown_links.prompt_browser_link_sync('', clean_label)
-      if #browser_link > 0 then
-        txt = browser_link .. "\n\n" .. txt
-      end
+      markdown_links.prompt_browser_link('', clean_label, function(browser_link)
+        if #browser_link > 0 then
+          txt = browser_link .. "\n\n" .. txt
+        end
 
-      if cb then
-        cb(txt)
-      end
+        if cb then
+          cb(txt)
+        end
+      end)
     end)
   end
 

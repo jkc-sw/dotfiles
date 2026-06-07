@@ -19,6 +19,22 @@ M.trigger_specs = {
   spt = { kind = 'browser', label = 'SharePoint' },
   tnk = { kind = 'browser', label = 'Topic' },
   ynk = { kind = 'browser', label = 'Youtube' },
+  [',n'] = { kind = 'eval', expr = [[v:lua.require('jerry.markdown').new_originuuid()]] },
+  ats = { kind = 'eval', expr = [[v:lua.require('jerry.markdown').get_date_offset('', '')]] },
+  ['`3'] = {
+    kind = 'eval',
+    expr = [[v:lua.require('jerry.markdown').code_block()]],
+    suffix = '<Up><End>',
+  },
+  pck = { kind = 'eval', expr = [[v:lua.require('jerry.markdown').ask_label_for_picture_name('')]] },
+  [',p'] = { kind = 'eval', expr = [[v:lua.require('jerry.markdown').ask_label_for_picture_name_with_title('')]] },
+  [',t'] = { kind = 'eval', expr = [[v:lua.require('jerry.markdown').get_date_offset('0', '## ')]] },
+  [',h'] = { kind = 'eval', expr = [[v:lua.require('jerry.markdown').get_date_offset('', '## ')]] },
+  ['.u'] = { kind = 'literal', rhs = [[<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p')<cr>]] },
+  ['.b'] = { kind = 'literal', rhs = [[<c-r>=strftime('- %m/%d/%Y %H:%M:%S %p Break')<cr>]] },
+  ['.n'] = { kind = 'literal', rhs = '+' },
+  jff = { kind = 'eval', expr = [[v:lua.require('jerry.markdown').ask_user_for_jira_tag_return_jf_output('')]] },
+  jf = { kind = 'eval', expr = [[v:lua.require('jerry.markdown').ask_user_for_jira_tag_return_jf_output('Work on')]] },
 }
 
 local function strip_terminal_suffix(txt)
@@ -238,26 +254,43 @@ function M.wrap_markdown_link(label, link)
   return '[' .. clean_lbl .. '](' .. clean .. ')'
 end
 
-function M.prompt_browser_link_sync(browser, label)
-  vim.fn.inputsave()
+function M.prompt_browser_link(browser, label, cb)
   local clean_lbl = label or ''
+  local function ask_for_url()
+    prompt_input('Url:', '', function(link)
+      if link == nil then
+        cb('')
+        return
+      end
+
+      local clean = clean_link(link)
+      if clean == '' then
+        cb('')
+        return
+      end
+
+      clean_lbl = clean_label(clean_lbl)
+      if clean_lbl == '' then
+        clean_lbl = clean
+      end
+
+      cb(build_wrapped_link(browser, clean_lbl, clean))
+    end)
+  end
+
   if clean_lbl == '' then
-    clean_lbl = strip_terminal_suffix(vim.fn.input('Label:', clean_lbl))
-  end
-  local link = vim.fn.input('Url:')
-  vim.fn.inputrestore()
-
-  local clean = clean_link(link)
-  if clean == '' then
-    return ''
-  end
-
-  clean_lbl = clean_label(clean_lbl)
-  if clean_lbl == '' then
-    clean_lbl = clean
+    prompt_input('Label:', clean_lbl, function(input_label)
+      if input_label == nil then
+        cb('')
+        return
+      end
+      clean_lbl = input_label
+      ask_for_url()
+    end)
+    return
   end
 
-  return build_wrapped_link(browser, clean_lbl, clean)
+  ask_for_url()
 end
 
 function M.expand_abbrev(trigger)
@@ -293,12 +326,25 @@ function M.setup_buffer()
   end
   vim.b.jerry_markdown_links_setup_done = true
 
-  for trigger, _ in pairs(M.trigger_specs) do
-    vim.cmd(string.format(
-      [[inoreabbrev <buffer> <expr> %s v:lua.require('jerry.markdown_links').expand_abbrev('%s')]],
-      trigger,
-      trigger
-    ))
+  for trigger, spec in pairs(M.trigger_specs) do
+    if spec.kind == 'browser' or spec.kind == 'markdown' or spec.kind == 'title_and_browser' then
+      vim.cmd(string.format(
+        [[inoreabbrev <buffer> <expr> %s v:lua.require('jerry.markdown_links').expand_abbrev('%s')]],
+        trigger,
+        trigger
+      ))
+    elseif spec.kind == 'eval' then
+      vim.cmd(string.format(
+        'inoreabbrev <buffer> %s <c-r>=%s<cr>%s',
+        trigger,
+        spec.expr,
+        spec.suffix or ''
+      ))
+    elseif spec.kind == 'literal' then
+      vim.cmd(string.format('inoreabbrev <buffer> %s %s', trigger, spec.rhs))
+    else
+      error('Unknown trigger spec kind: ' .. tostring(spec.kind))
+    end
   end
 end
 
