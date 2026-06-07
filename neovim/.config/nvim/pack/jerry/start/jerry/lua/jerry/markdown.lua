@@ -11,6 +11,9 @@ local send_to_clipboard = require('jerry.clipboard').send_to_clipboard
 local markdown_links = require('jerry.markdown_links')
 local markdown_buffer_group = vim.api.nvim_create_augroup('jerry_markdown_ftplugin', { clear = false })
 
+local placeholder_ns = vim.api.nvim_create_namespace('jerry_markdown')
+local placeholder_seq = 0
+
 local function strip_terminal_suffix(txt)
   if txt == nil then
     return nil
@@ -19,15 +22,89 @@ local function strip_terminal_suffix(txt)
   return txt:gsub('1~$', '')
 end
 
-local function prompt_input(prompt, default)
-  vim.fn.inputsave()
-  local ok, value = pcall(vim.fn.input, prompt, default or '')
-  vim.fn.inputrestore()
-  if not ok then
-    error(value)
+local function prompt_input(prompt, default, cb)
+  vim.ui.input({ prompt = prompt, default = default or '' }, function(input)
+    if input == nil then
+      cb(nil)
+      return
+    end
+    cb(strip_terminal_suffix(input))
+  end)
+end
+
+local function replacement_lines(txt)
+  if txt == nil or txt == '' then
+    return {}
+  end
+  return vim.split(txt, '\n', { plain = true })
+end
+
+local function replacement_end_cursor(row, col, lines)
+  if #lines == 0 then
+    return { row + 1, col }
+  end
+  if #lines == 1 then
+    return { row + 1, col + #lines[1] }
+  end
+  return { row + #lines, #lines[#lines] }
+end
+
+local function locate_placeholder(bufnr, placeholder, row_hint)
+  if row_hint ~= nil then
+    local hinted_line = vim.api.nvim_buf_get_lines(bufnr, row_hint - 1, row_hint, false)[1]
+    if hinted_line ~= nil then
+      local start_col = hinted_line:find(placeholder, 1, true)
+      if start_col ~= nil then
+        return row_hint - 1, start_col - 1
+      end
+    end
   end
 
-  return strip_terminal_suffix(value)
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  for idx, line in ipairs(lines) do
+    local start_col = line:find(placeholder, 1, true)
+    if start_col ~= nil then
+      return idx - 1, start_col - 1
+    end
+  end
+
+  error('Unable to locate placeholder')
+end
+
+local function create_placeholder_mark(bufnr, placeholder, row_hint)
+  local row, col = locate_placeholder(bufnr, placeholder, row_hint)
+  return vim.api.nvim_buf_set_extmark(bufnr, placeholder_ns, row, col, {
+    end_row = row,
+    end_col = col + #placeholder,
+    right_gravity = false,
+    end_right_gravity = true,
+  })
+end
+
+local function replace_placeholder(bufnr, extmark_id, txt)
+  if not vim.api.nvim_buf_is_valid(bufnr) then
+    return
+  end
+
+  local extmark = vim.api.nvim_buf_get_extmark_by_id(bufnr, placeholder_ns, extmark_id, { details = true })
+  if #extmark == 0 then
+    return
+  end
+
+  local row = extmark[1]
+  local col = extmark[2]
+  local details = extmark[3]
+  local lines = replacement_lines(txt)
+
+  vim.api.nvim_buf_set_text(bufnr, row, col, details.end_row, details.end_col, lines)
+  vim.api.nvim_buf_del_extmark(bufnr, placeholder_ns, extmark_id)
+
+  if vim.api.nvim_get_current_buf() ~= bufnr then
+    return
+  end
+
+  vim.api.nvim_win_set_cursor(0, replacement_end_cursor(row, col, lines))
+  vim.cmd.startinsert()
 end
 
 local function format_current_file_for_journal_jump()
@@ -52,6 +129,28 @@ local function escape_vim_search_line(line)
   local out = line:gsub('"', '\\"')
   out = out:gsub('%*', '\\\\*')
   return out
+end
+
+local function prompt_with_placeholder(prompt_func)
+  placeholder_seq = placeholder_seq + 1
+  local bufnr = vim.api.nvim_get_current_buf()
+  local row_hint = vim.api.nvim_win_get_cursor(0)[1]
+  local placeholder = string.format('__JERRY_MARKDOWN_%d_%d__', bufnr, placeholder_seq)
+
+  vim.schedule(function()
+    if not vim.api.nvim_buf_is_valid(bufnr) then
+      return
+    end
+
+    local extmark_id = create_placeholder_mark(bufnr, placeholder, row_hint)
+    prompt_func(function(txt)
+      vim.schedule(function()
+        replace_placeholder(bufnr, extmark_id, txt)
+      end)
+    end)
+  end)
+
+  return placeholder
 end
 
 local function define_insert_abbrev(lhs, rhs)
@@ -427,47 +526,57 @@ M.replace_range = function(s_row, e_row)
 end
 
 M.ask_user_for_jira_tag_return_jf_output = function(prefix)
-  local jtag = prompt_input('Jira tag:', '')
-  if jtag == nil or jtag == '' then
-    vim.api.nvim_err_writeln('No jira tag is entered')
-    return ''
-  end
+  return prompt_with_placeholder(function(cb)
+    prompt_input('Jira tag:', '', function(jtag)
+      if jtag == nil or jtag == '' then
+        vim.api.nvim_err_writeln('No jira tag is entered')
+        cb('')
+        return
+      end
 
-  local jfoutput
-  if vim.fn.has('win32') == 1 then
-    jfoutput = vim.fn.system({
-      'pwsh.exe',
-      '-NoProfile',
-      '-Command',
-      "Import-Module MyModules00 ; jf '" .. jtag .. "' -Passthru",
-    })
-  else
-    local ip = vim.env.BOXX_IP
-    if ip == nil then
-      error('AskUserForJiraTagReturnJfOutput needs to access env var BOXX_IP, but it is not found')
-    end
+      local jfoutput
+      if vim.fn.has('win32') == 1 then
+        jfoutput = vim.fn.system({
+          'pwsh.exe',
+          '-NoProfile',
+          '-Command',
+          "Import-Module MyModules00 ; jf '" .. jtag .. "' -Passthru",
+        })
+      else
+        local ip = vim.env.BOXX_IP
+        if ip == nil then
+          error('AskUserForJiraTagReturnJfOutput needs to access env var BOXX_IP, but it is not found')
+        end
 
-    local user = vim.env.BOXX_USER
-    if user == nil then
-      error('AskUserForJiraTagReturnJfOutput needs to access env var BOXX_USER, but it is not found')
-    end
+        local user = vim.env.BOXX_USER
+        if user == nil then
+          error('AskUserForJiraTagReturnJfOutput needs to access env var BOXX_USER, but it is not found')
+        end
 
-    local ret = vim.system({ 'jfssh', jtag }, { text = true, stderr = false }):wait()
-    jfoutput = ret.stdout or ''
-  end
+        local ret = vim.system({ 'jfssh', jtag }, { text = true, stderr = false }):wait()
+        jfoutput = ret.stdout or ''
+      end
 
-  jfoutput = vim.trim(jfoutput)
-  if prefix ~= nil and prefix ~= '' then
-    return prefix .. ' ' .. jfoutput
-  end
-
-  return jfoutput
+      jfoutput = vim.trim(jfoutput)
+      if prefix ~= nil and prefix ~= '' then
+        cb(prefix .. ' ' .. jfoutput)
+      else
+        cb(jfoutput)
+      end
+    end)
+  end)
 end
 
 M.code_block = function()
-  local lang = prompt_input('Lang:', '')
-  M.code_block_enable_paste_mode(true)
-  return '```' .. lang .. '\n```'
+  return prompt_with_placeholder(function(cb)
+    prompt_input('Lang:', '', function(lang)
+      if lang == nil then
+        lang = ''
+      end
+      M.code_block_enable_paste_mode(true)
+      cb('```' .. lang .. '\n```')
+    end)
+  end)
 end
 
 M.code_block_enable_paste_mode = function(enable)
@@ -491,7 +600,15 @@ end
 M.get_date_offset = function(dayoffset, prefix)
   local offset = dayoffset
   if offset == nil or offset == '' then
-    offset = prompt_input('Day of offset:', '')
+    return prompt_with_placeholder(function(cb)
+      prompt_input('Day of offset:', '', function(input)
+        if input == nil then
+          input = ''
+        end
+        local seconds = (tonumber(input) or 0) * 60 * 60 * 24
+        cb((prefix or '') .. vim.fn.strftime('%Y-%m-%d %A', vim.fn.localtime() + seconds))
+      end)
+    end)
   end
 
   local seconds = (tonumber(offset) or 0) * 60 * 60 * 24
@@ -501,7 +618,15 @@ end
 M.get_date_offset_no_day = function(offset)
   local day_offset = offset
   if day_offset == nil or day_offset == '' then
-    day_offset = prompt_input('Day of offset:', '')
+    return prompt_with_placeholder(function(cb)
+      prompt_input('Day of offset:', '', function(input)
+        if input == nil then
+          input = ''
+        end
+        local seconds = (tonumber(input) or 0) * 60 * 60 * 24
+        cb(vim.fn.strftime('%Y-%m-%d', vim.fn.localtime() + seconds))
+      end)
+    end)
   end
 
   local seconds = (tonumber(day_offset) or 0) * 60 * 60 * 24
@@ -513,43 +638,82 @@ M.search_and_replace_invalid_sharepoint_link = function()
 end
 
 M.ask_label_for_picture_name_with_title = function(label)
-  local clean_label = prompt_input('Label:', label or '')
-  local body = M.ask_label_for_picture_name(clean_label)
-  return '## ' .. clean_label .. '\n\n' .. M.new_originuuid() .. '\n\n' .. body
+  return prompt_with_placeholder(function(cb)
+    prompt_input('Label:', label or '', function(clean_label)
+      if clean_label == nil then
+        clean_label = ''
+      end
+
+      M.ask_label_for_picture_name_impl(clean_label, function(body)
+        cb('## ' .. clean_label .. '\n\n' .. M.new_originuuid() .. '\n\n' .. body)
+      end)
+    end)
+  end)
+end
+
+local function ask_label_for_picture_name_impl(label, cb)
+  local clean_label = label or ''
+
+  local function process_label(lbl)
+    if lbl == nil then
+      if cb then
+        cb('')
+      end
+      return
+    end
+
+    clean_label = lbl
+    clean_label = strip_terminal_suffix(clean_label) or ''
+    local default_pic_name = clean_label:lower():gsub(' ', '-')
+    default_pic_name = default_pic_name:gsub("'", '')
+    default_pic_name = default_pic_name:gsub('[!@#$%%^&,:*()%-=%[%]/\\ ?|]+', '-')
+
+    prompt_input('Filename:', default_pic_name .. '.', function(pic_name)
+      if pic_name == nil then
+        if cb then
+          cb('')
+        end
+        return
+      end
+
+      local note_parent_folder_name = vim.fn.fnamemodify(vim.fn.expand('%:p'), ':h:t')
+      local note_type_dash_index = note_parent_folder_name:find('-', 1, true)
+      if note_type_dash_index == nil then
+        error("Folder name'" .. note_parent_folder_name .. "' derived from '" .. vim.fn.expand('%:p') .. "' is not supported. No - is found")
+      end
+
+      local folder_name = note_parent_folder_name:sub(1, note_type_dash_index - 1)
+      local pic_path_prefix = folder_name .. '/' .. M.get_date_offset_no_day(0) .. '-'
+      local link = (pic_path_prefix .. pic_name):gsub('/', '\\')
+      if clean_label == '' then
+        clean_label = link
+      end
+
+      local txt = markdown_links.wrap_link('', clean_label, link)
+      local browser_link = markdown_links.prompt_browser_link_sync('', clean_label)
+      if #browser_link > 0 then
+        txt = browser_link .. "\n\n" .. txt
+      end
+
+      if cb then
+        cb(txt)
+      end
+    end)
+  end
+
+  if clean_label == '' then
+    prompt_input('Label:', clean_label, function(lbl)
+      process_label(lbl)
+    end)
+  else
+    process_label(clean_label)
+  end
 end
 
 M.ask_label_for_picture_name = function(label)
-  local clean_label = label or ''
-  if clean_label == '' then
-    clean_label = prompt_input('Label:', clean_label)
-  end
-
-  clean_label = strip_terminal_suffix(clean_label) or ''
-  local default_pic_name = clean_label:lower():gsub(' ', '-')
-  default_pic_name = default_pic_name:gsub("'", '')
-  default_pic_name = default_pic_name:gsub('[!@#$%%^&,:*()%-=%[%]/\\ ?|]+', '-')
-
-  local pic_name = prompt_input('Filename:', default_pic_name .. '.')
-  local note_parent_folder_name = vim.fn.fnamemodify(vim.fn.expand('%:p'), ':h:t')
-  local note_type_dash_index = note_parent_folder_name:find('-', 1, true)
-  if note_type_dash_index == nil then
-    error("Folder name'" .. note_parent_folder_name .. "' derived from '" .. vim.fn.expand('%:p') .. "' is not supported. No - is found")
-  end
-
-  local folder_name = note_parent_folder_name:sub(1, note_type_dash_index - 1)
-  local pic_path_prefix = folder_name .. '/' .. M.get_date_offset_no_day(0) .. '-'
-  local link = (pic_path_prefix .. pic_name):gsub('/', '\\')
-  if clean_label == '' then
-    clean_label = link
-  end
-
-  local txt = markdown_links.wrap_link('', clean_label, link)
-  local browser_link = markdown_links.prompt_browser_link_sync('', clean_label)
-  if #browser_link > 0 then
-    txt = browser_link .. "\n\n" .. txt
-  end
-
-  return txt
+  return prompt_with_placeholder(function(cb)
+    ask_label_for_picture_name_impl(label, cb)
+  end)
 end
 
 return M
