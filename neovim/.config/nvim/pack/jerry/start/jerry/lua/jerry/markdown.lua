@@ -679,7 +679,11 @@ local function ask_label_for_picture_name_impl(label, cb)
       local note_parent_folder_name = vim.fn.fnamemodify(vim.fn.expand('%:p'), ':h:t')
       local note_type_dash_index = note_parent_folder_name:find('-', 1, true)
       if note_type_dash_index == nil then
-        error("Folder name'" .. note_parent_folder_name .. "' derived from '" .. vim.fn.expand('%:p') .. "' is not supported. No - is found")
+        vim.api.nvim_err_writeln("Folder name '" .. note_parent_folder_name .. "' derived from '" .. vim.fn.expand('%:p') .. "' is not supported. No - is found")
+        if cb then
+          cb('')
+        end
+        return
       end
 
       local folder_name = note_parent_folder_name:sub(1, note_type_dash_index - 1)
