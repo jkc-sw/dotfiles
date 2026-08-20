@@ -82,7 +82,7 @@ local function create_placeholder_mark(bufnr, placeholder, row_hint)
   })
 end
 
-local function replace_placeholder(bufnr, extmark_id, txt)
+local function replace_placeholder(bufnr, extmark_id, txt, cursor_offset)
   if not vim.api.nvim_buf_is_valid(bufnr) then
     return
   end
@@ -104,7 +104,11 @@ local function replace_placeholder(bufnr, extmark_id, txt)
     return
   end
 
-  vim.api.nvim_win_set_cursor(0, replacement_end_cursor(row, col, lines))
+  if cursor_offset ~= nil then
+    vim.api.nvim_win_set_cursor(0, { row + cursor_offset[1] + 1, cursor_offset[2] })
+  else
+    vim.api.nvim_win_set_cursor(0, replacement_end_cursor(row, col, lines))
+  end
   vim.cmd.startinsert()
 end
 
@@ -144,9 +148,9 @@ local function prompt_with_placeholder(prompt_func)
     end
 
     local extmark_id = create_placeholder_mark(bufnr, placeholder, row_hint)
-    prompt_func(function(txt)
+    prompt_func(function(txt, cursor_offset)
       vim.schedule(function()
-        replace_placeholder(bufnr, extmark_id, txt)
+        replace_placeholder(bufnr, extmark_id, txt, cursor_offset)
       end)
     end)
   end)
@@ -554,7 +558,7 @@ M.code_block = function()
         lang = ''
       end
       M.code_block_enable_paste_mode(true)
-      cb('```' .. lang .. '\n```')
+      cb('```' .. lang .. '\n\n```', { 1, 0 })
     end)
   end)
 end
