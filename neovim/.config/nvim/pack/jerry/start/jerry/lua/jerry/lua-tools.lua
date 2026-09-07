@@ -36,7 +36,7 @@ function M.format(bufnr)
   local filename = vim.api.nvim_buf_get_name(bufnr)
   local input = table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false), '\n')
   local result = vim.system(
-    { 'stylua', '--stdin-filepath', filename },
+    { 'stylua', '--stdin-filepath', filename, '-' },
     { cwd = project_root(filename), stdin = input, text = true }
   ):wait()
 
