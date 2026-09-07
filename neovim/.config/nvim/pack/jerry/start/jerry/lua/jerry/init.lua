@@ -3,7 +3,13 @@ require('jerry.global-options')
 require('jerry.global-autocommands')
 require('jerry.global-funcs')
 require('jerry.tmux').setup()
+pcall(require('lazydev').setup, {
+  library = {
+    { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+  },
+})
 require('jerry.lsp.config').setup()
+require('jerry.lua-tools').setup()
 
 local work_dir = vim.uv.os_homedir() .. '/.config/nvim'
 if vim.uv.fs_stat(work_dir) then

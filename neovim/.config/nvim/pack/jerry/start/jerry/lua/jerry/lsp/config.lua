@@ -97,6 +97,13 @@ M.setup = function()
           -- (most likely LuaJIT in the case of Neovim)
           version = 'LuaJIT'
         },
+        diagnostics = {
+          globals = { 'vim' },
+        },
+        format = {
+          -- StyLua is the canonical formatter for this configuration.
+          enable = false,
+        },
         -- Make the server aware of Neovim runtime files
         workspace = {
           checkThirdParty = false,
