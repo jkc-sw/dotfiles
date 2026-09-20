@@ -1,5 +1,3 @@
-vim.filetype.add({
-    pattern = {
-        ['want.*.rc'] = 'wantrc'
-    }
-})
+if vim.g.perforce_enabled then
+  require('perforce').setup()
+end

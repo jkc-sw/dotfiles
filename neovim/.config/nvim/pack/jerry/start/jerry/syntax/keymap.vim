@@ -1,3 +1,6 @@
+if !get(g:, 'jerry_enabled', v:false)
+    finish
+endif
 
 " Reference: https://learnvimscriptthehardway.stevelosh.com/chapters/44.html
 " Reference: https://vim.fandom.com/wiki/Creating_your_own_syntax_files

@@ -1,36 +1,50 @@
+local M = {}
 
-require('jerry.global-options')
-require('jerry.global-autocommands')
-require('jerry.global-funcs')
-require('jerry.tmux').setup()
-require('jerry.plugins-cfg.lazydev')
-require('jerry.lsp.config').setup()
-require('jerry.lua-tools').setup()
+local configured = {
+  custom = false,
+  home_manager = false,
+}
 
-local work_dir = vim.uv.os_homedir() .. '/.config/nvim'
-if vim.uv.fs_stat(work_dir) then
-  vim.opt.packpath:prepend(work_dir)
+local defaults = {
+  features = {
+    home_manager = false,
+  },
+}
+
+local function setup_custom_config()
+  if configured.custom then
+    return
+  end
+
+  -- Runtime files shipped by this plugin use this flag to avoid activating
+  -- merely because the plugin is present on runtimepath.
+  vim.g.jerry_enabled = true
+
+  require('jerry.global-options')
+  require('jerry.global-autocommands')
+  require('jerry.global-funcs')
+  require('jerry.tmux').setup()
+  require('jerry.lua-tools').setup()
+
+  configured.custom = true
 end
 
-require('jerry.plugins-cfg.lualine')
-require('jerry.plugins-cfg.colorful-menu')
-require('jerry.plugins-cfg.blink-cmp')
-require('jerry.plugins-cfg.neogit')
-require('jerry.plugins-cfg.lspkind')
-require('jerry.plugins-cfg.nvim-treesitter')
-require('jerry.plugins-cfg.nvim_context_vt')
-require('jerry.plugins-cfg.telescope')
-require('jerry.plugins-cfg.colorizer')
--- This is getting annoying when not signed in to copilot
--- require('jerry.plugins-cfg.sidekick')
+---Configure the custom Neovim layer.
+---
+---Third-party plugin and LSP configuration is intentionally opt-in so that a
+---distribution such as LazyVim can own those integrations.
+---@param opts? { features?: { home_manager?: boolean } }
+function M.setup(opts)
+  opts = vim.tbl_deep_extend('force', defaults, opts or {})
 
--- -- Choose one
--- require('jerry.plugins-cfg.markview')
-require('jerry.plugins-cfg.render-markdown')
+  setup_custom_config()
 
--- -- Choose one or more
--- -- Commented out to save storage space
--- -- require('jerry.plugins-cfg.avante')
--- require('jerry.plugins-cfg.codecompanion')
--- require('jerry.plugins-cfg.copilot')
--- require('jerry.plugins-cfg.copilotchat')
+  if opts.features.home_manager and not configured.home_manager then
+    require('jerry.integrations.home_manager').setup()
+    configured.home_manager = true
+  end
+
+  return M
+end
+
+return M

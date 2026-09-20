@@ -55,11 +55,6 @@ vim.opt.clipboard:append("unnamed")
 vim.opt.diffopt:append("iwhiteeol")
 vim.opt.path:append("**")
 
-vim.g.gruvbox_material_background = "hard"
-vim.g.gruvbox_material_foreground = "material"
-vim.g.gruvbox_material_better_performance = 0
-vim.cmd("colorscheme gruvbox-material")
-
 vim.g.rg_derive_root = true
 vim.g.use_fzf = 0
 
@@ -158,16 +153,4 @@ vim.filetype.add({
     inc = 'bitbake',
     keymap = 'keymap',
   }
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  callback = function()
-    pcall(function()
-      vim.treesitter.start()
-      vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-      -- -- This automatic fold is annoying
-      -- vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-      -- vim.wo[0][0].foldmethod = 'expr'
-    end)
-  end,
 })
