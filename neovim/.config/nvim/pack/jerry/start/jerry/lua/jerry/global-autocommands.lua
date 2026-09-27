@@ -17,30 +17,6 @@ end
 
 ensure_markdown_fenced_languages()
 
--- Clipboard autocmd
-local toClipBoard = vim.api.nvim_create_augroup("toClipBoard", { clear = true })
-if #vim.g.clip_supplier > 0 then
-    vim.api.nvim_create_autocmd("TextYankPost", {
-        group = toClipBoard,
-        pattern = "*",
-        callback = function()
-            local event = vim.v.event
-            if event.operator == "y" and event.regname == "" then
-                local ret = vim.fn.system(vim.g.clip_supplier, vim.fn.getreg('"'))
-                if vim.g.toclip_verbose then
-                    vim.api.nvim_echo({
-                        { table.concat(vim.g.clip_supplier, " ") .. " (" .. vim.v.shell_error .. "): " .. ret }
-                    }, false, {})
-                end
-            end
-        end,
-    })
-else
-    vim.api.nvim_echo({
-        { "No clipboard tool found. Need to be toclip, win32yank.exe or clip.exe", "WarningMsg" }
-    }, false, {})
-end
-
 -- Trim whitespace on save
 vim.api.nvim_create_augroup("nowhitespaceattheend", { clear = true })
 vim.api.nvim_create_autocmd("BufWritePre", {

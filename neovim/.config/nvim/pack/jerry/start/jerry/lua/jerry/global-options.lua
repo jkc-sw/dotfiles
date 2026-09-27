@@ -7,7 +7,6 @@ vim.g.mapleader = " "
 -- vim.o.completeopt = "menuone,noinsert,noselect"
 -- vim.o.number = true
 -- vim.o.relativenumber = true
-vim.g.loaded_clipboard_provider = 1
 vim.g.netrw_banner = 0
 vim.g.netrw_browse_split = 4
 vim.g.netrw_winsize = 25
@@ -144,9 +143,6 @@ map("v", ";", ":", opts)
 map("v", ":", ";", opts)
 map("n", "<c-j>", "<cmd>cnext<cr>|zz", opts)
 map("n", "<c-k>", "<cmd>cprev<cr>|zz", opts)
-
--- let g:clip_supplier = ['toclip']
-vim.g.clip_supplier = { "toclip" }
 
 vim.filetype.add({
   extensions = {

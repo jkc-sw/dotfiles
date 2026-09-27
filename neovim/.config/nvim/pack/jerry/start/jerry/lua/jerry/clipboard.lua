@@ -1,17 +1,19 @@
 
 local M = {}
 
---- @brief Send the content to the clipboard provider
+--- @brief Send the content to vim.g.clip_supplier, or to the `+` register
+--- when no supplier is configured
 --- @param content string
---- @throws No clipboard provider
 M.send_to_clipboard = function(content)
   if not content then
     return
   end
-  if #vim.g.clip_supplier < 1 then
-    error("No clipboard supplier found. Please set vim.g.clip_supplier")
+  local supplier = vim.g.clip_supplier
+  if type(supplier) ~= 'table' or #supplier < 1 then
+    vim.fn.setreg('+', content)
+  else
+    vim.system({supplier[1]}, { stdin = content, text = true }):wait()
   end
-  vim.system({vim.g.clip_supplier[1]}, { stdin = content, text = true }):wait()
   vim.fn.setreg('"', content)
 end
 
