@@ -279,6 +279,19 @@ aoeu () {
     tmux_attach aoeu '' "$1"
 }
 
+# configuration to rg and fd
+# export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+if command -v fd >/dev/null 2>&1; then
+    export FZF_DEFAULT_COMMAND='fd --follow --hidden --type file'
+    export FZF_ALT_C_COMMAND="fd --follow --hidden --type directory"
+elif command -v fdfind >/dev/null 2>&1; then
+    export FZF_DEFAULT_COMMAND='fdfind --follow --hidden --type file'
+    export FZF_ALT_C_COMMAND="fdfind --follow --hidden --type directory"
+    alias fd=fdfind
+fi
+export FZF_DEFAULT_OPTS="--color=dark --height=50%"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
 # Redefine this function to change the options
 _fzf_git_fzf() {
   fzf-tmux -p80%,60% -- \
