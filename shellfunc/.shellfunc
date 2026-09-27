@@ -94,6 +94,9 @@ export TZ='America/Los_Angeles'
 
 export PASSWORD_STORE_DIR="$HOME/repos/mypasswordstore"
 
+# auto mode. This is the only way to set this flag
+export COPILOT_ALLOW_ALL=true
+
 # addThisPath "$HOME/.cargo/bin"
 # addThisPath "$HOME/.local/bin"
 # addThisPath "/usr/local/sbin"
