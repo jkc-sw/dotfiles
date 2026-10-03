@@ -222,7 +222,7 @@ func! jerry#common#FileFuzzySearch()
     if g:use_fzf
         :Files
     else
-        lua require'telescope.builtin'.find_files{find_command = vim.split(vim.env.FZF_DEFAULT_COMMAND, ' ')}
+        lua require'telescope.builtin'.find_files{}
     endif
 endfun
 

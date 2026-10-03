@@ -8,35 +8,43 @@ SOURCE_THESE_VIMS_END
 
 local M = {}
 
---- @brief Setup all the autocommand
---- @throws TBD
+-- Global maps are installed once by jerry.setup(), not on every buffer event.
 M.setup = function()
-  local augroup_id = vim.api.nvim_create_augroup("jerry_tmux", {})
-  vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TabEnter" }, {
-    group = augroup_id,
-    desc = 'TBD',
-    callback = function(ev)
-      local map = vim.keymap.set
-      local opts = { noremap = true, silent = true }
-
-      map("n", "<leader>te", function() M.tmux_send_current_line_to_a_pane(':.+1') end, opts)
-      map("v", "<leader>te", ":<C-U>lua require('jerry.tmux').tmux_send_current_visual_block_to_a_pane(':.+1')<CR>", opts)
-      map("n", "<leader>to", function() M.tmux_send_current_line_to_a_pane(':.-1') end, opts)
-      map("v", "<leader>to", ":<C-U>lua require('jerry.tmux').tmux_send_current_visual_block_to_a_pane(':.-1')<CR>", opts)
-      map("n", "<leader>tu", function() M.tmux_send_current_text_block_to_a_pane(':.+1') end, opts)
-      map("n", "<leader>ta", function() M.tmux_send_current_text_block_to_a_pane(':.-1') end, opts)
-      map("n", "<leader>t.", function() M.tmux_send_cword_under_cursor_to_a_pane(':.+1') end, opts)
-      map("n", "<leader>t,", function() M.tmux_send_cword_under_cursor_to_a_pane(':.-1') end, opts)
-    end
-  })
+  local prefix = vim.g.jerry_legacy and '<leader>t' or '<leader>it'
+  local function map(mode, key, rhs, desc)
+    vim.keymap.set(mode, prefix .. key, rhs, { silent = true, desc = desc })
+  end
+  for _, target in ipairs({ { 'e', ':.+1', 'next' }, { 'o', ':.-1', 'previous' } }) do
+    local key, pane, name = unpack(target)
+    map('n', key, function() M.tmux_send_current_line_to_a_pane(pane) end, 'Send line to ' .. name .. ' tmux pane')
+    map('x', key, ":<C-u>lua require('jerry.tmux').tmux_send_current_visual_block_to_a_pane('" .. pane .. "')<CR>",
+      'Send selection to ' .. name .. ' tmux pane')
+  end
+  map('n', 'u', function() M.tmux_send_current_text_block_to_a_pane(':.+1') end, 'Send block to next tmux pane')
+  map('n', 'a', function() M.tmux_send_current_text_block_to_a_pane(':.-1') end, 'Send block to previous tmux pane')
+  map('n', '.', function() M.tmux_send_cword_under_cursor_to_a_pane(':.+1') end, 'Send word to next tmux pane')
+  map('n', ',', function() M.tmux_send_cword_under_cursor_to_a_pane(':.-1') end, 'Send word to previous tmux pane')
 end
 
 --- @brief Wrapper function to send text to a tmux pane
 --- @param text string the text to send
 --- @param pane string the pane identifier
 local function send_to_tmux_pane(text, pane)
-  local _ = vim.system({'tmux', 'load-buffer', '-'}, { stdin = text .. '\r', text = true }):wait()
-  local _ = vim.system({'tmux', 'paste-buffer', '-t', pane}, { text = true }):wait()
+  if vim.fn.executable('tmux') ~= 1 then
+    vim.notify('Jerry: tmux is required to send text to a pane', vim.log.levels.WARN)
+    return false
+  end
+  -- Use a private buffer so a failed paste cannot send an unrelated user's buffer.
+  local buffer = 'jerry-' .. vim.fn.getpid()
+  local result = vim.system({ 'tmux', 'load-buffer', '-b', buffer, '-' }, { stdin = text .. '\r', text = true }):wait()
+  if result.code == 0 then
+    result = vim.system({ 'tmux', 'paste-buffer', '-d', '-b', buffer, '-t', pane }, { text = true }):wait()
+  end
+  if result.code ~= 0 then
+    vim.notify('Jerry: tmux send failed: ' .. (result.stderr or 'check the tmux server and target pane'), vim.log.levels.WARN)
+    return false
+  end
+  return true
 end
 
 --- @brief Send the current cword from the buffer to another tmux pane
@@ -58,8 +66,9 @@ end
 --- @param pane string the pane identifier
 function M.tmux_send_current_text_block_to_a_pane(pane)
   local lines = vim.fn['jerry#common#GetBlockSelection']()
-  send_to_tmux_pane(lines, pane)
-  vim.cmd("normal! '}")
+  if send_to_tmux_pane(lines, pane) then
+    vim.cmd("normal! '}")
+  end
 end
 
 --- @brief Send the current visual block of text from the buffer to another tmux pane

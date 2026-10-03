@@ -8,10 +8,11 @@ local configured = {
 local defaults = {
   features = {
     home_manager = false,
+    legacy = false,
   },
 }
 
-local function setup_custom_config()
+local function setup_custom_config(legacy)
   if configured.custom then
     return
   end
@@ -20,11 +21,18 @@ local function setup_custom_config()
   -- merely because the plugin is present on runtimepath.
   vim.g.jerry_enabled = true
 
-  require('jerry.global-options')
-  require('jerry.global-autocommands')
+  vim.filetype.add({ extensions = { inc = "bitbake", keymap = "keymap" } })
+  vim.g.jerry_legacy = legacy
+  if legacy then
+    require('jerry.global-options')
+    require('jerry.lua-tools').setup()
+  else
+    require('jerry.custom-keymaps').setup()
+  end
+  require('jerry.global-autocommands').setup({ legacy = legacy })
+  require('jerry.global-commands')
   require('jerry.global-funcs')
   require('jerry.tmux').setup()
-  require('jerry.lua-tools').setup()
 
   configured.custom = true
 end
@@ -33,11 +41,11 @@ end
 ---
 ---Third-party plugin and LSP configuration is intentionally opt-in so that a
 ---distribution such as LazyVim can own those integrations.
----@param opts? { features?: { home_manager?: boolean } }
+---@param opts? { features?: { home_manager?: boolean, legacy?: boolean } }
 function M.setup(opts)
   opts = vim.tbl_deep_extend('force', defaults, opts or {})
 
-  setup_custom_config()
+  setup_custom_config(opts.features.home_manager or opts.features.legacy)
 
   if opts.features.home_manager and not configured.home_manager then
     require('jerry.integrations.home_manager').setup()

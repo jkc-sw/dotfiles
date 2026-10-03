@@ -2,7 +2,8 @@ local M = {}
 
 local configured = false
 
-function M.setup()
+function M.setup(opts)
+  opts = opts or {}
   if configured then
     return M
   end
@@ -14,6 +15,8 @@ function M.setup()
     },
   }
   vim.cmd.runtime('plugin/perforce.vim')
+
+  require('perforce.keymaps').setup(opts.key_prefix or '<leader>e')
 
   configured = true
   return M

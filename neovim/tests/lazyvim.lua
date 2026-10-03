@@ -1,0 +1,51 @@
+-- A headless process has no UIEnter, which lazy.nvim normally waits for.
+vim.api.nvim_exec_autocmds('UIEnter', { modeline = false })
+assert(vim.wait(10000, function() return vim.g.did_very_lazy end), 'VeryLazy did not run')
+assert(vim.g.jerry_enabled, 'jerry not configured')
+for name, plugin in pairs(require('lazy.core.config').plugins) do
+  assert(vim.fn.isdirectory(plugin.dir) == 1, 'plugin installation missing: ' .. name)
+end
+assert(not vim.g.jerry_legacy)
+assert(not package.loaded['jerry.integrations.home_manager'])
+assert(not package.loaded['jerry.lua-tools'])
+assert(vim.g.autoformat == false, 'laptop autoformat preference changed')
+assert(vim.o.signcolumn ~= 'no', 'diagnostic signs hidden')
+assert(not vim.o.undodir:find('/.vim/undodir', 1, true))
+assert(vim.fn.maparg(' b', 'n') == '', 'buffer prefix shadowed')
+assert(vim.fn.maparg('<C-j>', 'n') ~= '', 'LazyVim window binding missing')
+assert(vim.fn.maparg(' im', 'n') ~= '', 'custom marker missing')
+assert(not vim.g.perforce_enabled, 'Perforce enabled without p4')
+vim.cmd.edit('/tmp/lazyvim-journal.md')
+assert(vim.b.jerry_markdown_setup_done, 'custom Markdown ftplugin not loaded')
+assert(vim.fn.maparg(' ite', 'n') ~= '', 'custom tmux mapping missing')
+assert(vim.fn.maparg(' idy', 'n') ~= '', 'custom Markdown mapping missing')
+for _, mode in ipairs({ 'n', 'x' }) do
+  for _, maps in ipairs({ vim.api.nvim_get_keymap(mode), vim.api.nvim_buf_get_keymap(0, mode) }) do
+    for _, map in ipairs(maps) do
+      assert(map.lhs:sub(1, 2) ~= ' j', 'old custom prefix remains: ' .. map.lhs)
+    end
+  end
+end
+vim.cmd.edit('/tmp/format.lua')
+vim.api.nvim_buf_set_lines(0, 0, -1, false, { 'local x={a=1}', 'return x' })
+vim.cmd.write()
+assert(vim.api.nvim_buf_get_lines(0, 0, 1, false)[1] == 'local x={a=1}', 'save ignored autoformat=false')
+assert(require('conform').formatters_by_ft.lua[1] == 'stylua')
+assert(vim.tbl_contains(require('lint').linters_by_ft.lua, 'luacheck'))
+assert(vim.wait(60000, function()
+  return vim.fn.executable('stylua') == 1 and vim.fn.executable('luacheck') == 1
+end, 100), 'Mason Lua tools did not finish installing')
+local format_error
+require('conform').format({ async = false }, function(err) format_error = err end)
+assert(not format_error, vim.inspect(format_error))
+assert(vim.api.nvim_buf_get_lines(0, 0, 1, false)[1] ~= 'local x={a=1}', 'manual formatting failed')
+vim.api.nvim_buf_set_lines(0, 0, -1, false, { 'this_global_is_undefined()' })
+local lint = require('lint')
+lint.try_lint('luacheck')
+assert(vim.wait(10000, function()
+  return #vim.diagnostic.get(0, { namespace = lint.get_namespace('luacheck') }) > 0
+end, 100), 'Luacheck did not publish diagnostics')
+vim.bo.modified = false
+assert(vim.v.errmsg == '', vim.v.errmsg)
+print('LazyVim integration checks passed')
+vim.fn.writefile({ 'LazyVim integration checks passed' }, '/tmp/jerry-lazyvim-result')
