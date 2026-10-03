@@ -3,7 +3,7 @@ local M = {}
 -- Keep the distribution's picker, LSP, formatting and window keys intact.
 function M.setup()
   local function map(mode, suffix, rhs, desc)
-    vim.keymap.set(mode, '<leader>j' .. suffix, rhs, { silent = true, desc = desc })
+    vim.keymap.set(mode, '<leader>i' .. suffix, rhs, { silent = true, desc = desc })
   end
   map('n', 'sl', function()
     require('jerry.sourcer').lua_sourcer('SOURCE_THESE_LUAS_START', 'SOURCE_THESE_LUAS_END')

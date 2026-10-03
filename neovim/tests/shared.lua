@@ -26,12 +26,21 @@ assert(#qf == 2 and vim.api.nvim_buf_get_name(qf[1].bufnr) == '/tmp/a b.lua')
 vim.cmd('filetype plugin on')
 vim.cmd.edit('/tmp/journal.md')
 assert(vim.b.jerry_markdown_setup_done)
+assert(vim.fn.maparg(' ite', 'n') ~= '', 'custom tmux mapping missing')
+assert(vim.fn.maparg(' idy', 'n') ~= '', 'custom Markdown mapping missing')
+for _, mode in ipairs({ 'n', 'x' }) do
+  for _, maps in ipairs({ vim.api.nvim_get_keymap(mode), vim.api.nvim_buf_get_keymap(0, mode) }) do
+    for _, map in ipairs(maps) do
+      assert(map.lhs:sub(1, 2) ~= ' j', 'old custom prefix remains: ' .. map.lhs)
+    end
+  end
+end
 assert(vim.fn.maparg('ats', 'i', true):find('get_date_offset', 1, true), 'journal date abbreviation overwritten')
 vim.cmd.enew()
 vim.bo.filetype = 'lua'
 assert(vim.fn.maparg('ats', 'i', true) == '', 'Markdown abbreviation leaked')
 vim.api.nvim_buf_set_lines(0, 0, -1, false, { 'vim.g.jerry_eval_test = 42' })
-vim.fn.maparg(' jel', 'n', false, true).callback()
+vim.fn.maparg(' iel', 'n', false, true).callback()
 assert(vim.g.jerry_eval_test == 42, 'custom Lua evaluation failed')
 vim.bo.modified = false
 require('perforce').setup({ key_prefix = '<localleader>p' })

@@ -46,23 +46,23 @@ Perforce uses `<localleader>p` in the LazyVim spec (for example,
 `<localleader>po` lists opened files). Its default `<leader>e` prefix remains
 available to Home Manager.
 
-The default personal key namespace is `<leader>j`; each key below follows
+The default personal key namespace is `<leader>i`; each key below follows
 `<leader>`:
 
 | Keys | Action |
 | --- | --- |
-| `jsl`, `jsv` | Source marked Lua or Vimscript blocks |
-| `jel`, `jev` | Evaluate line or visual selection as Lua or Vimscript |
-| `jm` | Jump to a personal marker |
-| `jT` | Send line or visual selection to a Neovim terminal |
-| `jte`, `jto` | Send line or selection to next/previous tmux pane |
-| `jtu`, `jta` | Send text block to next/previous tmux pane |
-| `jt.`, `jt,` | Send word to next/previous tmux pane |
-| `jd[`, `jd]` | Previous/next Markdown journal heading |
-| `jdy` | Yank fenced Markdown code |
-| `jdt`, `jdn`, `jdf`, `jdh` | Copy multiline, single-line, Vim, or shell jump snippet |
-| `jdu`, `jdb`, `jdU` | Insert timestamp, insert break, or copy line into journal |
-| `jda` | Format Markdown table or visual selection |
+| `isl`, `isv` | Source marked Lua or Vimscript blocks |
+| `iel`, `iev` | Evaluate line or visual selection as Lua or Vimscript |
+| `im` | Jump to a personal marker |
+| `iT` | Send line or visual selection to a Neovim terminal |
+| `ite`, `ito` | Send line or selection to next/previous tmux pane |
+| `itu`, `ita` | Send text block to next/previous tmux pane |
+| `it.`, `it,` | Send word to next/previous tmux pane |
+| `id[`, `id]` | Previous/next Markdown journal heading |
+| `idy` | Yank fenced Markdown code |
+| `idt`, `idn`, `idf`, `idh` | Copy multiline, single-line, Vim, or shell jump snippet |
+| `idu`, `idb`, `idU` | Insert timestamp, insert break, or copy line into journal |
+| `ida` | Format Markdown table or visual selection |
 
 Markdown mappings and abbreviations are buffer-local. Tmux helpers require
 `tmux` and a reachable server. Markdown origin tags require `uuidgen` and
