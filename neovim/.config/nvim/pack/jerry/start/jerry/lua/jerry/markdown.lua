@@ -165,6 +165,10 @@ M.setup_buffer = function()
   end
   vim.b.jerry_markdown_setup_done = true
 
+  local function key(legacy, suffix)
+    return vim.g.jerry_legacy and legacy or '<leader>jd' .. suffix
+  end
+
   vim.opt_local.wrap = true
   vim.opt_local.spell = true
   vim.opt_local.linebreak = true
@@ -175,55 +179,55 @@ M.setup_buffer = function()
   -- 'list:-1' tells Vim to align soft-wrapped lines with the list text.
   vim.opt_local.breakindentopt = "list:-1"
 
-  vim.keymap.set('n', '<leader>th', function()
+  vim.keymap.set('n', key('<leader>th', '['), function()
     vim.fn.search('^## \\d\\{4}-\\d\\{2}-\\d\\{2}', 'bW')
   end, { buffer = 0, desc = 'Jump to previous journal heading' })
 
-  vim.keymap.set('n', '<leader>tn', function()
+  vim.keymap.set('n', key('<leader>tn', ']'), function()
     vim.fn.search('^## \\d\\{4}-\\d\\{2}-\\d\\{2}', 'W')
   end, { buffer = 0, desc = 'Jump to next journal heading' })
 
   -- yank the lines between the nearest surrounding ``` fences (exclusive)
   vim.keymap.set(
     'n',
-    '<leader>ne',
+    key('<leader>ne', 'y'),
     [[<cmd>?^```?+1,/^```/-1 y<CR>]],
-    { buffer = 0, noremap = true, silent = true }
+    { buffer = 0, noremap = true, silent = true, desc = 'Yank fenced code' }
   )
 
-  vim.keymap.set('n', '<leader>pt', function()
+  vim.keymap.set('n', key('<leader>pt', 't'), function()
     send_to_clipboard(M.new_search_pattern_as_markdown_multiline_code_block())
     print('pt content sent to clipboard')
   end, { buffer = 0, desc = 'Copy multiline jump snippet' })
 
-  vim.keymap.set('n', '<leader>pn', function()
+  vim.keymap.set('n', key('<leader>pn', 'n'), function()
     send_to_clipboard(M.new_search_pattern_as_markdown_singleline_code_block())
     print('pn content sent to clipboard')
   end, { buffer = 0, desc = 'Copy single-line jump snippet' })
 
-  vim.keymap.set('n', '<leader>pf', function()
+  vim.keymap.set('n', key('<leader>pf', 'f'), function()
     send_to_clipboard(M.new_search_pattern_from_inside_vim())
     print('pf content sent to clipboard')
   end, { buffer = 0, desc = 'Copy Vim jump snippet' })
 
-  vim.keymap.set('n', '<leader>ph', function()
+  vim.keymap.set('n', key('<leader>ph', 'h'), function()
     send_to_clipboard(M.new_search_pattern_from_shell_without_markup())
     print('ph content sent to clipboard')
   end, { buffer = 0, desc = 'Copy shell jump snippet' })
 
-  vim.keymap.set('n', '<leader>.u', [[gg/^-<space>/<CR>}O<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p ')<CR>]], { buffer = 0 })
-  vim.keymap.set('n', '<leader>.b', [[gg/^-<space>/<CR>}O<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p Break ')<CR><Esc>A]], { buffer = 0 })
-  vim.keymap.set('n', '<leader>,u', [["ryygg/^-<space>/<CR>}"rP0d4Wi<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p ')<CR><Esc>A ]], { buffer = 0 })
+  vim.keymap.set('n', key('<leader>.u', 'u'), [[gg/^-<space>/<CR>}O<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p ')<CR>]], { buffer = 0, desc = 'Insert journal timestamp' })
+  vim.keymap.set('n', key('<leader>.b', 'b'), [[gg/^-<space>/<CR>}O<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p Break ')<CR><Esc>A]], { buffer = 0, desc = 'Insert journal break' })
+  vim.keymap.set('n', key('<leader>,u', 'U'), [["ryygg/^-<space>/<CR>}"rP0d4Wi<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p ')<CR><Esc>A ]], { buffer = 0, desc = 'Copy line to journal' })
 
-  vim.fn.setreg('c', vim.api.nvim_replace_termcodes([[V/^## \<CR>k"Ld]], true, false, true))
+  if vim.g.jerry_legacy then
+    vim.fn.setreg('c', vim.api.nvim_replace_termcodes([[V/^## \<CR>k"Ld]], true, false, true))
+  end
 
-  vim.keymap.set("v", "<leader>tf", function()
-    local s = vim.fn.getpos("'<")[2]
-    local e = vim.fn.getpos("'>")[2]
-    M.replace_range(s, e)
-  end, { buffer = 0, desc = "Format selection as markdown table" })
+  vim.keymap.set("x", key('<leader>tf', 'a'),
+    ":<C-u>lua require('jerry.markdown').replace_range(vim.fn.line(\"'<\"), vim.fn.line(\"'>\"))<CR>",
+    { buffer = 0, desc = "Format selection as markdown table" })
 
-  vim.keymap.set("n", "<leader>tf", function()
+  vim.keymap.set("n", key('<leader>tf', 'a'), function()
     local buf = vim.api.nvim_buf_get_lines(0, 0, -1, false)
     local total = #buf
     local row = vim.api.nvim_win_get_cursor(0)[1]
@@ -314,8 +318,9 @@ end
 --- @param pattern string
 --- @return {filepath: string, line_number: integer}[]
 M.get_filename_linenum_of_a_pattern = function(pattern)
-  -- I don't check whether rg exist. I am using home-manager with nix to build neovim setup.
-  -- Ripgrep is a dependency for my neovim install
+  if vim.fn.executable('rg') ~= 1 then
+    error('Jerry Markdown: ripgrep (rg) is required to find origin tags')
+  end
   local cmd = {
     "rg",
     "--column",
@@ -399,8 +404,15 @@ end
 --- @return string
 --- @throws string Error message if the tag format is invalid, ripgrep fails, or multiple results are found.
 M.new_originuuid = function()
+  if vim.fn.executable('uuidgen') ~= 1 then
+    error('Jerry Markdown: uuidgen is required to create origin tags')
+  end
   for attempt_num = 1, 3, 1 do
-    local uuid = string.sub(vim.system({ 'uuidgen' }, { text = true }):wait().stdout, 1, -2)
+    local result = vim.system({ 'uuidgen' }, { text = true }):wait()
+    if result.code ~= 0 or not result.stdout or vim.trim(result.stdout) == '' then
+      error('Jerry Markdown: uuidgen failed: ' .. (result.stderr or 'empty output'))
+    end
+    local uuid = vim.trim(result.stdout)
     local out = 'origin:' .. uuid
     local matches = M.get_filename_linenum_of_a_pattern(out)
     if #matches == 0 then
@@ -493,8 +505,16 @@ end
 ---@return string[] formatted The same table with every column padded
 ---         so that pipes are vertically aligned.
 M.fmt_table = function(lines)
+  if vim.fn.executable('column') ~= 1 or vim.fn.executable('tr') ~= 1 then
+    vim.notify('Jerry Markdown: table formatting requires column and tr', vim.log.levels.WARN)
+    return lines
+  end
   local stdin = table.concat(lines, "\n")
   local out = vim.fn.systemlist("tr -s ' ' | column -t -s '|' -o '|'", stdin)
+  if vim.v.shell_error ~= 0 then
+    vim.notify('Jerry Markdown: table formatting failed; check column supports -o', vim.log.levels.WARN)
+    return lines
+  end
   return out
 end
 
@@ -510,6 +530,11 @@ M.replace_range = function(s_row, e_row)
 end
 
 M.ask_user_for_jira_tag_return_jf_output = function(prefix)
+  local executable = vim.fn.has('win32') == 1 and 'pwsh.exe' or 'jfssh'
+  if vim.fn.executable(executable) ~= 1 then
+    vim.notify('Jerry Markdown: Jira lookup requires ' .. executable, vim.log.levels.WARN)
+    return ''
+  end
   return prompt_with_placeholder(function(cb)
     prompt_input('Jira tag:', '', function(jtag)
       if jtag == nil or jtag == '' then
@@ -524,20 +549,34 @@ M.ask_user_for_jira_tag_return_jf_output = function(prefix)
           'pwsh.exe',
           '-NoProfile',
           '-Command',
-          "Import-Module MyModules00 ; jf '" .. jtag .. "' -Passthru",
+          "Import-Module MyModules00 ; jf '" .. jtag:gsub("'", "''") .. "' -Passthru",
         })
+        if vim.v.shell_error ~= 0 then
+          vim.notify('Jerry Markdown: Jira lookup failed; check MyModules00 and jf', vim.log.levels.WARN)
+          cb('')
+          return
+        end
       else
         local ip = vim.env.BOXX_IP
         if ip == nil then
-          error('AskUserForJiraTagReturnJfOutput needs to access env var BOXX_IP, but it is not found')
+          vim.notify('Jerry Markdown: Jira lookup requires BOXX_IP', vim.log.levels.WARN)
+          cb('')
+          return
         end
 
         local user = vim.env.BOXX_USER
         if user == nil then
-          error('AskUserForJiraTagReturnJfOutput needs to access env var BOXX_USER, but it is not found')
+          vim.notify('Jerry Markdown: Jira lookup requires BOXX_USER', vim.log.levels.WARN)
+          cb('')
+          return
         end
 
-        local ret = vim.system({ 'jfssh', jtag }, { text = true, stderr = false }):wait()
+        local ret = vim.system({ 'jfssh', jtag }, { text = true }):wait()
+        if ret.code ~= 0 then
+          vim.notify('Jerry Markdown: Jira lookup failed: ' .. (ret.stderr or ''), vim.log.levels.WARN)
+          cb('')
+          return
+        end
         jfoutput = ret.stdout or ''
       end
 
