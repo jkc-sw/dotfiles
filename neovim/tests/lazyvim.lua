@@ -13,16 +13,16 @@ assert(vim.o.signcolumn ~= 'no', 'diagnostic signs hidden')
 assert(not vim.o.undodir:find('/.vim/undodir', 1, true))
 assert(vim.fn.maparg(' b', 'n') == '', 'buffer prefix shadowed')
 assert(vim.fn.maparg('<C-j>', 'n') ~= '', 'LazyVim window binding missing')
-assert(vim.fn.maparg(' im', 'n') ~= '', 'custom marker missing')
+assert(vim.fn.maparg(' am', 'n') ~= '', 'custom marker missing')
 assert(not vim.g.perforce_enabled, 'Perforce enabled without p4')
 vim.cmd.edit('/tmp/lazyvim-journal.md')
 assert(vim.b.jerry_markdown_setup_done, 'custom Markdown ftplugin not loaded')
-assert(vim.fn.maparg(' ite', 'n') ~= '', 'custom tmux mapping missing')
-assert(vim.fn.maparg(' idy', 'n') ~= '', 'custom Markdown mapping missing')
+assert(vim.fn.maparg(' ate', 'n') ~= '', 'custom tmux mapping missing')
+assert(vim.fn.maparg(' ady', 'n') ~= '', 'custom Markdown mapping missing')
 for _, mode in ipairs({ 'n', 'x' }) do
   for _, maps in ipairs({ vim.api.nvim_get_keymap(mode), vim.api.nvim_buf_get_keymap(0, mode) }) do
     for _, map in ipairs(maps) do
-      assert(map.lhs:sub(1, 2) ~= ' j', 'old custom prefix remains: ' .. map.lhs)
+      assert(map.lhs:sub(1, 2) ~= ' j' and map.lhs:sub(1, 2) ~= ' i', 'old custom prefix remains: ' .. map.lhs)
     end
   end
 end

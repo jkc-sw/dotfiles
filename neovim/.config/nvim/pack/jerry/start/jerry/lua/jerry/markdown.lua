@@ -166,7 +166,7 @@ M.setup_buffer = function()
   vim.b.jerry_markdown_setup_done = true
 
   local function key(legacy, suffix)
-    return vim.g.jerry_legacy and legacy or '<leader>id' .. suffix
+    return vim.g.jerry_legacy and legacy or '<leader>ad' .. suffix
   end
 
   vim.opt_local.wrap = true

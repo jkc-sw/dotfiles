@@ -10,7 +10,7 @@ local M = {}
 
 -- Global maps are installed once by jerry.setup(), not on every buffer event.
 M.setup = function()
-  local prefix = vim.g.jerry_legacy and '<leader>t' or '<leader>it'
+  local prefix = vim.g.jerry_legacy and '<leader>t' or '<leader>at'
   local function map(mode, key, rhs, desc)
     vim.keymap.set(mode, prefix .. key, rhs, { silent = true, desc = desc })
   end
