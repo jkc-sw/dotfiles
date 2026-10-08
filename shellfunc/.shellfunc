@@ -248,6 +248,12 @@ tmux_attach() {
         return 0
     fi
 
+    # tmux silently rewrites '.' to '_' in session names, so the attach would fail
+    if [[ "$name" == *.* ]]; then
+        echoerror "Session name '$name' must not contain '.'"
+        return 1
+    fi
+
     local client_session
     client_session="$(tmux display-message -p '#{client_session}')"
 
