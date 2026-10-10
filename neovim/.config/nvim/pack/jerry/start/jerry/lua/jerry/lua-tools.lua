@@ -1,6 +1,6 @@
 local M = {}
 
-local namespace = vim.api.nvim_create_namespace('jerry_luacheck')
+local namespace = vim.api.nvim_create_namespace 'jerry_luacheck'
 local missing_tools = {}
 
 local function notify_missing(tool)
@@ -15,8 +15,7 @@ local function notify_missing(tool)
 end
 
 local function project_root(filename)
-  return vim.fs.root(filename, { '.stylua.toml', '.luacheckrc' })
-    or vim.fn.fnamemodify(filename, ':h')
+  return vim.fs.root(filename, { '.stylua.toml', '.luacheckrc' }) or vim.fn.fnamemodify(filename, ':h')
 end
 
 local function is_lua_buffer(bufnr)
@@ -28,17 +27,16 @@ function M.format(bufnr)
   if not is_lua_buffer(bufnr) then
     return
   end
-  if vim.fn.executable('stylua') ~= 1 then
-    notify_missing('stylua')
+  if vim.fn.executable 'stylua' ~= 1 then
+    notify_missing 'stylua'
     return
   end
 
   local filename = vim.api.nvim_buf_get_name(bufnr)
   local input = table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false), '\n')
-  local result = vim.system(
-    { 'stylua', '--stdin-filepath', filename, '-' },
-    { cwd = project_root(filename), stdin = input, text = true }
-  ):wait()
+  local command = { 'stylua', '--stdin-filepath', filename, '-' }
+  local options = { cwd = project_root(filename), stdin = input, text = true }
+  local result = vim.system(command, options):wait()
 
   if result.code ~= 0 then
     vim.notify(('StyLua failed: %s'):format(result.stderr), vim.log.levels.ERROR)
@@ -61,8 +59,8 @@ function M.lint(bufnr)
   if not is_lua_buffer(bufnr) then
     return
   end
-  if vim.fn.executable('luacheck') ~= 1 then
-    notify_missing('luacheck')
+  if vim.fn.executable 'luacheck' ~= 1 then
+    notify_missing 'luacheck'
     return
   end
 
@@ -78,7 +76,7 @@ function M.lint(bufnr)
       end
       local diagnostics = {}
       for line in vim.gsplit(result.stdout, '\n', { plain = true, trimempty = true }) do
-        local _, lnum, col, end_col, code, message = line:match('^(.-):(%d+):(%d+)%-(%d+): %((%u%d+)%) (.*)$')
+        local _, lnum, col, end_col, code, message = line:match '^(.-):(%d+):(%d+)%-(%d+): %((%u%d+)%) (.*)$'
         if lnum then
           table.insert(diagnostics, {
             lnum = tonumber(lnum) - 1,
@@ -96,15 +94,19 @@ function M.lint(bufnr)
   end)
 end
 
-function M.setup()
+---@param opts? { format?: boolean }
+function M.setup(opts)
+  opts = opts or {}
   local group = vim.api.nvim_create_augroup('jerry_lua_tools', { clear = true })
-  vim.api.nvim_create_autocmd('BufWritePre', {
-    group = group,
-    pattern = '*.lua',
-    callback = function(event)
-      M.format(event.buf)
-    end,
-  })
+  if opts.format ~= false then
+    vim.api.nvim_create_autocmd('BufWritePre', {
+      group = group,
+      pattern = '*.lua',
+      callback = function(event)
+        M.format(event.buf)
+      end,
+    })
+  end
   vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost' }, {
     group = group,
     pattern = '*.lua',

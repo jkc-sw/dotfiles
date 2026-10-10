@@ -1,6 +1,6 @@
 require('blink.cmp').setup {
   keymap = {
-    preset = 'default',
+    preset = 'enter',
     ['<Tab>'] = false, -- conflict with CopilotChat
   },
   appearance = {
@@ -40,15 +40,12 @@ require('blink.cmp').setup {
   },
   signature = { enabled = true },
   sources = {
-    -- default = { "lsp", "path", "snippets", "buffer" },
-    default = { 'avante', 'lsp', 'path', 'snippets', 'buffer' },
+    default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
     providers = {
-      avante = {
-        module = 'blink-cmp-avante',
-        name = 'Avante',
-        opts = {
-          -- options for blink-cmp-avante
-        },
+      lazydev = {
+        module = 'lazydev.integrations.blink',
+        name = 'LazyDev',
+        score_offset = 100,
       },
     },
   },

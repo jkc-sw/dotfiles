@@ -7,3 +7,12 @@ PowerShellEditorServices.json
 result
 .zcompdump
 /neovim/.config/github-copilot
+.jj/
+.env
+.env.*
+!.env.example
+# Machine-local Neovim overrides and generated state can contain credentials.
+/neovim/.config/nvim/lua/config/local.lua
+/neovim/.config/nvim/lua/plugins/local.lua
+/neovim/.local/state/nvim/
+/neovim/.local/share/nvim/

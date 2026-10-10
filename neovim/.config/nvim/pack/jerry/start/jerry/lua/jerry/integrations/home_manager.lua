@@ -1,6 +1,9 @@
 local M = {}
 
 local plugin_configs = {
+  'jerry.plugins-cfg.snacks',
+  'jerry.plugins-cfg.editor',
+  'jerry.plugins-cfg.conform',
   'jerry.plugins-cfg.lualine',
   'jerry.plugins-cfg.colorful-menu',
   'jerry.plugins-cfg.blink-cmp',
@@ -13,6 +16,27 @@ local plugin_configs = {
   'jerry.plugins-cfg.render-markdown',
 }
 
+local function setup_options()
+  vim.g.maplocalleader = '\\'
+  vim.g.have_nerd_font = true
+  vim.g.autoformat = true
+  vim.opt.number = true
+  vim.opt.relativenumber = true
+  vim.opt.signcolumn = 'yes'
+  vim.opt.mouse = 'a'
+  vim.opt.scrolloff = 8
+  vim.opt.sidescrolloff = 8
+  vim.opt.splitkeep = 'screen'
+  vim.opt.timeoutlen = 300
+  vim.opt.updatetime = 200
+  vim.opt.tabstop = 2
+  vim.opt.shiftwidth = 2
+  vim.opt.softtabstop = 2
+  vim.opt.pumheight = 10
+  vim.opt.undodir = vim.fn.stdpath 'state' .. '/undo'
+  vim.fn.mkdir(vim.o.undodir, 'p')
+end
+
 local function add_user_config_to_packpath()
   local user_config = vim.uv.os_homedir() .. '/.config/nvim'
   if vim.uv.fs_stat(user_config) then
@@ -24,7 +48,7 @@ local function setup_colorscheme()
   vim.g.gruvbox_material_background = 'hard'
   vim.g.gruvbox_material_foreground = 'material'
   vim.g.gruvbox_material_better_performance = 0
-  vim.cmd.colorscheme('gruvbox-material')
+  vim.cmd.colorscheme 'gruvbox-material'
 end
 
 -- Yanks are piped to an external clipboard tool instead of Neovim's
@@ -46,7 +70,7 @@ local function setup_clipboard()
     callback = function()
       local event = vim.v.event
       if event.operator == 'y' and event.regname == '' then
-        local ret = vim.fn.system(vim.g.clip_supplier, vim.fn.getreg('"'))
+        local ret = vim.fn.system(vim.g.clip_supplier, vim.fn.getreg '"')
         if vim.g.toclip_verbose then
           vim.api.nvim_echo({
             { table.concat(vim.g.clip_supplier, ' ') .. ' (' .. vim.v.shell_error .. '): ' .. ret },
@@ -70,10 +94,11 @@ local function setup_treesitter()
 end
 
 function M.setup()
+  setup_options()
   setup_clipboard()
   setup_colorscheme()
 
-  require('jerry.plugins-cfg.lazydev')
+  require 'jerry.plugins-cfg.lazydev'
   require('jerry.lsp.config').setup()
 
   add_user_config_to_packpath()
@@ -83,6 +108,7 @@ function M.setup()
   end
 
   setup_treesitter()
+  require('jerry.integrations.home_manager.keymaps').setup()
 end
 
 return M

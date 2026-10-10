@@ -40,6 +40,59 @@ This enables the shared custom options, keymaps, autocommands, filetype
 support, and Lua utilities without applying the Home Manager plugin or LSP
 configuration.
 
+### Home Manager editing profile
+
+With `features.home_manager = true`, the editor uses LazyVim-style defaults:
+relative line numbers, a visible sign column, two-space indentation, Snacks
+pickers and explorer, a dashboard, bufferline, which-key hints, Gitsigns,
+Flash, Trouble, Todo comments, mini.ai, mini.pairs, and Persistence sessions.
+Gruvbox Material, the shared custom tools, MATLAB, Perforce, and the `toclip`
+integration are retained. These third-party setups are never applied by the
+LazyVim integrator.
+
+Home Manager supplies all plugins and executables through Nix. There is no
+lazy.nvim or Mason bootstrap in this profile. Telescope remains available for
+the custom pickers, while Snacks owns `vim.ui.select` and the main search keys.
+Blink completion uses Enter to accept a selection and includes LazyDev support.
+
+Useful keys (the leader is Space):
+
+| Keys | Action |
+| --- | --- |
+| `<leader><space>`, `<leader>ff`, `<C-p>` | Find files at the LSP/Git root |
+| `<leader>fF`, `<leader>sG` | Find files / grep in the current directory |
+| `<leader>/`, `<leader>sg` | Grep at the LSP/Git root |
+| `<leader>,`, `<leader>fb` | Buffers |
+| `<leader>e`, `<leader>E` | Explorer at the root / current directory |
+| `<S-h>`, `<S-l>`, `[b`, `]b` | Previous / next buffer |
+| `<leader>bd`, `<leader>bo` | Delete buffer / other buffers, preserving splits |
+| `<C-h/j/k/l>`, `<leader>w-`, `<leader>w\|` | Window navigation and splits |
+| `s`, `S` | Flash jump / Tree-sitter selection |
+| `<leader>gg`, `<leader>gs`, `<leader>gh*` | Lazygit, Git status, hunk actions |
+| `gd`, `gr`, `gI`, `gy`, `K` | LSP navigation and hover |
+| `<leader>ca`, `<leader>cr`, `<leader>cf` | Code actions, rename, format |
+| `<leader>xx`, `<leader>xX`, `[d`, `]d` | Diagnostics and navigation |
+| `<leader>qs`, `<leader>qS`, `<leader>ql` | Restore / select / last session |
+| `<leader>ft`, `<C-/>` | Terminal at the project root |
+| `<leader>uf`, `<leader>uF` | Toggle global / buffer autoformat |
+
+The old `<leader>b` buffer picker moves to `<leader>,` / `<leader>fb` so that
+buffer commands have a prefix. The old `<leader>gs` LSP health command moves to
+`<leader>cl` / `<leader>gL`, and `<leader>gg` stop-LSP moves to `<leader>gQ`.
+The former Ctrl-j/Ctrl-k quickfix navigation is available as `]q` / `[q`.
+Most other custom keys remain available, including `<leader>po`,
+`<leader>ps`, `<leader>gf`, and the sourcing/tmux/Perforce keys.
+
+Conform formats on save using StyLua, Alejandra, shfmt, Ruff, or prettierd
+according to filetype, falling back to an attached LSP formatter. The Nix
+module supplies these tools. `:ConformInfo` shows the active formatter.
+The shared Lua save formatter is disabled in this profile to avoid formatting
+twice; `:LuaFormat`, `:LuaLint`, and Luacheck diagnostics remain available.
+Use either autoformat toggle to pause formatting. Sessions, undo data, and
+picker history live under Neovim's XDG data/state directories, outside this
+repository. Keep machine-specific credentials in environment variables or
+ignored local overrides, never in plugin configuration.
+
 ## Lua tooling
 
 The shared configuration uses:
