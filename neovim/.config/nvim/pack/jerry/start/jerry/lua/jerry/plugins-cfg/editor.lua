@@ -28,6 +28,7 @@ require('flash').setup { modes = { char = { enabled = false } } }
 require('mini.ai').setup { n_lines = 500 }
 require('mini.pairs').setup {}
 require('trouble').setup {}
+require('grug-far').setup { headerMaxWidth = 80 }
 require('todo-comments').setup {}
 require('persistence').setup {}
 
@@ -44,4 +45,5 @@ which_key.add {
   { '<leader>u', group = 'UI' },
   { '<leader>w', group = 'windows' },
   { '<leader>x', group = 'diagnostics/quickfix' },
+  { '<leader><tab>', group = 'tabs' },
 }

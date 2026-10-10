@@ -1,5 +1,5 @@
 -- Set <Space> as leader
-vim.g.mapleader = " "
+vim.g.mapleader = ' '
 
 -- Native settings
 -- vim.cmd("filetype plugin on")
@@ -10,9 +10,9 @@ vim.g.mapleader = " "
 vim.g.netrw_banner = 0
 vim.g.netrw_browse_split = 4
 vim.g.netrw_winsize = 25
-vim.g.vimsyn_embed = "l"
+vim.g.vimsyn_embed = 'l'
 vim.o.autoindent = true
-vim.o.background = "dark"
+vim.o.background = 'dark'
 vim.o.backup = false
 vim.o.cmdheight = 1
 vim.o.cursorline = true
@@ -20,23 +20,23 @@ vim.o.errorbells = false
 vim.o.expandtab = true
 vim.o.fixendofline = false
 vim.o.foldenable = false
-vim.o.grepprg = "rg --line-number --color=never"
-vim.o.guicursor = "i-ci-ve:block-blinkwait175-blinkoff150-blinkon175"
+vim.o.grepprg = 'rg --line-number --color=never'
+vim.o.guicursor = 'i-ci-ve:block-blinkwait175-blinkoff150-blinkon175'
 vim.o.hidden = true
 vim.o.hlsearch = false
 vim.o.ignorecase = true
-vim.o.inccommand = "split"
+vim.o.inccommand = 'split'
 vim.o.incsearch = true
 vim.o.list = true
 vim.opt.laststatus = 3 -- Recommended by avante.nvim
-vim.o.mouse = "nv"
+vim.o.mouse = 'nv'
 vim.o.regexpengine = 1
 vim.o.scrolloff = 5
 vim.o.shiftround = true
 vim.o.shiftwidth = 4
-vim.o.shortmess = vim.o.shortmess .. "c"
+vim.o.shortmess = vim.o.shortmess .. 'c'
 vim.o.showmode = false
-vim.o.signcolumn = "no"
+vim.o.signcolumn = 'no'
 vim.o.smartcase = true
 vim.o.smartindent = true
 vim.o.softtabstop = 4
@@ -45,108 +45,91 @@ vim.o.splitright = true
 vim.o.swapfile = false
 vim.o.tabstop = 4
 vim.o.termguicolors = true
-vim.o.undodir = vim.fn.expand("~/.vim/undodir")
+vim.o.undodir = vim.fn.expand '~/.vim/undodir'
 vim.o.undofile = true
 vim.o.updatetime = 50
 vim.o.wildmenu = true
 vim.o.wrap = false
-vim.opt.clipboard:append("unnamed")
-vim.opt.diffopt:append("iwhiteeol")
-vim.opt.path:append("**")
+vim.opt.clipboard:append 'unnamed'
+vim.opt.diffopt:append 'iwhiteeol'
+vim.opt.path:append '**'
 
 vim.g.rg_derive_root = true
 vim.g.use_fzf = 0
 
--- Keymaps
-local map = vim.keymap.set
-local opts = { noremap = true, silent = true }
+-- Shared mappings only cover actions without a LazyVim default shortcut.
+-- Each integrator owns navigation, search, LSP, diagnostics, and tab controls.
+local function map(mode, lhs, rhs, desc)
+  vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
+end
 
-map("n", "<leader>h", "<cmd>wincmd h<CR>", opts)
-map("n", "<leader>j", "<cmd>wincmd j<CR>", opts)
-map("n", "<leader>k", "<cmd>wincmd k<CR>", opts)
-map("n", "<leader>l", "<cmd>wincmd l<CR>", opts)
-map("n", "<leader>U", "<cmd>UndotreeShow<CR>", opts)
-map("n", "<leader>pv", "<cmd>vertical topleft wincmd v | Ex | vertical resize 50<CR>", opts)
-map("n", "<leader>pp", "<cmd>call jerry#common#TogglePasteMode()<CR>", opts)
-map("n", "<leader>r", "<cmd>silent exec '!tswitch -c nv'<CR>", opts)
-map("n", "<leader>,.", "<cmd>call execute(getline('.'), '')<CR>", opts)
-map("v", "<leader>,.", ":<C-u>lua require('jerry.sourcer').eval_vimscript(table.concat(vim.fn['jerry#common#GetVisualSelectionAsList'](), '\\n'))<CR>", opts)
-map("n", "<leader>,p", "<cmd>call luaeval(getline('.'), '')<CR>", opts)
-map("v", "<leader>,p", ":<C-u>lua require('jerry.sourcer').eval_lua(table.concat(vim.fn['jerry#common#GetVisualSelectionAsList'](), '\\n'))<CR>", opts)
-map("n", "<leader>T", "<cmd>lua SL()<CR>", opts)
-map("v", "<leader>T", ":<C-u>lua SV()<CR>", opts)
+map('n', '<leader>pp', '<cmd>call jerry#common#TogglePasteMode()<CR>', 'Toggle paste mode')
+map('n', '<leader>r', "<cmd>silent exec '!tswitch -c nv'<CR>", 'Switch tmux session')
+map('n', '<leader>,.', "<cmd>call execute(getline('.'), '')<CR>", 'Evaluate Vimscript line')
+map(
+  'v',
+  '<leader>,.',
+  ":<C-u>lua require('jerry.sourcer').eval_vimscript"
+    .. "(table.concat(vim.fn['jerry#common#GetVisualSelectionAsList'](), '\\n'))<CR>",
+  'Evaluate Vimscript selection'
+)
+map('n', '<leader>,p', "<cmd>call luaeval(getline('.'), '')<CR>", 'Evaluate Lua line')
+map(
+  'v',
+  '<leader>,p',
+  ":<C-u>lua require('jerry.sourcer').eval_lua"
+    .. "(table.concat(vim.fn['jerry#common#GetVisualSelectionAsList'](), '\\n'))<CR>",
+  'Evaluate Lua selection'
+)
+map('n', '<leader>T', '<cmd>lua SL()<CR>', 'Send line to Neovim terminal')
+map('v', '<leader>T', ':<C-u>lua SV()<CR>', 'Send selection to Neovim terminal')
 
-map("n", "<leader>oe", "<cmd>silent execute \"!tmux send-keys -t :.+1 Up Enter\"<CR>", opts)
-map("n", "<leader>ou", "<cmd>silent execute \"!tmux send-keys -t :.-1 Up Enter\"<CR>", opts)
-map("n", "<leader>oa", "<cmd>silent execute \"!tmux send-keys -t :-.1 Up Enter\"<CR>", opts)
-map("n", "<leader>oo", "<cmd>silent execute \"!tmux send-keys -t :+.1 Up Enter\"<CR>", opts)
+map('n', '<leader>oe', '<cmd>silent execute "!tmux send-keys -t :.+1 Up Enter"<CR>', 'Repeat command in next tmux pane')
+map(
+  'n',
+  '<leader>ou',
+  '<cmd>silent execute "!tmux send-keys -t :.-1 Up Enter"<CR>',
+  'Repeat command in previous tmux pane'
+)
+map(
+  'n',
+  '<leader>oa',
+  '<cmd>silent execute "!tmux send-keys -t :-.1 Up Enter"<CR>',
+  'Repeat command in previous tmux window'
+)
+map(
+  'n',
+  '<leader>oo',
+  '<cmd>silent execute "!tmux send-keys -t :+.1 Up Enter"<CR>',
+  'Repeat command in next tmux window'
+)
 
-map("n", "<leader>ty", "<cmd>lua require('jerry.sourcer').lua_sourcer('SOURCE_THESE_LUAS_START', 'SOURCE_THESE_LUAS_END')<CR>", opts)
-map("n", "<leader>ti", "<cmd>lua require('jerry.sourcer').vim_sourcer('SOURCE_THESE_VIMS_START', 'SOURCE_THESE_VIMS_END')<CR>", opts)
-map("n", "<leader>tp", "<cmd>lua require('jerry.marker').mark_these('MARK_THIS_PLACE')<CR>", opts)
+map(
+  'n',
+  '<leader>ty',
+  "<cmd>lua require('jerry.sourcer').lua_sourcer('SOURCE_THESE_LUAS_START', 'SOURCE_THESE_LUAS_END')<CR>",
+  'Source marked Lua block'
+)
+map(
+  'n',
+  '<leader>ti',
+  "<cmd>lua require('jerry.sourcer').vim_sourcer('SOURCE_THESE_VIMS_START', 'SOURCE_THESE_VIMS_END')<CR>",
+  'Source marked Vimscript block'
+)
+map('n', '<leader>tp', "<cmd>lua require('jerry.marker').mark_these('MARK_THIS_PLACE')<CR>", 'Mark text region')
+map('n', '<leader>gQ', function()
+  for _, client in ipairs(vim.lsp.get_clients()) do
+    client:stop()
+  end
+end, 'Stop all LSP clients')
 
-map("n", "<C-p>", "<cmd>call jerry#common#FileFuzzySearch()<CR>", opts)
-map("n", "<leader>po", "<cmd>lua require('telescope.builtin').oldfiles()<CR>", opts)
-map("n", "<leader>/", "<cmd>call jerry#common#LinesFuzzySearch()<CR>", opts)
-map("n", "<leader>b", "<cmd>call jerry#common#BufferFuzzySearch()<CR>", opts)
-map("n", "Q", "<cmd>call jerry#common#WordFuzzySearch()<CR>", opts)
-map("n", "<leader>ps", "<cmd>call jerry#common#GlobalFuzzySearch()<CR>", opts)
-map("n", "<leader>qf", "<cmd>lua require('telescope.builtin').quickfix()<CR>", opts)
-map("n", "<leader>pa", "<cmd>call jerry#common#CloseTab()<CR>", opts)
+map('n', '<leader>Hl', '<cmd>so $VIMRUNTIME/syntax/hitest.vim<CR>', 'Show syntax highlight test')
+map('v', '<leader>p', '"0p', 'Paste last yank (register 0)')
+map('n', '<leader>fm', 'vip:g/\\|/Tab/\\|/<CR>', 'Align pipe-separated paragraph')
 
-map("n", "<leader><C-]>", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-map("n", "<leader>gd", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-map("n", "<leader>gf", "<cmd>lua vim.lsp.buf.format()<CR>", opts)
-map("v", "<leader>gf", "<cmd>'<,'>lua vim.lsp.buf.format()<CR>", opts)
-map("n", "<leader>gD", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-map("n", "<leader>gr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", opts)
-map("n", "<leader>gR", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-map("n", "<leader>1gD", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
-map("n", "<leader>ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-map("v", "<leader>ga", function()
-  vim.lsp.buf.code_action()
-end, opts)
-map("n", "<leader>K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-map("n", "<leader>go", "<cmd>call jerry#common#ListSymbols()<CR>", opts)
-map("i", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-
-map("n", "<leader>gO", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
-map("n", "<leader>gs", "<cmd>checkhealth lsp<CR>", opts)
-map("n", "<leader>gg", "<cmd>lua for _, c in ipairs(vim.lsp.get_clients()) do c:stop() end<CR>", opts)
-map("n", "<leader>gn", "<cmd>lua vim.diagnostic.jump { count = 1, wrap = false, severity = 'Error' }<CR>", opts)
-map("n", "<leader>gp", "<cmd>lua vim.diagnostic.jump { count = -1, wrap = false, severity = 'Error' }<CR>", opts)
-map("n", "<leader>gN", "<cmd>lua vim.diagnostic.jump { count = 1, wrap = false, severity = { max = vim.diagnostic.severity.WARN } }<CR>", opts)
-map("n", "<leader>gP", "<cmd>lua vim.diagnostic.jump { count = -1, wrap = false, severity = { max = vim.diagnostic.severity.WARN } }<CR>", opts)
-
-map("n", "<leader>Hl", "<cmd>so $VIMRUNTIME/syntax/hitest.vim<CR>", opts)
-map("n", "<leader>Hh", function()
-    local synID = vim.fn.synID
-    local synIDattr = vim.fn.synIDattr
-    local synIDtrans = vim.fn.synIDtrans
-    local line = vim.fn.line(".")
-    local col = vim.fn.col(".")
-    print("hi<" .. synIDattr(synID(line, col, 1), "name") ..
-        "> trans<" .. synIDattr(synID(line, col, 0), "name") ..
-        "> lo<" .. synIDattr(synIDtrans(synID(line, col, 1)), "name") .. ">")
-end, opts)
-
-map("v", "<leader>p", "\"0p", opts)
-map("n", "<leader>fm", "vip:g/\\|/Tab/\\|/<CR>", opts)
-map("n", "]c", "]czz", opts)
-map("n", "[c", "[czz", opts)
-map("n", "n", "nzz", opts)
-map("n", "N", "Nzz", opts)
-map("i", "<C-c>", "<ESC>", opts)
-map("n", ";", ":", opts)
-map("n", ":", ";", opts)
-map("v", ";", ":", opts)
-map("v", ":", ";", opts)
-map("n", "<c-j>", "<cmd>cnext<cr>|zz", opts)
-map("n", "<c-k>", "<cmd>cprev<cr>|zz", opts)
-
-vim.filetype.add({
+vim.filetype.add {
   extensions = {
     inc = 'bitbake',
     keymap = 'keymap',
-  }
-})
+  },
+}

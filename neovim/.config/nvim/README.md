@@ -59,14 +59,14 @@ Useful keys (the leader is Space):
 
 | Keys | Action |
 | --- | --- |
-| `<leader><space>`, `<leader>ff`, `<C-p>` | Find files at the LSP/Git root |
+| `<leader><space>`, `<leader>ff` | Find files at the LSP/Git root |
 | `<leader>fF`, `<leader>sG` | Find files / grep in the current directory |
 | `<leader>/`, `<leader>sg` | Grep at the LSP/Git root |
 | `<leader>,`, `<leader>fb` | Buffers |
 | `<leader>e`, `<leader>E` | Explorer at the root / current directory |
 | `<S-h>`, `<S-l>`, `[b`, `]b` | Previous / next buffer |
 | `<leader>bd`, `<leader>bo` | Delete buffer / other buffers, preserving splits |
-| `<C-h/j/k/l>`, `<leader>w-`, `<leader>w\|` | Window navigation and splits |
+| `<C-h/j/k/l>`, `<leader>-`, `<leader>\|` | Window navigation and splits |
 | `s`, `S` | Flash jump / Tree-sitter selection |
 | `<leader>gg`, `<leader>gs`, `<leader>gh*` | Lazygit, Git status, hunk actions |
 | `gd`, `gr`, `gI`, `gy`, `K` | LSP navigation and hover |
@@ -76,12 +76,20 @@ Useful keys (the leader is Space):
 | `<leader>ft`, `<C-/>` | Terminal at the project root |
 | `<leader>uf`, `<leader>uF` | Toggle global / buffer autoformat |
 
-The old `<leader>b` buffer picker moves to `<leader>,` / `<leader>fb` so that
-buffer commands have a prefix. The old `<leader>gs` LSP health command moves to
-`<leader>cl` / `<leader>gL`, and `<leader>gg` stop-LSP moves to `<leader>gQ`.
-The former Ctrl-j/Ctrl-k quickfix navigation is available as `]q` / `[q`.
-Most other custom keys remain available, including `<leader>po`,
-`<leader>ps`, `<leader>gf`, and the sourcing/tmux/Perforce keys.
+Custom aliases now use LazyVim's default shortcuts whenever there is an
+alternative. The complete before/after report is in `KEYMAPS.md`. For example,
+formatting uses `<leader>cf`, declaration uses `gD`, recent files use
+`<leader>fr`, and closing a tab uses `<leader><Tab>d`. The old `<leader>pa`
+force-close alias is removed; the default tab command respects unsaved work.
+Normal `;` and `:` have their native meanings again. Undo history is
+`<leader>su`, picker resume is `<leader>sR`, relative numbers are `<leader>uL`,
+and search/replace is `<leader>sr` through grug-far.
+
+Unique custom sourcing, tmux, Perforce, journal, and register-0 paste actions
+remain available. Shared global mappings have descriptions for `<leader>sk`.
+The `<leader>gQ` stop-LSP action remains custom. Use `<leader>fe` and
+`<leader>fb` to avoid the prefix waits caused by longer custom `<leader>e*`
+and `<leader>,*` sequences.
 
 Conform formats on save using StyLua, Alejandra, shfmt, Ruff, or prettierd
 according to filetype, falling back to an attached LSP formatter. The Nix
