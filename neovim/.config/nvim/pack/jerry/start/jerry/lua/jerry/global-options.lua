@@ -60,7 +60,11 @@ vim.g.use_fzf = 0
 -- Shared mappings only cover actions without a LazyVim default shortcut.
 -- Each integrator owns navigation, search, LSP, diagnostics, and tab controls.
 local function map(mode, lhs, rhs, desc)
-  vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
+  vim.keymap.set(mode, lhs, rhs, {
+    noremap = true,
+    silent = true,
+    desc = require('jerry.keymap_categories').describe(lhs, desc, mode),
+  })
 end
 
 map('n', '<leader>pp', '<cmd>call jerry#common#TogglePasteMode()<CR>', 'Toggle paste mode')

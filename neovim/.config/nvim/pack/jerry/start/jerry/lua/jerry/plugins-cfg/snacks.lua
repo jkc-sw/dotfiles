@@ -45,7 +45,28 @@ snacks.setup {
   indent = { enabled = true },
   input = { enabled = true },
   notifier = { enabled = true },
-  picker = { enabled = true },
+  picker = {
+    enabled = true,
+    sources = {
+      keymaps = {
+        transform = require('jerry.keymap_categories').transform,
+        matcher = { sort_empty = true },
+        sort = { fields = { 'score:desc', 'category', 'key', 'mode' } },
+        format = function(item)
+          local align = snacks.picker.util.align
+          return {
+            { item.mode, 'SnacksPickerKeymapMode' },
+            { ' ' },
+            { align(snacks.util.normkey(item.key), 16), 'SnacksPickerKeymapLhs' },
+            { ' ' },
+            { align(item.category, 15), 'Title' },
+            { ' ' },
+            { item.keymap_description, 'SnacksPickerDesc' },
+          }
+        end,
+      },
+    },
+  },
   quickfile = { enabled = true },
   scope = { enabled = true },
   statuscolumn = { enabled = true },

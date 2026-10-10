@@ -15,6 +15,7 @@ end
 function M.setup()
   local snacks = require 'snacks'
   local function map(mode, lhs, rhs, desc, opts)
+    desc = require('jerry.keymap_categories').describe(lhs, desc, mode)
     vim.keymap.set(mode, lhs, rhs, vim.tbl_extend('force', { silent = true, desc = desc }, opts or {}))
   end
   local function pick(source, cwd)

@@ -86,7 +86,11 @@ Normal `;` and `:` have their native meanings again. Undo history is
 and search/replace is `<leader>sr` through grug-far.
 
 Unique custom sourcing, tmux, Perforce, journal, and register-0 paste actions
-remain available. Shared global mappings have descriptions for `<leader>sk`.
+remain available. `<leader>sk` shows a category column and sorts the empty
+list by category. Search a category such as `Diagnostics`, `Tmux`, `Perforce`,
+`Journal`, `Snippets`, `Sourcing`, or `Formatting` to see related shortcuts.
+Custom descriptions also include their category in which-key hints; the
+existing mixed prefixes have named groups such as paste/snippets and text tools.
 The `<leader>gQ` stop-LSP action remains custom. Use `<leader>fe` and
 `<leader>fb` to avoid the prefix waits caused by longer custom `<leader>e*`
 and `<leader>,*` sequences.

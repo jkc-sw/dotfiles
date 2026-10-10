@@ -8,11 +8,11 @@ SOURCE_THESE_VIMS_END
 
 local M = {}
 local send_to_clipboard = require('jerry.clipboard').send_to_clipboard
-local markdown_links = require('jerry.markdown_links')
+local markdown_links = require 'jerry.markdown_links'
 local markdown_buffer_group = vim.api.nvim_create_augroup('jerry_markdown_ftplugin', { clear = false })
 local ask_label_for_picture_name_impl
 
-local placeholder_ns = vim.api.nvim_create_namespace('jerry_markdown')
+local placeholder_ns = vim.api.nvim_create_namespace 'jerry_markdown'
 local placeholder_seq = 0
 
 local function strip_terminal_suffix(txt)
@@ -69,7 +69,7 @@ local function locate_placeholder(bufnr, placeholder, row_hint)
     end
   end
 
-  error('Unable to locate placeholder')
+  error 'Unable to locate placeholder'
 end
 
 local function create_placeholder_mark(bufnr, placeholder, row_hint)
@@ -113,7 +113,7 @@ local function replace_placeholder(bufnr, extmark_id, txt, cursor_offset)
 end
 
 local function format_current_file_for_journal_jump()
-  local out = vim.fn.expand('%')
+  local out = vim.fn.expand '%'
   out = out:gsub('"', '\\"')
   out = out:gsub('\\', '/')
   out = out:gsub('.*/[jJ]ournal/', './')
@@ -173,63 +173,78 @@ M.setup_buffer = function()
   -- https://t3.chat/share/y8c0bx42dw
   vim.opt_local.breakindent = true
   -- 'list:-1' tells Vim to align soft-wrapped lines with the list text.
-  vim.opt_local.breakindentopt = "list:-1"
+  vim.opt_local.breakindentopt = 'list:-1'
 
   vim.keymap.set('n', '<leader>th', function()
     vim.fn.search('^## \\d\\{4}-\\d\\{2}-\\d\\{2}', 'bW')
-  end, { buffer = 0, desc = 'Jump to previous journal heading' })
+  end, { buffer = 0, desc = 'Journal: Jump to previous journal heading' })
 
   vim.keymap.set('n', '<leader>tn', function()
     vim.fn.search('^## \\d\\{4}-\\d\\{2}-\\d\\{2}', 'W')
-  end, { buffer = 0, desc = 'Jump to next journal heading' })
+  end, { buffer = 0, desc = 'Journal: Jump to next journal heading' })
 
   -- yank the lines between the nearest surrounding ``` fences (exclusive)
   vim.keymap.set(
     'n',
     '<leader>ne',
     [[<cmd>?^```?+1,/^```/-1 y<CR>]],
-    { buffer = 0, noremap = true, silent = true }
+    { buffer = 0, noremap = true, silent = true, desc = 'Snippets: Yank fenced code contents' }
   )
 
   vim.keymap.set('n', '<leader>pt', function()
     send_to_clipboard(M.new_search_pattern_as_markdown_multiline_code_block())
-    print('pt content sent to clipboard')
-  end, { buffer = 0, desc = 'Copy multiline jump snippet' })
+    print 'pt content sent to clipboard'
+  end, { buffer = 0, desc = 'Snippets: Copy multiline jump snippet' })
 
   vim.keymap.set('n', '<leader>pn', function()
     send_to_clipboard(M.new_search_pattern_as_markdown_singleline_code_block())
-    print('pn content sent to clipboard')
-  end, { buffer = 0, desc = 'Copy single-line jump snippet' })
+    print 'pn content sent to clipboard'
+  end, { buffer = 0, desc = 'Snippets: Copy single-line jump snippet' })
 
   vim.keymap.set('n', '<leader>pf', function()
     send_to_clipboard(M.new_search_pattern_from_inside_vim())
-    print('pf content sent to clipboard')
-  end, { buffer = 0, desc = 'Copy Vim jump snippet' })
+    print 'pf content sent to clipboard'
+  end, { buffer = 0, desc = 'Snippets: Copy Vim jump snippet' })
 
   vim.keymap.set('n', '<leader>ph', function()
     send_to_clipboard(M.new_search_pattern_from_shell_without_markup())
-    print('ph content sent to clipboard')
-  end, { buffer = 0, desc = 'Copy shell jump snippet' })
+    print 'ph content sent to clipboard'
+  end, { buffer = 0, desc = 'Snippets: Copy shell jump snippet' })
 
-  vim.keymap.set('n', '<leader>.u', [[gg/^-<space>/<CR>}O<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p ')<CR>]], { buffer = 0 })
-  vim.keymap.set('n', '<leader>.b', [[gg/^-<space>/<CR>}O<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p Break ')<CR><Esc>A]], { buffer = 0 })
-  vim.keymap.set('n', '<leader>,u', [["ryygg/^-<space>/<CR>}"rP0d4Wi<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p ')<CR><Esc>A ]], { buffer = 0 })
+  vim.keymap.set(
+    'n',
+    '<leader>.u',
+    [[gg/^-<space>/<CR>}O<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p ')<CR>]],
+    { buffer = 0, desc = 'Journal: Insert timestamped entry' }
+  )
+  vim.keymap.set(
+    'n',
+    '<leader>.b',
+    [[gg/^-<space>/<CR>}O<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p Break ')<CR><Esc>A]],
+    { buffer = 0, desc = 'Journal: Insert timestamped break' }
+  )
+  vim.keymap.set(
+    'n',
+    '<leader>,u',
+    [["ryygg/^-<space>/<CR>}"rP0d4Wi<C-R>=strftime('- %m/%d/%Y %H:%M:%S %p ')<CR><Esc>A ]],
+    { buffer = 0, desc = 'Journal: Copy line to timestamped entry' }
+  )
 
   vim.fn.setreg('c', vim.api.nvim_replace_termcodes([[V/^## \<CR>k"Ld]], true, false, true))
 
-  vim.keymap.set("v", "<leader>tf", function()
+  vim.keymap.set('v', '<leader>tf', function()
     local s = vim.fn.getpos("'<")[2]
     local e = vim.fn.getpos("'>")[2]
     M.replace_range(s, e)
-  end, { buffer = 0, desc = "Format selection as markdown table" })
+  end, { buffer = 0, desc = 'Formatting: Format selection as Markdown table' })
 
-  vim.keymap.set("n", "<leader>tf", function()
+  vim.keymap.set('n', '<leader>tf', function()
     local buf = vim.api.nvim_buf_get_lines(0, 0, -1, false)
     local total = #buf
     local row = vim.api.nvim_win_get_cursor(0)[1]
 
     if not M.is_table_line(buf[row]) then
-      vim.notify("Cursor is not inside a table", vim.log.levels.WARN)
+      vim.notify('Cursor is not inside a table', vim.log.levels.WARN)
       return
     end
 
@@ -242,14 +257,14 @@ M.setup_buffer = function()
     end
 
     M.replace_range(s, e)
-  end, { buffer = 0, desc = "Format markdown table under cursor" })
+  end, { buffer = 0, desc = 'Formatting: Format Markdown table under cursor' })
 
   vim.api.nvim_create_autocmd('BufWritePre', {
     group = markdown_buffer_group,
     buffer = 0,
     callback = function()
       M.search_and_replace_invalid_sharepoint_link()
-      vim.cmd([[silent! %s/Ã‚Â’/'/g]])
+      vim.cmd [[silent! %s/Ã‚Â’/'/g]]
     end,
   })
 
@@ -265,10 +280,14 @@ end
 M.take_me_here_shell = function(one_liner)
   local current_line = escape_shell_search_line(vim.api.nvim_get_current_line())
   local filepath = format_current_file_for_journal_jump()
-  local out = string.format([[```ps1
+  local out = string.format(
+    [[```ps1
 en ; nvim "%s" -c "/^%s/"
 ```
-]], filepath, current_line)
+]],
+    filepath,
+    current_line
+  )
   if one_liner then
     out = string.format('`en ; nvim "%s" -c "/^%s/"`', filepath, current_line)
   end
@@ -282,14 +301,19 @@ M.take_me_here_vim = function()
   local filepath = format_current_file_for_journal_jump()
   local out = ''
 
-  if current_line:match('^## ') then
+  if current_line:match '^## ' then
     out = '\n' .. current_line .. '\n\n'
   end
 
-  out = out .. string.format([[```vim
+  out = out
+    .. string.format(
+      [[```vim
 execute "e ".fnameescape("%s") | call search("^%s")
 ```
-]], filepath, current_line)
+]],
+      filepath,
+      current_line
+    )
 
   vim.api.nvim_echo({ { 'TakeMeHereVim copys: ' .. out } }, false, {})
   return out
@@ -299,12 +323,12 @@ end
 M.push_to_tagstack = function()
   local win = vim.api.nvim_get_current_win()
   local bufnr = vim.api.nvim_get_current_buf()
-  local from = vim.fn.getpos('.')
+  local from = vim.fn.getpos '.'
   from[1] = bufnr
-  local tagname = vim.fn.expand('<cword>')
+  local tagname = vim.fn.expand '<cword>'
 
   -- Save position in jumplist
-  vim.cmd("normal! m'")
+  vim.cmd "normal! m'"
 
   local tagstack = { { tagname = tagname, from = from } }
   vim.fn.settagstack(vim.fn.win_getid(win), { items = tagstack }, 't')
@@ -317,15 +341,15 @@ M.get_filename_linenum_of_a_pattern = function(pattern)
   -- I don't check whether rg exist. I am using home-manager with nix to build neovim setup.
   -- Ripgrep is a dependency for my neovim install
   local cmd = {
-    "rg",
-    "--column",
-    "--line-number",
-    "--no-heading",
-    "--color=never",
-    "-e",
+    'rg',
+    '--column',
+    '--line-number',
+    '--no-heading',
+    '--color=never',
+    '-e',
     pattern,
-    "-g",
-    "*.md",
+    '-g',
+    '*.md',
   }
   local ret = vim.system(cmd, { text = true }):wait()
   if ret.code ~= 0 then
@@ -336,11 +360,11 @@ M.get_filename_linenum_of_a_pattern = function(pattern)
   if not output then
     return {}
   end
-  local lines = vim.split(output, "\n", { trimempty = true })
+  local lines = vim.split(output, '\n', { trimempty = true })
 
   local matches = {}
   for _, line in ipairs(lines) do
-    local filepath, line_number, _ = line:match("([^:]+):(%d+):(.*)")
+    local filepath, line_number, _ = line:match '([^:]+):(%d+):(.*)'
     table.insert(matches, {
       filepath = filepath,
       line_number = tonumber(line_number),
@@ -361,16 +385,16 @@ end
 --- @param uuid string The `origin:uuid` uuid to search for.
 --- @throws string Error message if the tag format is invalid, ripgrep fails, or multiple results are found.
 M.jump_to_originuuid = function(uuid)
-  local pattern = "^%w%w%w%w%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%w%w%w%w%w%w%w%w$"
+  local pattern = '^%w%w%w%w%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%w%w%w%w%w%w%w%w$'
   if not uuid:match(pattern) then
-    error("Invalid uuid format. Expected <uuid>")
+    error 'Invalid uuid format. Expected <uuid>'
   end
 
-  local orig_pattern = "origin:" .. uuid
+  local orig_pattern = 'origin:' .. uuid
 
   local matches = M.get_filename_linenum_of_a_pattern(orig_pattern)
   if #matches ~= 1 then
-    error(string.format("Pattern %s found %d matches (~=1). Please rg search and fix it", orig_pattern, #matches))
+    error(string.format('Pattern %s found %d matches (~=1). Please rg search and fix it', orig_pattern, #matches))
   end
 
   local match = matches[1]
@@ -387,10 +411,10 @@ end
 --- @error Throws an error if the pattern is not found.
 M.match_uuid_in_current_line = function()
   local line = vim.api.nvim_get_current_line()
-  local pattern = "origin:(%w%w%w%w%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%w%w%w%w%w%w%w%w)"
+  local pattern = 'origin:(%w%w%w%w%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%-%w%w%w%w%w%w%w%w%w%w%w%w)'
   local uuid = line:match(pattern)
   if not uuid then
-    error("Cannot find origin:uuid in the current line")
+    error 'Cannot find origin:uuid in the current line'
   end
   return uuid
 end
@@ -406,9 +430,15 @@ M.new_originuuid = function()
     if #matches == 0 then
       return out
     end
-    print(string.format('WARN (attempt %d): New uuid %s is in conflict with another one in the system, retry', attempt_num, uuid))
+    print(
+      string.format(
+        'WARN (attempt %d): New uuid %s is in conflict with another one in the system, retry',
+        attempt_num,
+        uuid
+      )
+    )
   end
-  error('Unable to generate a new UUID without a conflict for 3 times. This should never happens')
+  error 'Unable to generate a new UUID without a conflict for 3 times. This should never happens'
 end
 
 --- @brief Find an uuid in the current line and return the
@@ -417,9 +447,12 @@ end
 --- @throws When uuid is not found
 M.new_search_pattern_as_markdown_multiline_code_block = function()
   local uuid = M.match_uuid_in_current_line()
-  local out = string.format([[```
+  local out = string.format(
+    [[```
 en ; nvim -c "lua require('jerry.markdown').jump_to_originuuid('%s')"
-```]], uuid)
+```]],
+    uuid
+  )
   return out
 end
 
@@ -450,13 +483,17 @@ end
 M.new_search_pattern_from_inside_vim = function()
   local uuid = M.match_uuid_in_current_line()
   local heading = M.find_nearest_heading_above_current_line()
-  local out = string.format([[
+  local out = string.format(
+    [[
 %s
 
 ```vim
 lua require('jerry.markdown').jump_to_originuuid('%s')
 ```
-]], heading, uuid)
+]],
+    heading,
+    uuid
+  )
   return out
 end
 
@@ -464,14 +501,14 @@ end
 --- @return string
 --- @throws When pattern is not found
 M.find_nearest_heading_above_current_line = function()
-  local matched_line_nr = vim.fn.search('^## .*$', "bnW")
+  local matched_line_nr = vim.fn.search('^## .*$', 'bnW')
   if matched_line_nr == 0 then
-    error("Cannot find the heading backward from the current line")
+    error 'Cannot find the heading backward from the current line'
   end
 
   local heading = vim.api.nvim_buf_get_lines(0, matched_line_nr - 1, matched_line_nr, false)[1]
   if not heading then
-    error("Cannot find the heading backward from the current line")
+    error 'Cannot find the heading backward from the current line'
   end
   return heading
 end
@@ -481,7 +518,7 @@ end
 ---@param line string The line of text to inspect.
 ---@return boolean `true` if the line contains a pipe character (`|`).
 M.is_table_line = function(line)
-  return line:find("|") ~= nil
+  return line:find '|' ~= nil
 end
 
 --- Formats an array of Markdown table lines by aligning every column.
@@ -493,7 +530,7 @@ end
 ---@return string[] formatted The same table with every column padded
 ---         so that pipes are vertically aligned.
 M.fmt_table = function(lines)
-  local stdin = table.concat(lines, "\n")
+  local stdin = table.concat(lines, '\n')
   local out = vim.fn.systemlist("tr -s ' ' | column -t -s '|' -o '|'", stdin)
   return out
 end
@@ -513,28 +550,28 @@ M.ask_user_for_jira_tag_return_jf_output = function(prefix)
   return prompt_with_placeholder(function(cb)
     prompt_input('Jira tag:', '', function(jtag)
       if jtag == nil or jtag == '' then
-        vim.api.nvim_err_writeln('No jira tag is entered')
-        cb('')
+        vim.api.nvim_err_writeln 'No jira tag is entered'
+        cb ''
         return
       end
 
       local jfoutput
-      if vim.fn.has('win32') == 1 then
-        jfoutput = vim.fn.system({
+      if vim.fn.has 'win32' == 1 then
+        jfoutput = vim.fn.system {
           'pwsh.exe',
           '-NoProfile',
           '-Command',
           "Import-Module MyModules00 ; jf '" .. jtag .. "' -Passthru",
-        })
+        }
       else
         local ip = vim.env.BOXX_IP
         if ip == nil then
-          error('AskUserForJiraTagReturnJfOutput needs to access env var BOXX_IP, but it is not found')
+          error 'AskUserForJiraTagReturnJfOutput needs to access env var BOXX_IP, but it is not found'
         end
 
         local user = vim.env.BOXX_USER
         if user == nil then
-          error('AskUserForJiraTagReturnJfOutput needs to access env var BOXX_USER, but it is not found')
+          error 'AskUserForJiraTagReturnJfOutput needs to access env var BOXX_USER, but it is not found'
         end
 
         local ret = vim.system({ 'jfssh', jtag }, { text = true, stderr = false }):wait()
@@ -618,7 +655,7 @@ M.get_date_offset_no_day = function(offset)
 end
 
 M.search_and_replace_invalid_sharepoint_link = function()
-  vim.cmd([[silent! %s/\((http.*\)\/:\([^:/ ]\):\//\1\/%3A\2%3A\//]])
+  vim.cmd [[silent! %s/\((http.*\)\/:\([^:/ ]\):\//\1\/%3A\2%3A\//]]
 end
 
 M.ask_label_for_picture_name_with_title = function(label)
@@ -641,7 +678,7 @@ ask_label_for_picture_name_impl = function(label, cb)
   local function process_label(lbl)
     if lbl == nil then
       if cb then
-        cb('')
+        cb ''
       end
       return
     end
@@ -655,17 +692,23 @@ ask_label_for_picture_name_impl = function(label, cb)
     prompt_input('Filename:', default_pic_name .. '.', function(pic_name)
       if pic_name == nil then
         if cb then
-          cb('')
+          cb ''
         end
         return
       end
 
-      local note_parent_folder_name = vim.fn.fnamemodify(vim.fn.expand('%:p'), ':h:t')
+      local note_parent_folder_name = vim.fn.fnamemodify(vim.fn.expand '%:p', ':h:t')
       local note_type_dash_index = note_parent_folder_name:find('-', 1, true)
       if note_type_dash_index == nil then
-        vim.api.nvim_err_writeln("Folder name '" .. note_parent_folder_name .. "' derived from '" .. vim.fn.expand('%:p') .. "' is not supported. No - is found")
+        vim.api.nvim_err_writeln(
+          "Folder name '"
+            .. note_parent_folder_name
+            .. "' derived from '"
+            .. vim.fn.expand '%:p'
+            .. "' is not supported. No - is found"
+        )
         if cb then
-          cb('')
+          cb ''
         end
         return
       end
@@ -680,7 +723,7 @@ ask_label_for_picture_name_impl = function(label, cb)
       local txt = markdown_links.wrap_link('', clean_label, link)
       markdown_links.prompt_browser_link('', clean_label, function(browser_link)
         if #browser_link > 0 then
-          txt = browser_link .. "\n\n" .. txt
+          txt = browser_link .. '\n\n' .. txt
         end
 
         if cb then

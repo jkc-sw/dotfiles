@@ -46,4 +46,12 @@ which_key.add {
   { '<leader>w', group = 'windows' },
   { '<leader>x', group = 'diagnostics/quickfix' },
   { '<leader><tab>', group = 'tabs' },
+  { '<leader>,', group = 'buffers / evaluation', mode = { 'n', 'x' } },
+  { '<leader>.', group = 'journal' },
+  { '<leader>e', group = 'explorer / Perforce' },
+  { '<leader>H', group = 'highlight tests' },
+  { '<leader>n', group = 'notifications / code blocks' },
+  { '<leader>o', group = 'tmux repeat' },
+  { '<leader>p', group = 'paste / snippets' },
+  { '<leader>t', group = 'text tools', mode = { 'n', 'x' } },
 }
