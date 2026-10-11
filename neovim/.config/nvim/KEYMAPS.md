@@ -1,9 +1,9 @@
 # Shortcut migration to LazyVim defaults
 
 The leader is Space. Old aliases are removed from the shared configuration;
-LazyVim supplies its own defaults and Home Manager supplies the equivalents.
-Uppercase keys are distinct. This report covers the custom actions and the
-Home Manager differences found in the previous audit.
+LazyVim supplies its native defaults directly. Home Manager supplies the
+executables. Uppercase keys are distinct. This report records the custom
+actions relocated during the migration.
 
 ## Find shortcuts by category
 

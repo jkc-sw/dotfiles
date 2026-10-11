@@ -1,7 +1,2 @@
-require('jerry').setup {
-  features = {
-    home_manager = true,
-  },
-}
-
-require('perforce').setup()
+-- lazy.nvim and LazyVim own plugins, defaults, UI, completion and LSP setup.
+require 'config.lazy'

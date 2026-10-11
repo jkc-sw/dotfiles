@@ -1,59 +1,49 @@
 local markdown_fenced_languages = { 'python', 'ps1', 'cpp', 'bash', 'vim', 'matlab' }
 
 local function ensure_markdown_fenced_languages()
-    local current = vim.g.markdown_fenced_languages
-    if type(current) ~= 'table' then
-        current = {}
-    end
+  local current = vim.g.markdown_fenced_languages
+  if type(current) ~= 'table' then
+    current = {}
+  end
 
-    for _, lang in ipairs(markdown_fenced_languages) do
-        if not vim.tbl_contains(current, lang) then
-            table.insert(current, lang)
-        end
+  for _, lang in ipairs(markdown_fenced_languages) do
+    if not vim.tbl_contains(current, lang) then
+      table.insert(current, lang)
     end
+  end
 
-    vim.g.markdown_fenced_languages = current
+  vim.g.markdown_fenced_languages = current
 end
 
 ensure_markdown_fenced_languages()
 
 -- Trim whitespace on save
-vim.api.nvim_create_augroup("nowhitespaceattheend", { clear = true })
-vim.api.nvim_create_autocmd("BufWritePre", {
-    group = "nowhitespaceattheend",
-    pattern = "*",
-    callback = function()
-        vim.fn["jerry#common#TrimWhitespace"]()
-    end,
-})
-
--- Highlight on yank
-vim.api.nvim_create_augroup("LuaHighlight", { clear = true })
-vim.api.nvim_create_autocmd("TextYankPost", {
-    group = "LuaHighlight",
-    pattern = "*",
-    callback = function()
-        pcall(function() require("vim.hl").on_yank() end)
-    end,
+vim.api.nvim_create_augroup('nowhitespaceattheend', { clear = true })
+vim.api.nvim_create_autocmd('BufWritePre', {
+  group = 'nowhitespaceattheend',
+  pattern = '*',
+  callback = function()
+    vim.fn['jerry#common#TrimWhitespace']()
+  end,
 })
 
 -- indentConfig
-vim.api.nvim_create_augroup("indentConfig", { clear = true })
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TabEnter" }, {
-    group = "indentConfig",
-    pattern = "*",
-    callback = function()
-        vim.cmd [[iabbrev vimet vim:et ts=4 sts=4 sw=4]]
-    end,
+vim.api.nvim_create_augroup('indentConfig', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'TabEnter' }, {
+  group = 'indentConfig',
+  pattern = '*',
+  callback = function()
+    vim.cmd [[iabbrev vimet vim:et ts=4 sts=4 sw=4]]
+  end,
 })
 
 -- markdownFenceHighlight
-vim.api.nvim_create_augroup("markdownFenceHighlight", { clear = true })
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TabEnter" }, {
-    group = "markdownFenceHighlight",
-    pattern = "*.md",
-    callback = function()
-        vim.cmd [[
+vim.api.nvim_create_augroup('markdownFenceHighlight', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'TabEnter' }, {
+  group = 'markdownFenceHighlight',
+  pattern = '*.md',
+  callback = function()
+    vim.cmd [[
             iabbrev ats <c-r>=strftime('%Y-%m-%d %A')<cr>
             iabbrev #T # <c-r>=strftime('%Y-%m-%d %A')<cr>
             iabbrev #t # <c-r>=strftime('%Y-%m-%d %A')<cr>
@@ -64,46 +54,46 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TabEnter" }, {
             iabbrev ####T #### <c-r>=strftime('%Y-%m-%d %A')<cr>
             iabbrev ####t #### <c-r>=strftime('%Y-%m-%d %A')<cr>
         ]]
-    end,
+  end,
 })
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TabEnter" }, {
-    group = "markdownFenceHighlight",
-    pattern = "*.ps1",
-    callback = function()
-        vim.cmd [[
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'TabEnter' }, {
+  group = 'markdownFenceHighlight',
+  pattern = '*.ps1',
+  callback = function()
+    vim.cmd [[
             iabbrev nfor <c-r>=jerry#common#JiraNoFormat()<cr><up>
             iabbrev code; <c-r>=jerry#common#JiraCodeFormat()<cr><up>
         ]]
-    end,
+  end,
 })
 
 -- sourcerTheseCode
-vim.api.nvim_create_augroup("sourcerTheseCode", { clear = true })
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TabEnter" }, {
-    group = "sourcerTheseCode",
-    pattern = "*",
-    callback = function()
-        vim.cmd [[
+vim.api.nvim_create_augroup('sourcerTheseCode', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'TabEnter' }, {
+  group = 'sourcerTheseCode',
+  pattern = '*',
+  callback = function()
+    vim.cmd [[
             iabbrev tit SOURCE_THESE_VIMS_START<cr><cr>echom 'Sourced'<cr>SOURCE_THESE_VIMS_END
             iabbrev tyt SOURCE_THESE_LUAS_START<cr><cr>print('Sourced')<cr>SOURCE_THESE_LUAS_END
         ]]
-    end,
+  end,
 })
 
 -- markerTheseCode
-vim.api.nvim_create_augroup("markerTheseCode", { clear = true })
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TabEnter" }, {
-    group = "markerTheseCode",
-    pattern = "*",
-    callback = function()
-        vim.cmd [[iabbrev tpt MARK_THIS_PLACE]]
-    end,
+vim.api.nvim_create_augroup('markerTheseCode', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'TabEnter' }, {
+  group = 'markerTheseCode',
+  pattern = '*',
+  callback = function()
+    vim.cmd [[iabbrev tpt MARK_THIS_PLACE]]
+  end,
 })
 
 -- DisableSomeSyntax
-vim.api.nvim_create_augroup("DisableSomeSyntax", { clear = true })
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TabEnter" }, {
-    group = "DisableSomeSyntax",
-    pattern = { "*.groovy", "*.html" },
-    command = "syntax sync fromstart",
+vim.api.nvim_create_augroup('DisableSomeSyntax', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'TabEnter' }, {
+  group = 'DisableSomeSyntax',
+  pattern = { '*.groovy', '*.html' },
+  command = 'syntax sync fromstart',
 })
