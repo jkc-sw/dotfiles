@@ -2,17 +2,14 @@ local M = {}
 
 local plugin_configs = {
   'jerry.plugins-cfg.snacks',
+  'jerry.plugins-cfg.noice',
   'jerry.plugins-cfg.editor',
   'jerry.plugins-cfg.conform',
   'jerry.plugins-cfg.lualine',
-  'jerry.plugins-cfg.colorful-menu',
   'jerry.plugins-cfg.blink-cmp',
   'jerry.plugins-cfg.neogit',
-  'jerry.plugins-cfg.lspkind',
   'jerry.plugins-cfg.nvim-treesitter',
-  'jerry.plugins-cfg.nvim_context_vt',
   'jerry.plugins-cfg.telescope',
-  'jerry.plugins-cfg.colorizer',
   'jerry.plugins-cfg.render-markdown',
 }
 
@@ -24,7 +21,7 @@ local function setup_options()
   vim.opt.relativenumber = true
   vim.opt.signcolumn = 'yes'
   vim.opt.mouse = 'a'
-  vim.opt.scrolloff = 8
+  vim.opt.scrolloff = 4
   vim.opt.sidescrolloff = 8
   vim.opt.splitkeep = 'screen'
   vim.opt.timeoutlen = 300
@@ -32,7 +29,32 @@ local function setup_options()
   vim.opt.tabstop = 2
   vim.opt.shiftwidth = 2
   vim.opt.softtabstop = 2
+  -- Appearance and popup defaults from fresh LazyVim (TokyoNight Moon).
+  vim.g.ai_cmp = true
+  vim.g.snacks_animate = true
+  vim.g.trouble_lualine = true
+  vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
+  vim.opt.conceallevel = 2
+  vim.opt.cursorline = true
+  vim.opt.fillchars = { foldopen = '', foldclose = '', fold = ' ', foldsep = ' ', diff = '╱', eob = ' ' }
+  vim.opt.foldenable = true
+  vim.opt.foldlevel = 99
+  vim.opt.foldmethod = 'indent'
+  vim.opt.foldtext = ''
+  vim.opt.guicursor = vim.api.nvim_get_option_info2('guicursor', {}).default
+  vim.opt.hlsearch = true
+  vim.opt.inccommand = 'nosplit'
+  vim.opt.laststatus = 3
+  vim.opt.linebreak = true
+  vim.opt.pumblend = 10
   vim.opt.pumheight = 10
+  vim.opt.ruler = false
+  vim.opt.shortmess:append { W = true, I = true, c = true, C = true }
+  vim.opt.showmode = false
+  vim.opt.smoothscroll = true
+  vim.opt.virtualedit = 'block'
+  vim.opt.wildmode = 'longest:full,full'
+  vim.opt.winminwidth = 5
   vim.opt.undodir = vim.fn.stdpath 'state' .. '/undo'
   vim.fn.mkdir(vim.o.undodir, 'p')
 end
@@ -45,10 +67,31 @@ local function add_user_config_to_packpath()
 end
 
 local function setup_colorscheme()
-  vim.g.gruvbox_material_background = 'hard'
-  vim.g.gruvbox_material_foreground = 'material'
-  vim.g.gruvbox_material_better_performance = 0
-  vim.cmd.colorscheme 'gruvbox-material'
+  require('tokyonight').setup { style = 'moon' }
+  require('tokyonight').load()
+  require('catppuccin').setup {
+    lsp_styles = {
+      underlines = {
+        errors = { 'undercurl' },
+        hints = { 'undercurl' },
+        warnings = { 'undercurl' },
+        information = { 'undercurl' },
+      },
+    },
+    integrations = {
+      blink_cmp = true,
+      flash = true,
+      fzf = true,
+      grug_far = true,
+      gitsigns = true,
+      lsp_trouble = true,
+      mini = true,
+      noice = true,
+      snacks = true,
+      telescope = true,
+      which_key = true,
+    },
+  }
 end
 
 -- Yanks are piped to an external clipboard tool instead of Neovim's
@@ -87,6 +130,10 @@ local function setup_treesitter()
     callback = function()
       pcall(function()
         vim.treesitter.start()
+        if vim.treesitter.query.get(vim.treesitter.language.get_lang(vim.bo.filetype), 'folds') then
+          vim.wo.foldmethod = 'expr'
+          vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        end
         vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
       end)
     end,
@@ -96,10 +143,17 @@ end
 function M.setup()
   setup_options()
   setup_clipboard()
+  require('mini.icons').setup {
+    file = {
+      ['.keep'] = { glyph = '󰊢', hl = 'MiniIconsGrey' },
+      ['devcontainer.json'] = { glyph = '', hl = 'MiniIconsAzure' },
+    },
+    filetype = { dotenv = { glyph = '', hl = 'MiniIconsYellow' } },
+  }
+  require('mini.icons').mock_nvim_web_devicons()
   setup_colorscheme()
 
   require 'jerry.plugins-cfg.lazydev'
-  require('jerry.lsp.config').setup()
 
   add_user_config_to_packpath()
 
@@ -107,6 +161,7 @@ function M.setup()
     require(module)
   end
 
+  require('jerry.lsp.config').setup()
   setup_treesitter()
   require('jerry.integrations.home_manager.keymaps').setup()
 end

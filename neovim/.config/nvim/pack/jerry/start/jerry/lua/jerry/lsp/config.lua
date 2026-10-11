@@ -31,7 +31,7 @@ local function setup_each_lsp(target, opt)
     opt = {}
   end
 
-  opt = vim.tbl_deep_extend("force", {
+  opt = vim.tbl_deep_extend('force', {
     capabilities = capabilities,
   }, opt)
 
@@ -46,33 +46,32 @@ M.setup = function()
   vim.diagnostic.config {
     severity_sort = true,
     float = { border = 'rounded', source = 'if_many' },
-    underline = { severity = vim.diagnostic.severity.ERROR },
+    underline = true,
+    update_in_insert = false,
     signs = vim.g.have_nerd_font and {
       text = {
-        [vim.diagnostic.severity.ERROR] = '󰅚 ',
-        [vim.diagnostic.severity.WARN] = '󰀪 ',
-        [vim.diagnostic.severity.INFO] = '󰋽 ',
-        [vim.diagnostic.severity.HINT] = '󰌶 ',
+        [vim.diagnostic.severity.ERROR] = ' ',
+        [vim.diagnostic.severity.WARN] = ' ',
+        [vim.diagnostic.severity.INFO] = ' ',
+        [vim.diagnostic.severity.HINT] = ' ',
       },
     } or {},
     virtual_text = {
       source = 'if_many',
-      spacing = 2,
-      format = function(diagnostic)
-        local diagnostic_message = {
-          [vim.diagnostic.severity.ERROR] = diagnostic.message,
-          [vim.diagnostic.severity.WARN] = diagnostic.message,
-          [vim.diagnostic.severity.INFO] = diagnostic.message,
-          [vim.diagnostic.severity.HINT] = diagnostic.message,
-        }
-        return diagnostic_message[diagnostic.severity]
-      end,
+      spacing = 4,
+      prefix = '●',
     },
   }
 
+  require('snacks').util.lsp.on({ method = 'textDocument/inlayHint' }, function(buffer)
+    if vim.api.nvim_buf_is_valid(buffer) and vim.bo[buffer].buftype == '' and vim.bo[buffer].filetype ~= 'vue' then
+      vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
+    end
+  end)
+
   -- clangd
   setup_each_lsp('clangd', {
-    filetypes = { "c", "cpp", "cc", "objc", "objcpp" },
+    filetypes = { 'c', 'cpp', 'cc', 'objc', 'objcpp' },
   })
 
   -- -- rust
@@ -86,7 +85,10 @@ M.setup = function()
     on_init = function(client)
       if client.workspace_folders then
         local path = client.workspace_folders[1].name
-        if path ~= vim.fn.stdpath('config') and (vim.uv.fs_stat(path..'/.luarc.json') or vim.uv.fs_stat(path..'/.luarc.jsonc')) then
+        if
+          path ~= vim.fn.stdpath 'config'
+          and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
+        then
           return
         end
       end
@@ -95,7 +97,7 @@ M.setup = function()
         runtime = {
           -- Tell the language server which version of Lua you're using
           -- (most likely LuaJIT in the case of Neovim)
-          version = 'LuaJIT'
+          version = 'LuaJIT',
         },
         diagnostics = {
           globals = { 'vim' },
@@ -113,15 +115,27 @@ M.setup = function()
             -- Depending on the usage, you might want to add additional paths here.
             -- "${3rd}/luv/library"
             -- "${3rd}/busted/library",
-          }
+          },
           -- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
           -- library = vim.api.nvim_get_runtime_file("", true)
-        }
+        },
       })
     end,
     settings = {
-      Lua = {}
-    }
+      Lua = {
+        codeLens = { enable = true },
+        completion = { callSnippet = 'Replace' },
+        doc = { privateName = { '^_' } },
+        hint = {
+          enable = true,
+          setType = false,
+          paramType = true,
+          paramName = 'Disable',
+          semicolon = 'Disable',
+          arrayIndex = 'Disable',
+        },
+      },
+    },
   })
 
   -- go
@@ -140,7 +154,7 @@ M.setup = function()
         matlabConnectionTiming = 'onStart',
         telemetry = false,
       },
-    }
+    },
   })
 
   -- bash
@@ -174,18 +188,18 @@ M.setup = function()
     settings = {
       redhat = {
         telemetry = {
-          enabled = false
-        }
+          enabled = false,
+        },
       },
       yaml = {
         format = {
-          enable = true
+          enable = true,
         },
         validate = true,
         hover = true,
         completion = true,
-      }
-    }
+      },
+    },
   })
 
   -- ts_ls
@@ -210,8 +224,8 @@ M.setup = function()
       settings = {
         -- Any extra CLI arguments for `ruff` go here.
         args = {},
-      }
-    }
+      },
+    },
   })
 
   setup_each_lsp('pylsp', {
@@ -221,8 +235,8 @@ M.setup = function()
       return vim.fn.getcwd()
     end,
     settings = {
-      pylsp = { plugins = { pycodestyle = { maxLineLength = 300 } } }
-    }
+      pylsp = { plugins = { pycodestyle = { maxLineLength = 300 } } },
+    },
   })
   setup_each_lsp('pyright', true)
 
@@ -232,13 +246,13 @@ M.setup = function()
   -- -- hdl
   -- setup_each_lsp('hdl_checker', true)
 
-  if vim.fn.executable('power_es_work.sh') == 1 then
+  if vim.fn.executable 'power_es_work.sh' == 1 then
     setup_each_lsp('powershell_es', {
-      cmd = { 'power_es_work.sh' }
+      cmd = { 'power_es_work.sh' },
     })
   else
     setup_each_lsp('powershell_es', {
-      cmd = { 'powershell-editor-services', '-Stdio' }
+      cmd = { 'powershell-editor-services', '-Stdio' },
     })
   end
 

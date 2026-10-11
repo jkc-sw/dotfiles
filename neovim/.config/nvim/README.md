@@ -46,14 +46,32 @@ With `features.home_manager = true`, the editor uses LazyVim-style defaults:
 relative line numbers, a visible sign column, two-space indentation, Snacks
 pickers and explorer, a dashboard, bufferline, which-key hints, Gitsigns,
 Flash, Trouble, Todo comments, mini.ai, mini.pairs, and Persistence sessions.
-Gruvbox Material, the shared custom tools, MATLAB, Perforce, and the `toclip`
-integration are retained. These third-party setups are never applied by the
+TokyoNight Moon, Noice command/message popups, the LazyVim status layout,
+mini.icons, and smooth scrolling provide the default appearance. Catppuccin
+is available with `:colorscheme catppuccin`. The shared custom tools, MATLAB,
+Perforce, and the `toclip` integration are retained. These third-party setups are never applied by the
 LazyVim integrator.
 
 Home Manager supplies all plugins and executables through Nix. There is no
 lazy.nvim or Mason bootstrap in this profile. Telescope remains available for
 the custom pickers, while Snacks owns `vim.ui.select` and the main search keys.
-Blink completion uses Enter to accept a selection and includes LazyDev support.
+Blink uses LazyVim's Enter preset: suggestions are preselected, Enter accepts,
+Ctrl-y selects and accepts, Ctrl-space opens completion/documentation, and
+Ctrl-n/Ctrl-p select the next/previous suggestion. Tab and Shift-Tab move
+through native snippet placeholders; Tab inserts normally outside snippets.
+Documentation appears after 200 ms, ghost text and automatic brackets are
+on, and command-line completion uses the default cmdline preset. Lua files
+add LazyDev to the default LSP/path/snippet/buffer sources. Noice owns
+signature help, with Ctrl-f/Ctrl-b scrolling hover or signature popups.
+Unused LuaSnip, completion providers, colorful-menu, lspkind, and Dressing
+are removed from Home Manager, as are the extra inline context and color
+annotations. The profile follows LazyVim 16.0.1 at upstream commit
+`999700997f72227187d49d8b92667183dc7fc809`, with Nix supplying plugins.
+The adapted icons, snippet helper, UI settings, and statusline presentation
+come from https://github.com/LazyVim/LazyVim at that revision. They have been
+modified to work without LazyVim/lazy.nvim and use the existing Home Manager
+root detector. The upstream Apache-2.0 license is preserved alongside these
+helpers in `jerry/integrations/home_manager/LAZYVIM-LICENSE`.
 
 Useful keys (the leader is Space):
 
@@ -71,6 +89,9 @@ Useful keys (the leader is Space):
 | `<leader>gg`, `<leader>gs`, `<leader>gh*` | Lazygit, Git status, hunk actions |
 | `gd`, `gr`, `gI`, `gy`, `K` | LSP navigation and hover |
 | `<leader>ca`, `<leader>cr`, `<leader>cf` | Code actions, rename, format |
+| `<leader>cd` | Full line diagnostic popup |
+| `<leader>snl`, `<leader>snh`, `<leader>sna` | Last message / history / all messages |
+| `<leader>snd`, `<leader>snt` | Dismiss messages / fuzzy message picker |
 | `<leader>xx`, `<leader>xX`, `[d`, `]d` | Diagnostics and navigation |
 | `<leader>qs`, `<leader>qS`, `<leader>ql` | Restore / select / last session |
 | `<leader>ft`, `<C-/>` | Terminal at the project root |

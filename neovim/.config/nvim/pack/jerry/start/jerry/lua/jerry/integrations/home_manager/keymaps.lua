@@ -12,6 +12,8 @@ local function root()
   return vim.fs.root(filename ~= '' and filename or vim.fn.getcwd(), { '.git' }) or vim.fn.getcwd()
 end
 
+M.root = root
+
 function M.setup()
   local snacks = require 'snacks'
   local function map(mode, lhs, rhs, desc, opts)
@@ -99,6 +101,21 @@ function M.setup()
   map('n', '<leader>sR', function()
     snacks.picker.resume()
   end, 'Resume picker')
+  map('c', '<S-Enter>', function()
+    require('noice').redirect(vim.fn.getcmdline())
+  end, 'Redirect cmdline')
+  for _, action in ipairs { { 'l', 'last' }, { 'h', 'history' }, { 'a', 'all' }, { 'd', 'dismiss' }, { 't', 'pick' } } do
+    map('n', '<leader>sn' .. action[1], function()
+      require('noice').cmd(action[2])
+    end, 'Noice ' .. action[2])
+  end
+  for _, action in ipairs { { '<C-f>', 4, 'Scroll forward' }, { '<C-b>', -4, 'Scroll backward' } } do
+    map({ 'i', 'n', 's' }, action[1], function()
+      if not require('noice.lsp').scroll(action[2]) then
+        return action[1]
+      end
+    end, action[3], { expr = true })
+  end
   map('n', '<leader>n', function()
     snacks.picker.notifications()
   end, 'Notification history')

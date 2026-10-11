@@ -1,4 +1,5 @@
 local snacks = require 'snacks'
+local icons = require 'jerry.integrations.home_manager.icons'
 
 require('bufferline').setup {
   options = {
@@ -10,9 +11,27 @@ require('bufferline').setup {
     right_mouse_command = function(bufnr)
       snacks.bufdelete(bufnr)
     end,
+    diagnostics_indicator = function(_, _, diag)
+      return vim.trim(
+        (diag.error and icons.diagnostics.Error .. diag.error .. ' ' or '')
+          .. (diag.warning and icons.diagnostics.Warn .. diag.warning or '')
+      )
+    end,
+    get_element_icon = function(opts)
+      return icons.ft[opts.filetype]
+    end,
     offsets = { { filetype = 'snacks_layout_box' } },
   },
 }
+
+vim.api.nvim_create_autocmd({ 'BufAdd', 'BufDelete' }, {
+  group = vim.api.nvim_create_augroup('jerry_bufferline_refresh', { clear = true }),
+  callback = function()
+    vim.schedule(function()
+      pcall(nvim_bufferline)
+    end)
+  end,
+})
 
 require('gitsigns').setup {
   signs = {
@@ -42,6 +61,7 @@ which_key.add {
   { '<leader>gh', group = 'hunks' },
   { '<leader>q', group = 'quit/session' },
   { '<leader>s', group = 'search' },
+  { '<leader>sn', group = 'noice' },
   { '<leader>u', group = 'UI' },
   { '<leader>w', group = 'windows' },
   { '<leader>x', group = 'diagnostics/quickfix' },

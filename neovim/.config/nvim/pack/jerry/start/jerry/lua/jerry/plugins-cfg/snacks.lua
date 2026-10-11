@@ -1,21 +1,31 @@
 local snacks = require 'snacks'
+local notify = vim.notify
 
 snacks.setup {
   bigfile = { enabled = true },
   dashboard = {
     enabled = true,
     preset = {
-      header = 'Neovim',
+      header = [[
+          ██╗      █████╗ ███████╗██╗   ██╗██╗   ██╗██╗███╗   ███╗          Z
+          ██║     ██╔══██╗╚══███╔╝╚██╗ ██╔╝██║   ██║██║████╗ ████║      Z
+          ██║     ███████║  ███╔╝  ╚████╔╝ ██║   ██║██║██╔████╔██║   z
+          ██║     ██╔══██║ ███╔╝    ╚██╔╝  ╚██╗ ██╔╝██║██║╚██╔╝██║ z
+          ███████╗██║  ██║███████╗   ██║    ╚████╔╝ ██║██║ ╚═╝ ██║
+          ╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝     ╚═══╝  ╚═╝╚═╝     ╚═╝
+      ]],
       keys = {
         {
+          icon = ' ',
           key = 'f',
           desc = 'Find File',
           action = function()
             snacks.picker.files()
           end,
         },
-        { key = 'n', desc = 'New File', action = ':ene | startinsert' },
+        { icon = ' ', key = 'n', desc = 'New File', action = ':ene | startinsert' },
         {
+          icon = ' ',
           key = 'g',
           desc = 'Find Text',
           action = function()
@@ -23,6 +33,7 @@ snacks.setup {
           end,
         },
         {
+          icon = ' ',
           key = 'r',
           desc = 'Recent Files',
           action = function()
@@ -30,13 +41,22 @@ snacks.setup {
           end,
         },
         {
+          icon = ' ',
           key = 's',
           desc = 'Restore Session',
           action = function()
             require('persistence').load()
           end,
         },
-        { key = 'q', desc = 'Quit', action = ':qa' },
+        {
+          icon = ' ',
+          key = 'c',
+          desc = 'Config',
+          action = function()
+            snacks.picker.files { cwd = vim.fn.stdpath 'config' }
+          end,
+        },
+        { icon = ' ', key = 'q', desc = 'Quit', action = ':qa' },
       },
     },
     sections = { { section = 'header' }, { section = 'keys', gap = 1, padding = 1 } },
@@ -69,6 +89,10 @@ snacks.setup {
   },
   quickfile = { enabled = true },
   scope = { enabled = true },
+  scroll = { enabled = true },
   statuscolumn = { enabled = true },
   words = { enabled = true },
 }
+
+-- Let Noice capture early messages before delegating notifications to Snacks.
+vim.notify = notify
