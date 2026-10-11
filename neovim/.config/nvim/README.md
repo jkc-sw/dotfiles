@@ -16,8 +16,9 @@ defaults. There is no separate Home Manager editor profile.
 
 ## Native defaults
 
-Appearance and completion use LazyVim's own settings: TokyoNight Moon, Noice,
-Snacks, lualine, bufferline, which-key, Blink and native snippets. Telescope
+Gruvbox Material provides a warm colorscheme with its default medium background.
+The UI and completion use LazyVim's own settings: Noice, Snacks, lualine,
+bufferline, which-key, Blink and native snippets. Telescope
 remains available for custom Perforce/AI pickers; Snacks is the default picker.
 Java uses LazyVim's language extra with the Nix `jdtls` launcher. Other
 retained language-server settings are in `lua/plugins/lsp.lua`.

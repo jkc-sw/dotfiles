@@ -52,7 +52,7 @@ require('lazy').setup {
     },
   },
   defaults = { lazy = false, version = false },
-  install = { colorscheme = { 'tokyonight', 'habamax' } },
+  install = { colorscheme = { 'gruvbox-material', 'habamax' } },
   checker = { enabled = true, notify = false },
   performance = {
     rtp = { paths = { local_config }, disabled_plugins = { 'gzip', 'tarPlugin', 'tohtml', 'tutor', 'zipPlugin' } },
