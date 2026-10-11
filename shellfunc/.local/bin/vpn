@@ -1,17 +1,22 @@
 #!/usr/bin/env bash
 
-# echo "ERR: VPN is disabled until further noticed"
-# exit 1
+# Keep credentials out of shell traces, including when invoked with bash -x.
+set +x
+set -o pipefail
+export -n password
 
-pass="$(pass mks/services/vpn/vpn | tr -d '\n')"
-pass="${pass//\[/\\[}"
-pass="${pass//\]/\\]}"
-
-username="$(pass mks/services/vpn/vpn-user | tr -d '\n')"
-url="$(pass mks/services/vpn/vpn-url | tr -d '\n')"
-
-if [[ -z "$pass" ]]; then
+if ! password="$(pass mks/services/vpn/vpn | tr -d '\n')" || [[ -z "$password" ]]; then
     echo "Cannot find system in pass, add it" >&2
+    exit 1
+fi
+
+if ! username="$(pass mks/services/vpn/vpn-user | tr -d '\n')" || [[ -z "$username" ]]; then
+    echo "Cannot find VPN username in pass, add it" >&2
+    exit 1
+fi
+
+if ! url="$(pass mks/services/vpn/vpn-url | tr -d '\n')" || [[ -z "$url" ]]; then
+    echo "Cannot find VPN URL in pass, add it" >&2
     exit 1
 fi
 
@@ -20,29 +25,13 @@ logpath="$HOME/Downloads/mksvpnlog.txt"
 starttime=$(date)
 echo "Start time is $starttime" | tee -a "$logpath"
 
-runsudo=sudo
-
-expect -c "set timeout 3
-    spawn $runsudo $(which openconnect) --usergroup=portal --protocol=gp $url
-    expect {
-        timeout {
-            send_user { Waited too long }
-            exit 1
-        }
-        Username:
-    }
-    send \"$username\r\"
-    expect {
-        timeout {
-            send_user { Waited too long }
-            exit 1
-        }
-        Password:
-    }
-    send \"$pass\r\"
-    interact" | ts
+# Bash's builtin printf keeps the password out of every process's arguments.
+printf '%s\n' "$password" | sudo "$(command -v openconnect)" \
+    --usergroup=portal --protocol=gp --user="$username" --passwd-on-stdin "$url" | ts
+status=$?
 
 endtime=$(date)
 
 echo "Start time is $starttime"
 echo "end time is $endtime" | tee -a "$logpath"
+exit "$status"
