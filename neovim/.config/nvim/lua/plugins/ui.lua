@@ -8,6 +8,7 @@ return {
     'folke/snacks.nvim',
     dependencies = { 'jerry' },
     opts = function(_, opts)
+      opts.scroll = { enabled = false }
       local snacks = require 'snacks'
       opts.picker = opts.picker or {}
       opts.picker.sources = opts.picker.sources or {}

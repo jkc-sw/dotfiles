@@ -23,6 +23,9 @@ remains available for custom Perforce/AI pickers; Snacks is the default picker.
 Java uses LazyVim's language extra with the Nix `jdtls` launcher. Other
 retained language-server settings are in `lua/plugins/lsp.lua`.
 
+Snacks animations are disabled in `lua/config/options.lua`. The Snacks scroll
+module is disabled in `lua/plugins/ui.lua` so buffer movement updates immediately.
+
 The leader is Space. Useful native shortcuts:
 
 | Keys | Action |
