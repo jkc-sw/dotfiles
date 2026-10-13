@@ -1,8 +1,8 @@
 local M = {}
 
 function M.setup()
-  -- Shared mappings only cover actions without a LazyVim default shortcut.
-  -- Each integrator owns navigation, search, LSP, diagnostics, and tab controls.
+  -- Retain personal overrides alongside actions without a LazyVim shortcut.
+  -- Apply these after the integrator's defaults.
   local function map(mode, lhs, rhs, desc)
     vim.keymap.set(mode, lhs, rhs, {
       noremap = true,
@@ -10,6 +10,11 @@ function M.setup()
       desc = require('jerry.keymap_categories').describe(lhs, desc, mode),
     })
   end
+
+  map({ 'n', 'x' }, ';', ':', 'Enter command line')
+  map({ 'n', 'x' }, ':', ';', 'Repeat character find')
+  map('n', 'H', 'H', 'Move to top of view')
+  map('n', 'L', 'L', 'Move to bottom of view')
 
   map('n', '<leader>pp', '<cmd>call jerry#common#TogglePasteMode()<CR>', 'Toggle paste mode')
   map('n', '<leader>r', "<cmd>silent exec '!tswitch -c nv'<CR>", 'Switch tmux session')

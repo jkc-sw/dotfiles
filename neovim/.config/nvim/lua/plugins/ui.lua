@@ -1,5 +1,10 @@
 return {
   {
+    'akinsho/bufferline.nvim',
+    -- Keep jerry.keymaps' native H/L motions when bufferline loads.
+    keys = { { '<S-h>', false }, { '<S-l>', false } },
+  },
+  {
     'folke/snacks.nvim',
     dependencies = { 'jerry' },
     opts = function(_, opts)

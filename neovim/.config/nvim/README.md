@@ -48,6 +48,11 @@ formatting (`<leader>cf`) and closing a tab (`<leader><Tab>d`). Unique custom
 actions retain their shortcuts. Use `<leader>fe` and `<leader>fb` to avoid
 prefix waits caused by the longer custom `<leader>e*` and `<leader>,*` mappings.
 
+Personal overrides swap `;` and `:` in Normal/Visual mode: `;` enters the
+command line and `:` repeats the last character find. Normal `H` / `L` retain
+their native top/bottom screen motions; `M` retains the middle motion.
+Use `[b` / `]b` for previous/next buffer navigation.
+
 Conform uses Nix-provided StyLua, Alejandra, shfmt, Ruff and prettierd.
 `:ConformInfo` shows the selected formatter. LazyVim controls formatting on
 save and its toggles. `:LuaFormat` and `:LuaLint` delegate to Conform and

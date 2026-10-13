@@ -1,9 +1,12 @@
 # Shortcut migration to LazyVim defaults
 
-The leader is Space. Old aliases are removed from the shared configuration;
+The leader is Space. Most old aliases are removed from the shared configuration;
 LazyVim supplies its native defaults directly. Home Manager supplies the
 executables. Uppercase keys are distinct. This report records the custom
 actions relocated during the migration.
+
+Personal overrides retain the Normal/Visual `;` / `:` swap and native Normal
+`H` / `L` screen motions. Use `[b` / `]b` to switch buffers. `M` remains native.
 
 ## Find shortcuts by category
 
@@ -39,7 +42,7 @@ and actions are unchanged by this categorization.
 
 | Previous binding | Use now | Action | Behavior change |
 | --- | --- | --- | --- |
-| ; / : (swapped) | : / ; | Command line / repeat character find | Native roles restored in Normal and Visual mode. |
+| ; / : (swapped) | ; / : (swapped) | Command line / repeat character find | Personal swap retained in Normal and Visual mode. |
 | <C-c> (Insert Esc alias) | <Esc> | Leave Insert normally | Insert Ctrl-c has its native cancellation behavior. |
 
 ### Files
