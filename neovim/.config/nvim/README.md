@@ -56,6 +56,10 @@ command line and `:` repeats the last character find. Normal `H` / `L` retain
 their native top/bottom screen motions; `M` retains the middle motion.
 Use `[b` / `]b` for previous/next buffer navigation.
 
+Insert-mode punctuation does not insert LazyVim's extra undo breaks, which
+prevent abbreviations such as `,n`, `.u` and `code;` from expanding. Markdown
+abbreviations remain buffer-local and expand after a delimiter such as Space.
+
 Conform uses Nix-provided StyLua, Alejandra, shfmt, Ruff and prettierd.
 `:ConformInfo` shows the selected formatter. LazyVim controls formatting on
 save and its toggles. `:LuaFormat` and `:LuaLint` delegate to Conform and
