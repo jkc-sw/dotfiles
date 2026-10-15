@@ -251,8 +251,8 @@ Markdown buffers. Categories describe the action even when a prefix is shared.
 
 ## Remaining differences
 
-- Home Manager uses Nix to manage plugins; it has no lazy.nvim manager at
-  `<leader>l`. The LazyVim integrator retains that distribution's manager.
+- lazy.nvim manages third-party plugins on all installations, including Home
+  Manager. `<leader>l` opens its manager; Nix supplies executable tooling.
 - `<leader>e` shares a prefix with custom Perforce commands. Use
   `<leader>fe` to open the explorer without waiting for the key timeout.
 - `<leader>,` shares a prefix with code evaluation and Markdown `<leader>,u`.

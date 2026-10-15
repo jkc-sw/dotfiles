@@ -8,8 +8,9 @@ function M.setup()
     return M
   end
   vim.g.jerry_enabled = true
-  vim.filetype.add { extensions = { inc = 'bitbake', keymap = 'keymap' } }
+  vim.filetype.add { extension = { inc = 'bitbake', keymap = 'keymap' } }
   require 'jerry.global-autocommands'
+  require 'jerry.global-commands'
   require 'jerry.global-funcs'
   require('jerry.tmux').setup()
   require('jerry.lua-tools').setup()

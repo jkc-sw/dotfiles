@@ -6,6 +6,8 @@ and build tools. lazy.nvim installs every third-party plugin; LazyVim owns the
 UI, completion, editor options, keymaps, formatting and language-server setup.
 Mason and mason-lspconfig are disabled: executables come from Nix.
 nvim-treesitter builds and installs its grammars using the supplied CLI/compiler.
+The complete supported parser set is installed, preserving the former Nix
+`withAllGrammars` coverage. The first installation can take several minutes.
 
 `init.lua` loads `lua/config/lazy.lua`, following the LazyVim starter layout.
 `lua/plugins` contains the retained custom tools and small overrides. The
@@ -22,6 +24,18 @@ bufferline, which-key, Blink and native snippets. Telescope
 remains available for custom Perforce/AI pickers; Snacks is the default picker.
 Java uses LazyVim's language extra with the Nix `jdtls` launcher. Other
 retained language-server settings are in `lua/plugins/lsp.lua`.
+
+`lua/plugins/annotations.lua` restores rendered Markdown, color previews and
+context labels at the end of code blocks. Context labels retain the previous
+`disable_virtual_lines` setting so they do not insert extra display lines.
+Use `:RenderMarkdown toggle`, `:ColorizerToggle` and `:NvimContextVtToggle`
+to toggle these displays. Home Manager supplies `latex2text` for Markdown math.
+Git integration uses Neogit, Gitsigns and Lazygit;
+Fugitive is no longer installed.
+
+The local plugin detects `.inc` as BitBake and `.keymap` as the custom keymap
+syntax. `:ArgsToQF` replaces the quickfix list with the current `:args`, keeping
+filenames literal, including spaces and punctuation.
 
 Snacks animations are disabled in `lua/config/options.lua`. The Snacks scroll
 module is disabled in `lua/plugins/ui.lua` so buffer movement updates immediately.

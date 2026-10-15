@@ -204,7 +204,7 @@ function M.category(map, source)
     { 'Pairs', 'minipairs', 'open action', 'close action', 'closeopen action' },
     { 'Completion', 'blink', 'cmp', 'complete' },
     { 'Snippets', 'snippet', 'luasnip' },
-    { 'Git', 'fugitive', 'gitsigns', 'neogit', 'git ' },
+    { 'Git', 'gitsigns', 'neogit', 'git ' },
     { 'LSP', 'lsp', 'signature', 'hover' },
     { 'Diagnostics', 'diagnostic', 'warning', 'error' },
     { 'Terminal', 'terminal' },

@@ -1,5 +1,4 @@
 return {
-  { 'tpope/vim-fugitive', cmd = { 'Git', 'G', 'Gdiffsplit', 'Gvdiffsplit', 'Gedit' } },
   { 'machakann/vim-sandwich' },
   { 'michaeljsmith/vim-indent-object' },
   { 'godlygeek/tabular', cmd = { 'Tabularize', 'Tab' } },
