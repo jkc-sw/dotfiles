@@ -11,6 +11,9 @@ The `jerry` and `perforce` local plugins register custom tools and runtime files
 through `.setup()`. Apply retained custom mappings in `config.keymaps`, after
 LazyVim's native defaults. Do not reintroduce a parallel Home Manager feature
 flag, manual third-party `.setup()` calls, or copies of LazyVim's defaults.
+Prefer LazyVim extras, imported in `config.lazy`, over hand-written language
+setup; keep `lua/plugins` for overrides and servers no extra covers.
+Filetype-specific behavior belongs in the local plugins' `ftplugin/`.
 
 Commit the baseline `lazy-lock.json` and `lazyvim.json`. Runtime manager state
 and private overrides live under Neovim's XDG state directory, outside Git.

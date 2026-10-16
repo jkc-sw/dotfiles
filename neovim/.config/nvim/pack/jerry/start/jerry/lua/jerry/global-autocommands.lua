@@ -27,68 +27,13 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   end,
 })
 
--- indentConfig
-vim.api.nvim_create_augroup('indentConfig', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'TabEnter' }, {
-  group = 'indentConfig',
-  pattern = '*',
-  callback = function()
-    vim.cmd [[iabbrev vimet vim:et ts=4 sts=4 sw=4]]
-  end,
-})
-
--- markdownFenceHighlight
-vim.api.nvim_create_augroup('markdownFenceHighlight', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'TabEnter' }, {
-  group = 'markdownFenceHighlight',
-  pattern = '*.md',
-  callback = function()
-    vim.cmd [[
-            iabbrev ats <c-r>=strftime('%Y-%m-%d %A')<cr>
-            iabbrev #T # <c-r>=strftime('%Y-%m-%d %A')<cr>
-            iabbrev #t # <c-r>=strftime('%Y-%m-%d %A')<cr>
-            iabbrev ##T ## <c-r>=strftime('%Y-%m-%d %A')<cr>
-            iabbrev ##t ## <c-r>=strftime('%Y-%m-%d %A')<cr>
-            iabbrev ###T ### <c-r>=strftime('%Y-%m-%d %A')<cr>
-            iabbrev ###t ### <c-r>=strftime('%Y-%m-%d %A')<cr>
-            iabbrev ####T #### <c-r>=strftime('%Y-%m-%d %A')<cr>
-            iabbrev ####t #### <c-r>=strftime('%Y-%m-%d %A')<cr>
-        ]]
-  end,
-})
-vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'TabEnter' }, {
-  group = 'markdownFenceHighlight',
-  pattern = '*.ps1',
-  callback = function()
-    vim.cmd [[
-            iabbrev nfor <c-r>=jerry#common#JiraNoFormat()<cr><up>
-            iabbrev code; <c-r>=jerry#common#JiraCodeFormat()<cr><up>
-        ]]
-  end,
-})
-
--- sourcerTheseCode
-vim.api.nvim_create_augroup('sourcerTheseCode', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'TabEnter' }, {
-  group = 'sourcerTheseCode',
-  pattern = '*',
-  callback = function()
-    vim.cmd [[
-            iabbrev tit SOURCE_THESE_VIMS_START<cr><cr>echom 'Sourced'<cr>SOURCE_THESE_VIMS_END
-            iabbrev tyt SOURCE_THESE_LUAS_START<cr><cr>print('Sourced')<cr>SOURCE_THESE_LUAS_END
-        ]]
-  end,
-})
-
--- markerTheseCode
-vim.api.nvim_create_augroup('markerTheseCode', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'TabEnter' }, {
-  group = 'markerTheseCode',
-  pattern = '*',
-  callback = function()
-    vim.cmd [[iabbrev tpt MARK_THIS_PLACE]]
-  end,
-})
+-- Global abbreviations. Filetype-specific ones live in ftplugin/ as <buffer> abbreviations.
+vim.cmd [[
+  iabbrev vimet vim:et ts=4 sts=4 sw=4
+  iabbrev tit SOURCE_THESE_VIMS_START<cr><cr>echom 'Sourced'<cr>SOURCE_THESE_VIMS_END
+  iabbrev tyt SOURCE_THESE_LUAS_START<cr><cr>print('Sourced')<cr>SOURCE_THESE_LUAS_END
+  iabbrev tpt MARK_THIS_PLACE
+]]
 
 -- DisableSomeSyntax
 vim.api.nvim_create_augroup('DisableSomeSyntax', { clear = true })

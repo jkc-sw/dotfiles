@@ -1,5 +1,4 @@
 return {
-  { 'machakann/vim-sandwich' },
   { 'michaeljsmith/vim-indent-object' },
   { 'godlygeek/tabular', cmd = { 'Tabularize', 'Tab' } },
   {
@@ -9,6 +8,7 @@ return {
     opts = {},
   },
   {
+    -- Perforce pickers still use Telescope; Snacks is the LazyVim picker.
     'nvim-telescope/telescope.nvim',
     cmd = 'Telescope',
     dependencies = {
@@ -27,9 +27,9 @@ return {
     'olimorris/codecompanion.nvim',
     tag = 'v17.33.0', -- Retain the existing pin while upstream changes its API.
     cmd = { 'CodeCompanion', 'CodeCompanionChat', 'CodeCompanionActions' },
-    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter', 'nvim-telescope/telescope.nvim' },
+    dependencies = { 'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter' },
     opts = {
-      display = { action_palette = { provider = 'telescope' } },
+      display = { action_palette = { provider = 'snacks' } },
       strategies = { chat = { adapter = 'azure_openai' }, inline = { adapter = 'azure_openai' } },
       -- The built-in adapter reads AZURE_OPENAI_API_KEY and AZURE_OPENAI_ENDPOINT.
       -- Supply private adapter/model overrides through the local configuration.

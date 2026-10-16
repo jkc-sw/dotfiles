@@ -295,8 +295,8 @@ endfun
 fun! jerry#common#TrimWhitespace()
     let ft=&filetype
 
-    " skip for the diff type
-    if ft ==? 'diff'
+    " skip diffs, and Markdown where two trailing spaces are a line break
+    if ft ==? 'diff' || ft =~? '^markdown'
         return
     endif
 

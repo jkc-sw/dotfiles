@@ -1,9 +1,7 @@
 return {
   {
+    -- lang.markdown owns loading and the <leader>um toggle.
     'MeanderingProgrammer/render-markdown.nvim',
-    ft = { 'markdown', 'codecompanion' },
-    cmd = 'RenderMarkdown',
-    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },
     opts = {
       completions = { blink = { enabled = true } },
       code = { border = 'thick' },

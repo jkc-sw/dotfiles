@@ -21,9 +21,20 @@ defaults. There is no separate Home Manager editor profile.
 Gruvbox Material provides a warm colorscheme with its default medium background.
 The UI and completion use LazyVim's own settings: Noice, Snacks, lualine,
 bufferline, which-key, Blink and native snippets. Telescope
-remains available for custom Perforce/AI pickers; Snacks is the default picker.
-Java uses LazyVim's language extra with the Nix `jdtls` launcher. Other
-retained language-server settings are in `lua/plugins/lsp.lua`.
+remains available for the custom Perforce pickers; Snacks is the default picker,
+including the CodeCompanion action palette.
+
+Languages use LazyVim's extras, imported in `lua/config/lazy.lua` (not
+`lazyvim.json`, whose `:LazyExtras` copy lives in the state directory):
+`lang.{clangd,cmake,docker,go,java,json,markdown,nix,python,rust,tex,typescript,yaml}`,
+`formatting.prettier` and `coding.mini-surround`. Java uses the Nix `jdtls`
+launcher. `lua/plugins/lsp.lua` only adds servers no extra covers (Bash, MATLAB,
+Groovy, PowerShell, pylsp) and small overrides; `lua/plugins/formatting.lua`
+keeps Alejandra for Nix and Ruff for Python. Add a language by importing its
+extra and supplying its tools through Home Manager.
+
+Surround uses mini.surround on the `gs` prefix (`gsa`, `gsd`, `gsr`, `gsf`,
+`gsh`), so Flash's `s` jumps without waiting.
 
 `lua/plugins/annotations.lua` restores rendered Markdown, color previews and
 context labels at the end of code blocks. Context labels retain the previous
@@ -72,9 +83,13 @@ Use `[b` / `]b` for previous/next buffer navigation.
 
 Insert-mode punctuation does not insert LazyVim's extra undo breaks, which
 prevent abbreviations such as `,n`, `.u` and `code;` from expanding. Markdown
-abbreviations remain buffer-local and expand after a delimiter such as Space.
+(`ats`, `#t`, ...) and PowerShell (`nfor`, `code;`) abbreviations are
+buffer-local, defined in the `jerry` ftplugins, and expand after a delimiter
+such as Space. Trailing whitespace is trimmed on save, except in diffs and
+Markdown, where two trailing spaces are a line break.
 
-Conform uses Nix-provided StyLua, Alejandra, shfmt, Ruff and prettierd.
+Conform uses Nix-provided StyLua, Alejandra, shfmt, Ruff, Prettier, goimports
+and gofumpt.
 `:ConformInfo` shows the selected formatter. LazyVim controls formatting on
 save and its toggles. `:LuaFormat` and `:LuaLint` delegate to Conform and
 nvim-lint; Luacheck and ShellCheck publish diagnostics through nvim-lint.

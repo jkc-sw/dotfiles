@@ -1,21 +1,13 @@
 return {
   {
     'stevearc/conform.nvim',
+    -- Language extras and formatting.prettier supply the remaining formatters.
     opts = {
       formatters_by_ft = {
         nix = { 'alejandra' },
         bash = { 'shfmt' },
+        -- Avoid LSP fallback formatting, which pylsp would also offer.
         python = { 'ruff_format' },
-        javascript = { 'prettierd' },
-        javascriptreact = { 'prettierd' },
-        typescript = { 'prettierd' },
-        typescriptreact = { 'prettierd' },
-        json = { 'prettierd' },
-        jsonc = { 'prettierd' },
-        yaml = { 'prettierd' },
-        markdown = { 'prettierd' },
-        html = { 'prettierd' },
-        css = { 'prettierd' },
       },
     },
   },

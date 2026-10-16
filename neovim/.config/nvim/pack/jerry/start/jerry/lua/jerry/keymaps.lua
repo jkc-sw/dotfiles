@@ -6,7 +6,7 @@ function M.setup()
   -- LazyVim's punctuation undo breaks interrupt abbreviations such as ,n,
   -- .u and code;. Keep punctuation in the same insert sequence.
   for _, key in ipairs { ',', '.', ';' } do
-    vim.keymap.del('i', key)
+    pcall(vim.keymap.del, 'i', key)
   end
 
   local function map(mode, lhs, rhs, desc)

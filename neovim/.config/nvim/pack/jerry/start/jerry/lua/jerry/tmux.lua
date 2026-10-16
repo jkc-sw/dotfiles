@@ -8,50 +8,42 @@ SOURCE_THESE_VIMS_END
 
 local M = {}
 
---- @brief Setup all the autocommand
---- @throws TBD
+--- @brief Register the global tmux shortcuts
 M.setup = function()
-  local augroup_id = vim.api.nvim_create_augroup('jerry_tmux', {})
-  vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'TabEnter' }, {
-    group = augroup_id,
-    desc = 'Register tmux text shortcuts',
-    callback = function()
-      local function map(mode, lhs, rhs, desc)
-        vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = 'Tmux: ' .. desc })
-      end
+  local function map(mode, lhs, rhs, desc)
+    vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = 'Tmux: ' .. desc })
+  end
 
-      map('n', '<leader>te', function()
-        M.tmux_send_current_line_to_a_pane ':.+1'
-      end, 'Send line or selection to next pane')
-      map(
-        'v',
-        '<leader>te',
-        ":<C-U>lua require('jerry.tmux').tmux_send_current_visual_block_to_a_pane(':.+1')<CR>",
-        'Send line or selection to next pane'
-      )
-      map('n', '<leader>to', function()
-        M.tmux_send_current_line_to_a_pane ':.-1'
-      end, 'Send line or selection to previous pane')
-      map(
-        'v',
-        '<leader>to',
-        ":<C-U>lua require('jerry.tmux').tmux_send_current_visual_block_to_a_pane(':.-1')<CR>",
-        'Send line or selection to previous pane'
-      )
-      map('n', '<leader>tu', function()
-        M.tmux_send_current_text_block_to_a_pane ':.+1'
-      end, 'Send text block to next pane')
-      map('n', '<leader>ta', function()
-        M.tmux_send_current_text_block_to_a_pane ':.-1'
-      end, 'Send text block to previous pane')
-      map('n', '<leader>t.', function()
-        M.tmux_send_cword_under_cursor_to_a_pane ':.+1'
-      end, 'Send WORD to next pane')
-      map('n', '<leader>t,', function()
-        M.tmux_send_cword_under_cursor_to_a_pane ':.-1'
-      end, 'Send WORD to previous pane')
-    end,
-  })
+  map('n', '<leader>te', function()
+    M.tmux_send_current_line_to_a_pane ':.+1'
+  end, 'Send line or selection to next pane')
+  map(
+    'v',
+    '<leader>te',
+    ":<C-U>lua require('jerry.tmux').tmux_send_current_visual_block_to_a_pane(':.+1')<CR>",
+    'Send line or selection to next pane'
+  )
+  map('n', '<leader>to', function()
+    M.tmux_send_current_line_to_a_pane ':.-1'
+  end, 'Send line or selection to previous pane')
+  map(
+    'v',
+    '<leader>to',
+    ":<C-U>lua require('jerry.tmux').tmux_send_current_visual_block_to_a_pane(':.-1')<CR>",
+    'Send line or selection to previous pane'
+  )
+  map('n', '<leader>tu', function()
+    M.tmux_send_current_text_block_to_a_pane ':.+1'
+  end, 'Send text block to next pane')
+  map('n', '<leader>ta', function()
+    M.tmux_send_current_text_block_to_a_pane ':.-1'
+  end, 'Send text block to previous pane')
+  map('n', '<leader>t.', function()
+    M.tmux_send_cword_under_cursor_to_a_pane ':.+1'
+  end, 'Send WORD to next pane')
+  map('n', '<leader>t,', function()
+    M.tmux_send_cword_under_cursor_to_a_pane ':.-1'
+  end, 'Send WORD to previous pane')
 end
 
 --- @brief Wrapper function to send text to a tmux pane

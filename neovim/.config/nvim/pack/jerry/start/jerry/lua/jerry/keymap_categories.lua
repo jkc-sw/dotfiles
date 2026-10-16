@@ -200,7 +200,7 @@ function M.category(map, source)
   for _, rule in ipairs {
     { 'Comments', 'comment' },
     { 'Text objects', 'textobject', 'textobj' },
-    { 'Surround', 'sandwich', 'surround' },
+    { 'Surround', 'surround' },
     { 'Pairs', 'minipairs', 'open action', 'close action', 'closeopen action' },
     { 'Completion', 'blink', 'cmp', 'complete' },
     { 'Snippets', 'snippet', 'luasnip' },

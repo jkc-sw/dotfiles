@@ -44,6 +44,7 @@ and actions are unchanged by this categorization.
 | --- | --- | --- | --- |
 | ; / : (swapped) | ; / : (swapped) | Command line / repeat character find | Personal swap retained in Normal and Visual mode. |
 | <C-c> (Insert Esc alias) | <Esc> | Leave Insert normally | Insert Ctrl-c has its native cancellation behavior. |
+| sa / sd / sr (vim-sandwich) | gsa / gsd / gsr | Add / delete / replace surrounding | mini.surround replaces vim-sandwich so Flash's `s` jumps without waiting. Also gsf / gsF find and gsh highlight. |
 
 ### Files
 

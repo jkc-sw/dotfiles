@@ -15,6 +15,7 @@ end
 
 return {
   -- Home Manager supplies all external tools; LazyVim owns LSP setup.
+  -- Language extras imported in config.lazy configure the common servers.
   { 'mason-org/mason-lspconfig.nvim', enabled = false },
   {
     'mason-org/mason.nvim',
@@ -22,15 +23,9 @@ return {
   },
   {
     'neovim/nvim-lspconfig',
-    opts = function(_, opts)
-      local servers = {
-        ['*'] = { mason = false },
-        clangd = { filetypes = { 'c', 'cpp', 'cc', 'objc', 'objcpp' } },
-        rust_analyzer = {},
+    opts = {
+      servers = {
         lua_ls = { settings = { Lua = { format = { enable = false } } } },
-        gopls = {},
-        golangci_lint_ls = {},
-        jsonls = {},
         bashls = {},
         matlab_ls = {
           settings = {
@@ -48,20 +43,6 @@ return {
             on_dir(vim.fn.getcwd())
           end,
         },
-        nil_ls = {},
-        dockerls = {},
-        texlab = {},
-        ts_ls = {},
-        cmake = {},
-        jdtls = {},
-        yamlls = {
-          settings = {
-            redhat = { telemetry = { enabled = false } },
-            yaml = { format = { enable = true }, validate = true, hover = true, completion = true },
-          },
-        },
-        ruff = { init_options = { settings = { args = {} } } },
-        pyright = {},
         pylsp = {
           single_file_support = false,
           root_dir = function(_, on_dir)
@@ -73,15 +54,8 @@ return {
           cmd = vim.fn.executable 'power_es_work.sh' == 1 and { 'power_es_work.sh' }
             or { 'powershell-editor-services', '-Stdio' },
         },
-      }
-      opts.servers = vim.tbl_deep_extend('force', opts.servers or {}, servers)
-      -- Applies to built-in and subsequently enabled language extras alike.
-      for _, server in pairs(opts.servers) do
-        if type(server) == 'table' then
-          server.mason = false
-        end
-      end
-    end,
+      },
+    },
   },
   {
     'mfussenegger/nvim-jdtls',
