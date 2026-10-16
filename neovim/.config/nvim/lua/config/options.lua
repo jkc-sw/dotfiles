@@ -1,4 +1,3 @@
--- Keep the fresh LazyVim picker even though Perforce also uses Telescope.
 vim.g.lazyvim_picker = 'snacks'
 vim.g.have_nerd_font = true
 

@@ -217,61 +217,6 @@ function! jerry#common#GetVisualSelection()
     return join(jerry#common#GetVisualSelectionAsList(), "\r")
 endfunc
 
-" function to search through files
-func! jerry#common#FileFuzzySearch()
-    if g:use_fzf
-        :Files
-    else
-        lua require'telescope.builtin'.find_files{find_command = vim.split(vim.env.FZF_DEFAULT_COMMAND, ' ')}
-    endif
-endfun
-
-" function to search through lines
-func! jerry#common#LinesFuzzySearch()
-    if g:use_fzf
-        :Lines
-    else
-        lua require'telescope.builtin'.current_buffer_fuzzy_find{}
-    endif
-endfun
-
-" function to search through buffer
-func! jerry#common#BufferFuzzySearch()
-    if g:use_fzf
-        :Buffers
-    else
-        lua require'telescope.builtin'.buffers{}
-    endif
-endfun
-
-" function to search string globally
-func! jerry#common#WordFuzzySearch()
-    if g:use_fzf
-        exec 'Rg '.expand('<cword>')
-    else
-        lua require('telescope.builtin').grep_string()
-    endif
-endfun
-
-" function to find references
-func! jerry#common#ListSymbols()
-    if g:use_fzf
-        echom "List symbols from fzf is not supported"
-    else
-        lua require('telescope.builtin').lsp_document_symbols()
-    endif
-endfun
-
-" function to search string globally for a string
-func! jerry#common#GlobalFuzzySearch()
-    if g:use_fzf
-        let word = input('Grep For >')
-        exec 'Rg '.word
-    else
-        lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For >") })
-    endif
-endfun
-
 " function to return current pasemode status
 func! jerry#common#PasteModeReport()
     if &paste == 1

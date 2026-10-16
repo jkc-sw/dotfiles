@@ -20,9 +20,8 @@ defaults. There is no separate Home Manager editor profile.
 
 Gruvbox Material provides a warm colorscheme with its default medium background.
 The UI and completion use LazyVim's own settings: Noice, Snacks, lualine,
-bufferline, which-key, Blink and native snippets. Telescope
-remains available for the custom Perforce pickers; Snacks is the default picker,
-including the CodeCompanion action palette.
+bufferline, which-key, Blink and native snippets. Snacks is the only picker,
+including the Perforce opened-files picker (`<leader>eo`).
 
 Languages use LazyVim's extras, imported in `lua/config/lazy.lua` (not
 `lazyvim.json`, whose `:LazyExtras` copy lives in the state directory):
@@ -114,9 +113,7 @@ Machine-local options belong in
 `~/.local/state/nvim/local/lua/config/local.lua`; private plugin specs belong
 in `~/.local/state/nvim/local/lua/plugins/local.lua`. The bootstrap includes
 that directory in the runtime path. Keep credentials in the environment or
-these untracked files. The retained CodeCompanion adapter reads
-`AZURE_OPENAI_API_KEY` and `AZURE_OPENAI_ENDPOINT`; private model/adapter
-settings belong in local plugin specs.
+these untracked files.
 
 Upstream configuration references:
 https://www.lazyvim.org/configuration
