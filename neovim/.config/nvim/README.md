@@ -115,6 +115,13 @@ in `~/.local/state/nvim/local/lua/plugins/local.lua`. The bootstrap includes
 that directory in the runtime path. Keep credentials in the environment or
 these untracked files.
 
+The optional `mks` work plugin is loaded at startup from
+`~/.config/nvim-work/pack/mks/start/mks` when that directory exists. Keep using
+Stow to manage `nvim-work` independently of Home Manager's read-only `nvim`
+directory. lazy.nvim sources the work plugin's `plugin/perforce.vim`; no
+additional runtime-path or package-path configuration is needed. Machines
+without the work plugin skip it automatically.
+
 Upstream configuration references:
 https://www.lazyvim.org/configuration
 https://lazy.folke.io/usage/lockfile
