@@ -12,6 +12,7 @@ return {
       local snacks = require 'snacks'
       opts.picker = opts.picker or {}
       opts.picker.sources = opts.picker.sources or {}
+      opts.picker.sources.files = vim.tbl_deep_extend('force', opts.picker.sources.files or {}, { hidden = true })
       opts.picker.sources.keymaps = {
         transform = require('jerry.keymap_categories').transform,
         matcher = { sort_empty = true },
