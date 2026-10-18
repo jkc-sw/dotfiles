@@ -19,8 +19,6 @@ function M.setup()
 
   map({ 'n', 'x' }, ';', ':', 'Enter command line')
   map({ 'n', 'x' }, ':', ';', 'Repeat character find')
-  map('n', 'H', 'H', 'Move to top of view')
-  map('n', 'L', 'L', 'Move to bottom of view')
 
   map('n', '<leader>pp', '<cmd>call jerry#common#TogglePasteMode()<CR>', 'Toggle paste mode')
   map('n', '<leader>r', "<cmd>silent exec '!tswitch -c nv'<CR>", 'Switch tmux session')

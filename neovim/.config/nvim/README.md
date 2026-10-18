@@ -76,9 +76,8 @@ actions retain their shortcuts. Use `<leader>fe` and `<leader>fb` to avoid
 prefix waits caused by the longer custom `<leader>e*` and `<leader>,*` mappings.
 
 Personal overrides swap `;` and `:` in Normal/Visual mode: `;` enters the
-command line and `:` repeats the last character find. Normal `H` / `L` retain
-their native top/bottom screen motions; `M` retains the middle motion.
-Use `[b` / `]b` for previous/next buffer navigation.
+command line and `:` repeats the last character find. `H` / `L` use LazyVim's
+previous/next buffer mappings (also `[b` / `]b`).
 
 Insert-mode punctuation does not insert LazyVim's extra undo breaks, which
 prevent abbreviations such as `,n`, `.u` and `code;` from expanding. Markdown

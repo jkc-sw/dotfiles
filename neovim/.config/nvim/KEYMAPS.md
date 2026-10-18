@@ -5,8 +5,8 @@ LazyVim supplies its native defaults directly. Home Manager supplies the
 executables. Uppercase keys are distinct. This report records the custom
 actions relocated during the migration.
 
-Personal overrides retain the Normal/Visual `;` / `:` swap and native Normal
-`H` / `L` screen motions. Use `[b` / `]b` to switch buffers. `M` remains native.
+Personal overrides retain the Normal/Visual `;` / `:` swap. LazyVim's `H` / `L`
+switch to the previous/next buffer; `[b` / `]b` also work.
 
 ## Find shortcuts by category
 
