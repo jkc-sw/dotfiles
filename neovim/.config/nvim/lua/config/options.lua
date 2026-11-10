@@ -1,6 +1,9 @@
 vim.g.lazyvim_picker = 'snacks'
 vim.g.have_nerd_font = true
 
+-- Format only on request (<leader>cf); <leader>uf re-enables format on save.
+vim.g.autoformat = false
+
 -- Keep Snacks UI updates immediate, without animation frames.
 vim.g.snacks_animate = false
 

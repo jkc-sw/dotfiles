@@ -88,9 +88,11 @@ Markdown, where two trailing spaces are a line break.
 
 Conform uses Nix-provided StyLua, Alejandra, shfmt, Ruff, Prettier, goimports
 and gofumpt.
-`:ConformInfo` shows the selected formatter. LazyVim controls formatting on
-save and its toggles. `:LuaFormat` and `:LuaLint` delegate to Conform and
-nvim-lint; Luacheck and ShellCheck publish diagnostics through nvim-lint.
+`:ConformInfo` shows the selected formatter. Format on save is off
+(`vim.g.autoformat = false`); format with `<leader>cf`, or re-enable it with
+LazyVim's `<leader>uf` / `<leader>uF` toggles. `:LuaFormat` and `:LuaLint`
+delegate to Conform and nvim-lint; Luacheck and ShellCheck publish diagnostics
+through nvim-lint.
 Project Lua policies live in `.stylua.toml` and `.luacheckrc`.
 
 ## Writable state and updates
