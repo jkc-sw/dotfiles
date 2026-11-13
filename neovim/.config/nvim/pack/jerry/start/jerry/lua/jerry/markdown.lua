@@ -170,7 +170,6 @@ M.setup_buffer = function()
   vim.opt_local.linebreak = true
 
   -- This small block will automatically soft wrap a long line in a list. Visual only.
-  -- https://t3.chat/share/y8c0bx42dw
   vim.opt_local.breakindent = true
   -- 'list:-1' tells Vim to align soft-wrapped lines with the list text.
   vim.opt_local.breakindentopt = 'list:-1'
