@@ -21,7 +21,7 @@ function M.setup()
   map({ 'n', 'x' }, ':', ';', 'Repeat character find')
 
   map('n', '<leader>pp', '<cmd>call jerry#common#TogglePasteMode()<CR>', 'Toggle paste mode')
-  map('n', '<leader>r', "<cmd>silent exec '!tswitch -c nv'<CR>", 'Switch tmux session')
+  map('n', '<leader>r', "<cmd>silent exec '!tswitch -c nv'<CR>", 'Open side pane')
   map('n', '<leader>,.', "<cmd>call execute(getline('.'), '')<CR>", 'Evaluate Vimscript line')
   map(
     'v',
@@ -41,30 +41,17 @@ function M.setup()
   map('n', '<leader>T', '<cmd>lua SL()<CR>', 'Send line to Neovim terminal')
   map('v', '<leader>T', ':<C-u>lua SV()<CR>', 'Send selection to Neovim terminal')
 
-  map(
-    'n',
-    '<leader>oe',
-    '<cmd>silent execute "!tmux send-keys -t :.+1 Up Enter"<CR>',
-    'Repeat command in next tmux pane'
-  )
-  map(
-    'n',
-    '<leader>ou',
-    '<cmd>silent execute "!tmux send-keys -t :.-1 Up Enter"<CR>',
-    'Repeat command in previous tmux pane'
-  )
-  map(
-    'n',
-    '<leader>oa',
-    '<cmd>silent execute "!tmux send-keys -t :-.1 Up Enter"<CR>',
-    'Repeat command in previous tmux window'
-  )
-  map(
-    'n',
-    '<leader>oo',
-    '<cmd>silent execute "!tmux send-keys -t :+.1 Up Enter"<CR>',
-    'Repeat command in next tmux window'
-  )
+  -- Repeat the last shell command in another tmux / zellij pane.
+  for lhs, spec in pairs {
+    ['<leader>oe'] = { ':.+1', 'Repeat command in next pane' },
+    ['<leader>ou'] = { ':.-1', 'Repeat command in previous pane' },
+    ['<leader>oo'] = { ':+.1', 'Repeat command in next window' },
+    ['<leader>oa'] = { ':-.1', 'Repeat command in previous window' },
+  } do
+    map('n', lhs, function()
+      require('jerry.tmux').repeat_last_command(spec[1])
+    end, spec[2])
+  end
 
   map(
     'n',

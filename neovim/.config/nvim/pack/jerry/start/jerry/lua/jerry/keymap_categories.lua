@@ -3,7 +3,7 @@ local M = {}
 local exact = {
   ['<leader>pp'] = 'Paste',
   ['<leader>p'] = 'Paste',
-  ['<leader>r'] = 'Tmux',
+  ['<leader>r'] = 'Panes',
   ['<leader>,.'] = 'Evaluation',
   ['<leader>,p'] = 'Evaluation',
   ['<leader>,u'] = 'Journal',
@@ -99,6 +99,7 @@ for _, name in ipairs {
   'Navigation',
   'Notifications',
   'Pairs',
+  'Panes',
   'Paste',
   'Perforce',
   'Quickfix',
@@ -113,7 +114,6 @@ for _, name in ipairs {
   'Terminal',
   'Text tools',
   'Text objects',
-  'Tmux',
   'Undo',
   'Windows',
 } do
@@ -185,7 +185,7 @@ function M.category(map, source)
     return 'Windows'
   end
   if key:match '^<leader>o' or key:match '^<leader>t[eoua.,]$' then
-    return 'Tmux'
+    return 'Panes'
   end
   if key:match '^[%[%]]t$' then
     return 'Tasks'

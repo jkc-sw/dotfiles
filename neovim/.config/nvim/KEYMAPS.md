@@ -12,7 +12,7 @@ switch to the previous/next buffer; `[b` / `]b` also work.
 
 Open `<leader>sk` (Space s k), then search a category name or an action.
 The list includes a category column and sorts by category when the query is
-empty. Shared custom mappings, including tmux, Perforce, and Markdown buffer
+empty. Shared custom mappings, including tmux/zellij panes, Perforce, and Markdown buffer
 mappings, also show `Category: action` in which-key. Existing key sequences
 and actions are unchanged by this categorization.
 
@@ -234,21 +234,23 @@ Markdown buffers. Categories describe the action even when a prefix is shared.
 | --- | --- | --- |
 | Space tp | Normal | Mark text region |
 
-### Tmux
+### Panes
+
+tmux or zellij, whichever Neovim runs in.
 
 | Binding | Mode / scope | Action |
 | --- | --- | --- |
-| Space oa | Normal | Repeat command in previous tmux window |
-| Space oe | Normal | Repeat command in next tmux pane |
-| Space oo | Normal | Repeat command in next tmux window |
-| Space ou | Normal | Repeat command in previous tmux pane |
-| Space r | Normal | Switch tmux session |
-| Space t, | Normal | Send WORD to previous tmux pane |
-| Space t. | Normal | Send WORD to next tmux pane |
-| Space ta | Normal | Send text block to previous tmux pane |
-| Space te | Normal / Visual | Send line / selection to next tmux pane |
-| Space to | Normal / Visual | Send line / selection to previous tmux pane |
-| Space tu | Normal | Send text block to next tmux pane |
+| Space oa | Normal | Repeat command in previous window |
+| Space oe | Normal | Repeat command in next pane |
+| Space oo | Normal | Repeat command in next window |
+| Space ou | Normal | Repeat command in previous pane |
+| Space r | Normal | Open side pane (`tswitch -c nv`) |
+| Space t, | Normal | Send WORD to previous pane |
+| Space t. | Normal | Send WORD to next pane |
+| Space ta | Normal | Send text block to previous pane |
+| Space te | Normal / Visual | Send line / selection to next pane |
+| Space to | Normal / Visual | Send line / selection to previous pane |
+| Space tu | Normal | Send text block to next pane |
 
 ## Remaining differences
 

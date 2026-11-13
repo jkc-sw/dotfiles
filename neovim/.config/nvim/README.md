@@ -11,7 +11,7 @@ The complete supported parser set is installed, preserving the former Nix
 
 `init.lua` loads `lua/config/lazy.lua`, following the LazyVim starter layout.
 `lua/plugins` contains the retained custom tools and small overrides. The
-local `jerry` and `perforce` plugins provide tmux, journal, clipboard, code
+local `jerry` and `perforce` plugins provide tmux/zellij pane, journal, clipboard, code
 block, Perforce and MATLAB workflows. They register their custom features
 through `.setup()`; `config.keymaps` applies custom shortcuts after LazyVim's
 defaults. There is no separate Home Manager editor profile.
@@ -67,7 +67,7 @@ The leader is Space. Useful native shortcuts:
 | `<leader>uf`, `<leader>uF` | Toggle global / buffer autoformat |
 | `<leader>qs`, `<leader>qS`, `<leader>ql` | Restore / select / last session |
 
-`<leader>sk` includes a category column. Search `Diagnostics`, `Tmux`,
+`<leader>sk` includes a category column. Search `Diagnostics`, `Panes`,
 `Perforce`, `Journal`, `Snippets`, `Sourcing` or `Formatting` to find related
 shortcuts. Custom descriptions include categories in which-key too.
 `KEYMAPS.md` records the old aliases relocated to native defaults, including

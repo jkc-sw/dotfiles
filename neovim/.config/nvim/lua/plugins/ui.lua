@@ -36,7 +36,7 @@ return {
         { '<leader>e', group = 'explorer / Perforce' },
         { '<leader>H', group = 'highlight tests' },
         { '<leader>n', group = 'notifications / code blocks' },
-        { '<leader>o', group = 'tmux repeat' },
+        { '<leader>o', group = 'pane repeat' },
         { '<leader>p', group = 'paste / snippets' },
         { '<leader>t', group = 'text tools', mode = { 'n', 'x' } },
       },
